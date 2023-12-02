@@ -7,7 +7,7 @@ const Load = () => {
   const handleNewDeployment = async () => {
     try {
       // Sample JSON content for a new deployment
-      const fileContent = { data: 'New deployment content' };
+      const fileContent = { nodes: [], edges: [] };
       
       const fileHandle = await window.showSaveFilePicker();
       const writable = await fileHandle.createWritable();
@@ -17,9 +17,11 @@ const Load = () => {
 
       const file = await fileHandle.getFile();
       const fileName = file.name;
+      const fileNameWithoutExtension = fileName.split('.')[0];
       const content = await file.text();
 
-      localStorage.setItem('fileName', fileName);
+
+      localStorage.setItem('fileName', fileNameWithoutExtension);
       localStorage.setItem('fileContent', content);
 
       navigate(`/editor/${fileName}`);
@@ -34,14 +36,14 @@ const Load = () => {
       const file = await fileHandle.getFile();
       const fileContent = await file.text();
       
-      // Simulating a file position for the imported deployment
       const fileName = file.name;
+      const fileNameWithoutExtension = fileName.split('.')[0];
 
-      localStorage.setItem('fileName', fileName);
+      localStorage.setItem('fileName', fileNameWithoutExtension);
       localStorage.setItem('fileContent', fileContent);
 
 
-      navigate(`/editor/${fileName}`);
+      navigate(`/editor/${fileNameWithoutExtension}`);
     } catch (error) {
       console.error('Error importing file:', error);
     }
