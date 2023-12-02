@@ -1,4 +1,3 @@
-import React from 'react';
 import './style.scss';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,8 +17,11 @@ const Load = () => {
 
       const file = await fileHandle.getFile();
       const fileName = file.name;
-      const filePosition = fileHandle.name; // Might not give full path due to security restrictions
-           
+      const content = await file.text();
+
+      localStorage.setItem('fileName', fileName);
+      localStorage.setItem('fileContent', content);
+
       navigate(`/editor/${fileName}`);
     } catch (error) {
         console.error('Error creating file:', error);
@@ -33,8 +35,13 @@ const Load = () => {
       const fileContent = await file.text();
       
       // Simulating a file position for the imported deployment
-      const filePosition = file.name;
-      navigate(`/editor/${filePosition}`);
+      const fileName = file.name;
+
+      localStorage.setItem('fileName', fileName);
+      localStorage.setItem('fileContent', fileContent);
+
+
+      navigate(`/editor/${fileName}`);
     } catch (error) {
       console.error('Error importing file:', error);
     }

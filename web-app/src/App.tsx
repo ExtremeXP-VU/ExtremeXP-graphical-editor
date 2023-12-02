@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './styles/app.scss'
 import Load from './containers/Load'
