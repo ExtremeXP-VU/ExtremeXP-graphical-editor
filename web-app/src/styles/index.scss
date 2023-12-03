@@ -1,4 +1,4 @@
-@import 'colors.scss';
+@import "colors.scss";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -27,16 +27,21 @@ a:hover {
 
 body {
   margin: 0;
+  overflow: hidden;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  font-size: .12em;
+  font-size: 0.12em;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+p {
+  margin: 0;
 }
 
 button {

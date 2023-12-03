@@ -1,0 +1,77 @@
+@import "../../../styles/colors.scss";
+.panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.panel__info {
+  width: 100%;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+
+  &__window {
+    width: 70%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: {
+      left: 1px solid darken($color: $panel-color, $amount: 30);
+      top: 1px solid darken($color: $panel-color, $amount: 30);
+      right: 2px solid lighten($color: $panel-color, $amount: 30);
+      bottom: 2px solid lighten($color: $panel-color, $amount: 30);
+    }
+
+    &__notation {
+      width: 70%;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__title {
+      width: 70%;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+    }
+  }
+
+  &__description {
+    width: 100%;
+    height: 120px;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border-top: 1px solid darken($color: $panel-color, $amount: 30);
+    border-bottom: 1px solid darken($color: $panel-color, $amount: 30);
+    overflow-y: auto;
+    text-align: left;
+  }
+}
+
+.panel__nodes {
+  width: 100%;
+  height: calc((100% - 250px) / 2);
+  background-color: yellow;
+}
+
+.panel__links {
+  width: 100%;
+  height: calc((100% - 250px) / 2);
+  background-color: green;
+}

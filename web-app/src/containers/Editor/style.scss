@@ -1,63 +1,54 @@
 @import "../../styles/colors.scss";
 
 .editor {
-    // prevent scrolling
-    position:fixed;
-    top:0;
-    left:0;
-    bottom:0;
-    right:0;
+  // prevent scrolling
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    overflow-y: hidden;
-    overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .editor__top {
-    width: 100%;
-    height: 50px;
-    background-color: $header-color;
-    box-sizing: border-box;
-    border-bottom: 1px solid darken($color: $panel-color, $amount: 10);
-    color: $header-text-color;
+  width: 100%;
+  height: 50px;
+  background-color: $header-color;
+  box-sizing: border-box;
+  border-bottom: 1px solid darken($color: $panel-color, $amount: 10);
+  color: $header-text-color;
 }
 
 .editor__bottom {
-    display: flex;
-    width: 100%;
-    height: calc(100% - 50px);
-    
+  display: flex;
+  width: 100%;
+  height: calc(100% - 50px);
 }
 
 .editor__bottom__left {
-    width: 250px;
-    height: 100%;
-    background-color: $panel-color;
-    box-sizing: border-box;
-    border-right: 1px solid darken($color: $panel-color, $amount: 10);
+  width: 250px;
+  height: 100%;
+  background-color: $panel-color;
+  box-sizing: border-box;
+  border-right: 1px solid darken($color: $panel-color, $amount: 10);
 }
 
 .editor__bottom__middle {
-    width: calc(100% - 500px);
-    height: 100%;
-    background-color: $board-color;
+  width: calc(100% - 400px);
+  height: 100%;
+  background-color: $board-color;
 }
 
 .editor__bottom__right {
-    width: 250px;
-    height: 100%;
-    background-color: $panel-color;
-    box-sizing: border-box;
-    border-left: 1px solid darken($color: $panel-color, $amount: 10);
+  width: 150px;
+  height: 100%;
+  background-color: $panel-color;
+  box-sizing: border-box;
+  border-left: 1px solid darken($color: $panel-color, $amount: 10);
 }
-
-
-
-
-
-
-
-

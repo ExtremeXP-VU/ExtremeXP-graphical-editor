@@ -1,25 +1,24 @@
-
 .header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.header__logo {
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 40px;
+  height: 40px;
+  img {
     width: 100%;
-    height: 100%;
+    height: auto;
+  }
 }
 
-.header__logo{
-    margin-left: 20px;
-    margin-right: 20px;
-    width: 40px;
-    height: 40px;
-    img{
-        width: 100%;
-        height: 100%;
-    }
-}
-
-.header__name{
-    font-size: 1.6em;
-    font-weight: 600;
+.header__name {
+  font-size: 1.6em;
+  font-weight: 600;
 }
