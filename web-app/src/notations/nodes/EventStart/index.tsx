@@ -1,4 +1,4 @@
-import { memo } from "react";
+// import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const EventStart = ({
@@ -30,7 +30,7 @@ const EventStart = ({
             ry="15"
             fill="#000000"
             stroke="rgb(0, 0, 0)"
-            pointer-events="all"
+            pointerEvents="all"
           />
         </g>
       </svg>

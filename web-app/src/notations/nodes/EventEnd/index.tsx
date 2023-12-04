@@ -1,4 +1,4 @@
-import { memo } from "react";
+// import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const EventEnd = ({
@@ -25,7 +25,7 @@ const EventEnd = ({
             ry="14.999999999999998"
             fill="#000000"
             stroke="rgb(0, 0, 0)"
-            pointer-events="all"
+            pointerEvents="all"
           />
           <ellipse
             cx="15"
@@ -34,8 +34,8 @@ const EventEnd = ({
             ry="13"
             fill="#000000"
             stroke="#ffffff"
-            stroke-width="3"
-            pointer-events="all"
+            strokeWidth="3"
+            pointerEvents="all"
           />
         </g>
       </svg>

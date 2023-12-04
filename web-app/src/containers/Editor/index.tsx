@@ -75,7 +75,7 @@ const Editor = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { label: "" },
       };
 
       setNodes((nds) => nds.concat(newNode));

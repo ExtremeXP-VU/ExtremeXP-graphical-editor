@@ -1,30 +1,33 @@
 @import "../../../styles/colors.scss";
+
+$panel-info-height: 210px;
+
 .panel {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .panel__info {
-  width: 100%;
-  height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: $panel-info-height;
   box-sizing: border-box;
 
   &__window {
-    width: 70%;
-    height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    width: 70%;
+    height: 100px;
+    margin-top: 10px;
     margin-bottom: 10px;
     background-color: white;
     border: {
@@ -35,43 +38,111 @@
     }
 
     &__notation {
-      width: 70%;
-      height: 70px;
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 70%;
+      height: 70px;
     }
 
     &__title {
-      width: 70%;
-      height: 30px;
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 70%;
+      height: 30px;
       font-weight: 600;
     }
   }
 
   &__description {
     width: 100%;
-    height: 120px;
-    padding: 5px 10px;
+    height: 80px;
+    padding: 0px 10px;
     box-sizing: border-box;
     border-top: 1px solid darken($color: $panel-color, $amount: 30);
-    border-bottom: 1px solid darken($color: $panel-color, $amount: 30);
     overflow-y: auto;
     text-align: left;
+
+    color: lighten($primary-text-color, 30);
+    font-size: 0.9em;
   }
 }
 
 .panel__nodes {
-  width: 100%;
-  height: calc((100% - 250px) / 2);
-  background-color: yellow;
+  max-height: calc((100% - $panel-info-height) * (2 / 3));
+  border-top: 2px groove darken($color: $panel-color, $amount: 30);
 }
 
 .panel__links {
+  max-height: calc((100% - $panel-info-height) * (1 / 3));
+}
+
+.panel__nodes,
+.panel__links {
   width: 100%;
-  height: calc((100% - 250px) / 2);
-  background-color: green;
+  border-bottom: 2px groove darken($color: $panel-color, $amount: 30);
+  &__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    height: 50px;
+
+    &__name {
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid darken($color: $panel-color, $amount: 30);
+      font-weight: 600;
+    }
+    &__tutorial {
+      width: 100%;
+      padding: 0px 10px;
+      box-sizing: border-box;
+      text-align: left;
+      font-size: 0.9em;
+      color: lighten($primary-text-color, 30);
+      border-bottom: 1px solid darken($color: $panel-color, $amount: 30);
+      background-color: lighten($color: $panel-color, $amount: 20);
+    }
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 50px);
+    overflow-y: auto;
+  }
+}
+
+.panel__nodes__content {
+  overflow-y: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: space-between;
+  padding: 10px 10px;
+  box-sizing: border-box;
+
+  &__node {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+    box-sizing: border-box;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: darken($color: $panel-color, $amount: 20);
+      border-radius: 8px;
+    }
+  }
 }
