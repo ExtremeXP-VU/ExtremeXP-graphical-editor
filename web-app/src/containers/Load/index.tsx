@@ -21,7 +21,7 @@ const Load = () => {
       const content = await file.text();
 
       localStorage.setItem("fileName", fileNameWithoutExtension);
-      localStorage.setItem("fileContent", content);
+      localStorage.setItem("diagram", content);
 
       navigate(`/editor/${fileName}`);
     } catch (error) {
@@ -39,7 +39,7 @@ const Load = () => {
       const fileNameWithoutExtension = fileName.split(".")[0];
 
       localStorage.setItem("fileName", fileNameWithoutExtension);
-      localStorage.setItem("fileContent", fileContent);
+      localStorage.setItem("diagram", fileContent);
 
       navigate(`/editor/${fileNameWithoutExtension}`);
     } catch (error) {

@@ -5,6 +5,10 @@ import SideBar from "../../components/editor/SideBar";
 
 import ReactFlow, {
   ReactFlowProvider,
+  Node,
+  Edge,
+  MarkerType,
+  Connection,
   addEdge,
   useNodesState,
   useEdgesState,
@@ -15,14 +19,20 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import "./style.scss";
 
-const initialNodes = [
-  {
-    id: "1",
-    type: "input",
-    data: { label: "input node" },
-    position: { x: 250, y: 5 },
-  },
-];
+import EventStart from "../../notations/nodes/EventStart";
+import EventEnd from "../../notations/nodes/EventEnd";
+
+const diagramString =
+  localStorage.getItem("diagram") || JSON.stringify({ nodes: [], edges: [] });
+const diagram = JSON.parse(diagramString);
+
+const initialNodes = diagram.nodes;
+const initialEdges: Edge[] = diagram.edges;
+
+const nodeTypes = {
+  start: EventStart,
+  end: EventEnd,
+};
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -30,12 +40,12 @@ const getId = () => `dndnode_${id++}`;
 const Editor = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
+    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges]
   );
 
   const onDragOver = useCallback((event) => {
@@ -90,6 +100,7 @@ const Editor = () => {
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
+              nodeTypes={nodeTypes}
               onInit={setReactFlowInstance}
               onDrop={onDrop}
               onDragOver={onDragOver}
