@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Header from "../../components/editor/Header";
 import Panel from "../../components/editor/Panel";
 import SideBar from "../../components/editor/SideBar";
@@ -66,7 +66,6 @@ const Editor = () => {
   };
 
   const getLinkProps = useCallback(() => {
-    console.log(selectedLink);
     const props = linkProps[selectedLink];
     return props;
   }, [selectedLink]);
@@ -121,6 +120,12 @@ const Editor = () => {
     [reactFlowInstance]
   );
 
+  const handleSave = useCallback(() => {
+    console.log("save");
+    const diagram = { nodes, edges };
+    localStorage.setItem("diagram", JSON.stringify(diagram));
+  }, [nodes, edges]);
+
   return (
     <div className="editor">
       <div className="editor__top">
@@ -153,7 +158,7 @@ const Editor = () => {
             </ReactFlow>
           </div>
           <div className="editor__bottom__right">
-            <SideBar />
+            <SideBar onSave={handleSave} />
           </div>
         </div>
       </ReactFlowProvider>

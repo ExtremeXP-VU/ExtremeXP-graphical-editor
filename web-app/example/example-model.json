@@ -28,7 +28,7 @@
     },
     {
       "id": "e2-3",
-      "type": "step",
+      "type": "dataflow",
       "source": "2",
       "target": "3",
       "markerEnd": {
@@ -36,10 +36,6 @@
         "width": 20,
         "height": 20,
         "color": "#000000"
-      },
-      "style": {
-        "strokeWidth": 1.5,
-        "stroke": "#000000"
       }
     }
   ]

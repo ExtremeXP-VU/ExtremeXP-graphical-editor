@@ -1,0 +1,41 @@
+@import "../../../styles/colors.scss";
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar__files {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  button {
+    margin: 5px;
+    width: 100px;
+    height: 50px;
+    background-color: $primary-theme-color;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+
+    &:hover {
+      cursor: pointer;
+      border: none;
+      background-color: lighten($color: $primary-theme-color, $amount: 20);
+    }
+    &:focus {
+      outline: none;
+    }
+    &:active {
+      background-color: darken($color: $primary-theme-color, $amount: 20);
+      border: 2px inset darken($color: $primary-theme-color, $amount: 20);
+    }
+  }
+}
