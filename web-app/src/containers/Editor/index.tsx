@@ -43,6 +43,12 @@ const Editor = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
+  const [selectedLink, setSelectedLink] = useState("regular");
+
+  const handleLinkSelection = (linkType: string) => {
+    setSelectedLink(linkType);
+  };
+
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
@@ -91,7 +97,10 @@ const Editor = () => {
       <ReactFlowProvider>
         <div className="editor__bottom">
           <div className="editor__bottom__left">
-            <Panel />
+            <Panel
+              selectedLink={selectedLink}
+              onLinkSelection={handleLinkSelection}
+            />
           </div>
           <div className="editor__bottom__middle">
             <ReactFlow

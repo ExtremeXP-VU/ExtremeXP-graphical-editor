@@ -1,5 +1,11 @@
+import React from "react";
 import { useState } from "react";
 import "./style.scss";
+
+interface PanelProps {
+  selectedLink: string;
+  onLinkSelection: (linkType: string) => void;
+}
 
 const nodesList = [
   "start",
@@ -26,7 +32,7 @@ const nodesList = [
 ];
 const edgesList = ["regular", "conditional", "exceptional"];
 
-const Panel = () => {
+const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
 
   const onDragStart = (event, nodeType) => {
@@ -34,6 +40,11 @@ const Panel = () => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
+
+  const handleLinkSelection = (linkType: string) => {
+    onLinkSelection(linkType);
+  };
+
   return (
     <div className="panel">
       <div className="panel__info">
@@ -84,13 +95,21 @@ const Panel = () => {
         <div className="panel__links__title">
           <p className="panel__links__title__name">Links</p>
           <p className="panel__links__title__tutorial">
-            Click to select the link to connect between nodes.
+            Click to select the link type to connect between nodes.
           </p>
         </div>
         <div className="panel__links__content">
           {edgesList.map((edgeType, index) => {
             return (
-              <div key={index} className="panel__links__content__link">
+              <div
+                key={index}
+                className={`panel__links__content__link ${
+                  selectedLink === edgeType ? "selected" : ""
+                }`}
+                onClick={() => {
+                  handleLinkSelection(edgeType);
+                }}
+              >
                 {edgeType}
               </div>
             );
