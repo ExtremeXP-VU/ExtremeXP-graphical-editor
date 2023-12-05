@@ -21,6 +21,14 @@ import "./style.scss";
 
 import EventStart from "../../notations/nodes/EventStart";
 import EventEnd from "../../notations/nodes/EventEnd";
+import Task from "../../notations/nodes/Task";
+
+import RegularLink from "../../notations/edges/RegularLink";
+import ConditionalLink from "../../notations/edges/ConditionalLink";
+import ExceptionalLink from "../../notations/edges/ExceptionalLink";
+import DataflowLink from "../../notations/edges/DataflowLink";
+
+import linkProps from "../../notations/edges/linkProps.json";
 
 const diagramString =
   localStorage.getItem("diagram") || JSON.stringify({ nodes: [], edges: [] });
@@ -32,6 +40,14 @@ const initialEdges: Edge[] = diagram.edges;
 const nodeTypes = {
   start: EventStart,
   end: EventEnd,
+  task: Task,
+};
+
+const edgeTypes = {
+  regular: RegularLink,
+  conditional: ConditionalLink,
+  exceptional: ExceptionalLink,
+  dataflow: DataflowLink,
 };
 
 let id = 0;
@@ -49,18 +65,34 @@ const Editor = () => {
     setSelectedLink(linkType);
   };
 
+  const getLinkProps = useCallback(() => {
+    console.log(selectedLink);
+    const props = linkProps[selectedLink];
+    return props;
+  }, [selectedLink]);
+
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    (params: Edge | Connection) => {
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            ...getLinkProps(),
+          },
+          eds
+        )
+      );
+    },
+    [setEdges, getLinkProps]
   );
 
-  const onDragOver = useCallback((event) => {
+  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
 
   const onDrop = useCallback(
-    (event) => {
+    (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
       const type = event.dataTransfer.getData("application/reactflow");
@@ -110,6 +142,7 @@ const Editor = () => {
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
               nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
               onInit={setReactFlowInstance}
               onDrop={onDrop}
               onDragOver={onDragOver}

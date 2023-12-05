@@ -30,12 +30,15 @@ const nodesList = [
   "end",
   "task",
 ];
-const edgesList = ["regular", "conditional", "exceptional"];
+const edgesList = ["regular", "conditional", "exceptional", "dataflow"];
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
 
-  const onDragStart = (event, nodeType) => {
+  const onDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    nodeType: string
+  ) => {
     setWindowNode(nodeType);
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";

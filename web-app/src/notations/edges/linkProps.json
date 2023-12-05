@@ -1,0 +1,19 @@
+{
+  "regular": {
+    "type": "regular",
+    "style": { "stroke": "#000", "strokeWidth": 1.5 }
+  },
+  "conditional": {
+    "type": "conditional",
+    "style": { "stroke": "#000", "strokeWidth": 1.5 }
+  },
+  "exceptional": {
+    "type": "exceptional",
+    "style": { "stroke": "#000", "strokeWidth": 1.5 }
+  },
+  "dataflow": {
+    "type": "dataflow",
+    "style": { "stroke": "#3d97b0aa", "strokeWidth": 1.5 },
+    "animated": true
+  }
+}
