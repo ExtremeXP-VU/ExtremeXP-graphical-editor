@@ -7,12 +7,12 @@ const Load = () => {
   const handleNewDeployment = async () => {
     try {
       // Sample JSON content for a new deployment
-      const fileContent = { nodes: [], edges: [] };
+      const diagram = { nodes: [], edges: [] };
 
       const fileHandle = await window.showSaveFilePicker();
       const writable = await fileHandle.createWritable();
 
-      await writable.write(JSON.stringify(fileContent, null, 2));
+      await writable.write(JSON.stringify(diagram, null, 2));
       await writable.close();
 
       const file = await fileHandle.getFile();
@@ -33,13 +33,13 @@ const Load = () => {
     try {
       const [fileHandle] = await window.showOpenFilePicker();
       const file = await fileHandle.getFile();
-      const fileContent = await file.text();
+      const diagram = await file.text();
 
       const fileName = file.name;
       const fileNameWithoutExtension = fileName.split(".")[0];
 
       localStorage.setItem("fileName", fileNameWithoutExtension);
-      localStorage.setItem("diagram", fileContent);
+      localStorage.setItem("diagram", diagram);
 
       navigate(`/editor/${fileNameWithoutExtension}`);
     } catch (error) {

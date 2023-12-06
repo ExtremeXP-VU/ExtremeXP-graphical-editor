@@ -50,8 +50,14 @@ const edgeTypes = {
   dataflow: DataflowLink,
 };
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = (nodes: any) => {
+  if (nodes.length === 0) {
+    return `0`;
+  }
+  const ids = nodes.map((node) => node.id);
+  const maxId = Math.max(...ids);
+  return `${maxId + 1}`;
+};
 
 const Editor = () => {
   const reactFlowWrapper = useRef(null);
@@ -109,7 +115,7 @@ const Editor = () => {
         y: event.clientY,
       });
       const newNode = {
-        id: getId(),
+        id: getId(nodes),
         type,
         position,
         data: { label: "" },
@@ -117,7 +123,7 @@ const Editor = () => {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance]
+    [reactFlowInstance, nodes]
   );
 
   const handleSave = useCallback(() => {
