@@ -1,13 +1,11 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Header from "../../components/editor/Header";
 import Panel from "../../components/editor/Panel";
 import SideBar from "../../components/editor/SideBar";
 
 import ReactFlow, {
   ReactFlowProvider,
-  Node,
   Edge,
-  MarkerType,
   Connection,
   addEdge,
   useNodesState,
@@ -22,13 +20,15 @@ import "./style.scss";
 import EventStart from "../../notations/nodes/EventStart";
 import EventEnd from "../../notations/nodes/EventEnd";
 import Task from "../../notations/nodes/Task";
+import Data from "../../notations/nodes/Data";
 
 import RegularLink from "../../notations/edges/RegularLink";
 import ConditionalLink from "../../notations/edges/ConditionalLink";
 import ExceptionalLink from "../../notations/edges/ExceptionalLink";
 import DataflowLink from "../../notations/edges/DataflowLink";
+import Markers from "../../notations/edges/Markers";
 
-import linkProps from "../../notations/edges/linkProps.json";
+import linkProps from "../../notationConfigs/linkProps.json";
 
 const diagramString =
   localStorage.getItem("diagram") || JSON.stringify({ nodes: [], edges: [] });
@@ -41,6 +41,7 @@ const nodeTypes = {
   start: EventStart,
   end: EventEnd,
   task: Task,
+  data: Data,
 };
 
 const edgeTypes = {
@@ -60,7 +61,7 @@ const getId = (nodes: any) => {
 };
 
 const Editor = () => {
-  const reactFlowWrapper = useRef(null);
+  // const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -146,6 +147,7 @@ const Editor = () => {
             />
           </div>
           <div className="editor__bottom__middle">
+            <Markers />
             <ReactFlow
               nodes={nodes}
               edges={edges}

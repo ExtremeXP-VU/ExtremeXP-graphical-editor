@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+
+import notationList from "../../../notationConfigs/notationList.json";
+
 import "./style.scss";
 
 interface PanelProps {
@@ -7,30 +10,8 @@ interface PanelProps {
   onLinkSelection: (linkType: string) => void;
 }
 
-const nodesList = [
-  "start",
-  "end",
-  "task",
-  "start",
-  "end",
-  "task",
-  "start",
-  "end",
-  "task",
-  "start",
-  "end",
-  "task",
-  "start",
-  "end",
-  "task",
-  "start",
-  "end",
-  "task",
-  "start",
-  "end",
-  "task",
-];
-const edgesList = ["regular", "conditional", "exceptional", "dataflow"];
+const nodesList = notationList.nodes;
+const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
