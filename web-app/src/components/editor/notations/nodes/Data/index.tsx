@@ -23,15 +23,15 @@ const Data = ({
             d="M 0 0 L 38 0 L 50 12 L 50 40 L 0 40 L 0 0 Z"
             fill="none"
             stroke="rgb(0, 0, 0)"
-            stroke-miterlimit="10"
-            pointer-events="all"
+            strokeMiterlimit="10"
+            pointerEvents="all"
           />
           <path
             d="M 38 0 L 38 12 L 50 12 Z"
-            fill-opacity="0.05"
+            fillOpacity="0.05"
             fill="#000000"
             stroke="none"
-            pointer-events="all"
+            pointerEvents="all"
           />
           <path
             d="M 38 0 L 38 12 L 50 12"
