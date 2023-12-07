@@ -17,18 +17,18 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import "./style.scss";
 
-import EventStart from "../../notations/nodes/EventStart";
-import EventEnd from "../../notations/nodes/EventEnd";
-import Task from "../../notations/nodes/Task";
-import Data from "../../notations/nodes/Data";
+import EventStart from "../../components/editor/notations/nodes/EventStart";
+import EventEnd from "../../components/editor/notations/nodes/EventEnd";
+import Task from "../../components/editor/notations/nodes/Task";
+import Data from "../../components/editor/notations/nodes/Data";
 
-import RegularLink from "../../notations/edges/RegularLink";
-import ConditionalLink from "../../notations/edges/ConditionalLink";
-import ExceptionalLink from "../../notations/edges/ExceptionalLink";
-import DataflowLink from "../../notations/edges/DataflowLink";
-import Markers from "../../notations/edges/Markers";
+import RegularLink from "../../components/editor/notations/edges/RegularLink";
+import ConditionalLink from "../../components/editor/notations/edges/ConditionalLink";
+import ExceptionalLink from "../../components/editor/notations/edges/ExceptionalLink";
+import DataflowLink from "../../components/editor/notations/edges/DataflowLink";
+import Markers from "../../components/editor/notations/edges/Markers";
 
-import linkProps from "../../notationConfigs/linkProps.json";
+import linkProps from "../../components/editor/notations/notationConfigs/linkProps.json";
 
 const diagramString =
   localStorage.getItem("diagram") || JSON.stringify({ nodes: [], edges: [] });

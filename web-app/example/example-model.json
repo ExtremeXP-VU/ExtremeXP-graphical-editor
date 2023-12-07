@@ -1,42 +1,184 @@
 {
   "nodes": [
     {
-      "id": "1",
+      "id": "0",
       "type": "start",
+      "position": { "x": 101.37347849724807, "y": 73.52010508618545 },
       "data": { "label": "" },
-      "position": { "x": 250, "y": 5 }
+      "width": 31,
+      "height": 36,
+      "selected": false,
+      "positionAbsolute": { "x": 101.37347849724807, "y": 73.52010508618545 },
+      "dragging": false
+    },
+    {
+      "id": "1",
+      "type": "task",
+      "position": { "x": 285.7035625133556, "y": 217.7178162963937 },
+      "data": { "label": "" },
+      "width": 101,
+      "height": 56,
+      "selected": true,
+      "positionAbsolute": { "x": 285.7035625133556, "y": 217.7178162963937 },
+      "dragging": false
     },
     {
       "id": "2",
       "type": "task",
+      "position": { "x": 364.54551424675384, "y": 361.3271653651846 },
       "data": { "label": "" },
-      "position": { "x": 150, "y": 150 }
+      "width": 101,
+      "height": 56,
+      "selected": false,
+      "positionAbsolute": { "x": 364.54551424675384, "y": 361.3271653651846 },
+      "dragging": false
     },
     {
       "id": "3",
       "type": "end",
+      "position": { "x": 204.2248956844503, "y": 502.90439541879806 },
       "data": { "label": "" },
-      "position": { "x": 250, "y": 300 }
+      "width": 32,
+      "height": 37,
+      "selected": false,
+      "positionAbsolute": { "x": 204.2248956844503, "y": 502.90439541879806 },
+      "dragging": false
+    },
+    {
+      "id": "4",
+      "type": "data",
+      "position": { "x": 56.04320551518643, "y": 364.0413268827673 },
+      "data": { "label": "" },
+      "width": 51,
+      "height": 46,
+      "selected": false,
+      "positionAbsolute": { "x": 56.04320551518643, "y": 364.0413268827673 },
+      "dragging": false
+    },
+    {
+      "id": "5",
+      "type": "data",
+      "position": { "x": -24.42836431493467, "y": 216.28677527457683 },
+      "data": { "label": "" },
+      "width": 51,
+      "height": 46,
+      "selected": false,
+      "positionAbsolute": { "x": -24.42836431493467, "y": 216.28677527457683 },
+      "dragging": false
     }
   ],
   "edges": [
     {
-      "id": "e1-2",
-      "type": "regular",
       "source": "1",
-      "target": "2"
-    },
-    {
-      "id": "e2-3",
-      "type": "dataflow",
-      "source": "2",
-      "target": "3",
+      "sourceHandle": null,
+      "target": "2",
+      "targetHandle": null,
+      "type": "exceptional",
+      "style": { "stroke": "#000", "strokeWidth": 1.5 },
+      "markerStart": "squareMarker",
       "markerEnd": {
         "type": "arrow",
         "width": 20,
         "height": 20,
-        "color": "#000000"
-      }
+        "color": "#000"
+      },
+      "id": "reactflow__edge-1-2"
+    },
+    {
+      "source": "1",
+      "sourceHandle": null,
+      "target": "4",
+      "targetHandle": null,
+      "type": "dataflow",
+      "style": { "stroke": "#3d97b0aa", "strokeWidth": 1.5 },
+      "animated": true,
+      "markerEnd": {
+        "type": "arrow",
+        "width": 20,
+        "height": 20,
+        "color": "#3d97b0aa"
+      },
+      "id": "reactflow__edge-1-4",
+      "selected": false
+    },
+    {
+      "source": "4",
+      "sourceHandle": null,
+      "target": "3",
+      "targetHandle": null,
+      "type": "dataflow",
+      "style": { "stroke": "#3d97b0aa", "strokeWidth": 1.5 },
+      "animated": true,
+      "markerEnd": {
+        "type": "arrow",
+        "width": 20,
+        "height": 20,
+        "color": "#3d97b0aa"
+      },
+      "id": "reactflow__edge-4-3"
+    },
+    {
+      "source": "2",
+      "sourceHandle": null,
+      "target": "3",
+      "targetHandle": null,
+      "type": "conditional",
+      "style": { "stroke": "#000", "strokeWidth": 1.5 },
+      "markerStart": "diamondMarker",
+      "markerEnd": {
+        "type": "arrow",
+        "width": 20,
+        "height": 20,
+        "color": "#000"
+      },
+      "id": "reactflow__edge-2-3"
+    },
+    {
+      "source": "0",
+      "sourceHandle": null,
+      "target": "5",
+      "targetHandle": null,
+      "type": "dataflow",
+      "style": { "stroke": "#3d97b0aa", "strokeWidth": 1.5 },
+      "animated": true,
+      "markerEnd": {
+        "type": "arrow",
+        "width": 20,
+        "height": 20,
+        "color": "#3d97b0aa"
+      },
+      "id": "reactflow__edge-0-5"
+    },
+    {
+      "source": "5",
+      "sourceHandle": null,
+      "target": "4",
+      "targetHandle": null,
+      "type": "dataflow",
+      "style": { "stroke": "#3d97b0aa", "strokeWidth": 1.5 },
+      "animated": true,
+      "markerEnd": {
+        "type": "arrow",
+        "width": 20,
+        "height": 20,
+        "color": "#3d97b0aa"
+      },
+      "id": "reactflow__edge-5-4"
+    },
+    {
+      "source": "0",
+      "sourceHandle": null,
+      "target": "1",
+      "targetHandle": null,
+      "type": "regular",
+      "style": { "stroke": "#000", "strokeWidth": 1.5 },
+      "markerEnd": {
+        "type": "arrow",
+        "width": 20,
+        "height": 20,
+        "color": "#000"
+      },
+      "id": "reactflow__edge-0-1"
     }
   ]
 }

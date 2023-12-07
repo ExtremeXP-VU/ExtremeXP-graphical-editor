@@ -32,7 +32,7 @@
 }
 
 .editor__bottom__left {
-  width: 250px;
+  width: 220px;
   height: 100%;
   background-color: $panel-color;
   box-sizing: border-box;
@@ -40,7 +40,7 @@
 }
 
 .editor__bottom__middle {
-  width: calc(100% - 400px);
+  width: calc(100% - 370px);
   height: 100%;
   background-color: $board-color;
 }
