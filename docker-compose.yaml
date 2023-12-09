@@ -1,0 +1,19 @@
+version: "1.0"
+
+services:
+  mongo:
+    image: mongo:4.4.6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ~/mongo/data:/data/db
+
+  auth-service:
+    build: ./user-authentication
+    container_name: auth-service
+    ports:
+      - "6666:6666"
