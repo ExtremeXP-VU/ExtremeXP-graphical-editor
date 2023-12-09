@@ -17,3 +17,11 @@ services:
     container_name: auth-service
     ports:
       - "5555:5555"
+
+  web-app:
+    build: ./web-app
+    container_name: web-app
+    ports:
+      - "7001:7000"
+    depends_on:
+      - auth-service
