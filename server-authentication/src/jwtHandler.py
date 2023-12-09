@@ -13,7 +13,7 @@ class JWTHandler(object):
         # the algorithm used to generate the signature is HMAC SHA256
         self.header = {"alg": "HS256", "typ": "JWT"}
         # the secret key used to sign the JWT
-        self.secret = "Group8Secret"
+        self.secret = "ExtremeXPsecret20231209"
         self.file = open('../Config.json','r')
         self.config = json.load(self.file)
         self.file.close()
@@ -66,7 +66,3 @@ class JWTHandler(object):
         return exp_period + current_timestamp
 
 jwtHandler = JWTHandler()
-# print(jwtHandler.generate_jwt("Yuna"))
-# print(jwtHandler.generate_jwt("Fan"))
-# print(jwtHandler.generate_jwt("Cai"))
-# print(jwtHandler.generate_jwt("admin"))
