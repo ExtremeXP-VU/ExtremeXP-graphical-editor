@@ -24,6 +24,7 @@ const Load = () => {
       localStorage.setItem("diagram", content);
 
       navigate(`/editor/${fileName}`);
+      window.location.reload();
     } catch (error) {
       console.error("Error creating file:", error);
     }
@@ -42,6 +43,7 @@ const Load = () => {
       localStorage.setItem("diagram", diagram);
 
       navigate(`/editor/${fileNameWithoutExtension}`);
+      window.location.reload();
     } catch (error) {
       console.error("Error importing file:", error);
     }
@@ -59,10 +61,10 @@ const Load = () => {
       </div>
       <div className="load__file">
         <div className="load__file__button" onClick={handleNewDeployment}>
-          New Deployment
+          New Experiment Specification
         </div>
         <div className="load__file__button" onClick={handleImportDeployment}>
-          Import Deployment from ...
+          Import Experiment Secification
         </div>
       </div>
     </div>

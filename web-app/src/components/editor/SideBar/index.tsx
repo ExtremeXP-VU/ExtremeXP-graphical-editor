@@ -16,6 +16,9 @@ const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
 
   return (
     <div className="sidebar">
+      <div className="sidebar__datablock">
+        <div>Data Lists</div>
+      </div>
       <div className="sidebar__files">
         <button
           className="sidebar__files__button__save"
@@ -29,6 +32,9 @@ const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
         <button className="sidebar__files__button__load" onClick={handleGoBack}>
           Back
         </button>
+      </div>
+      <div className="sidebar__execution">
+        <button className="sidebar__execution__button">Execution</button>
       </div>
     </div>
   );

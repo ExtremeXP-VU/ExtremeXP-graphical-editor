@@ -100,6 +100,9 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           })}
         </div>
       </div>
+      <div className="panel__ui">
+        <div>UI elements</div>
+      </div>
     </div>
   );
 };

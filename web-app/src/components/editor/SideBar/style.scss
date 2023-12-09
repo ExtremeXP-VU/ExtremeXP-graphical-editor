@@ -9,6 +9,19 @@
   height: 100%;
 }
 
+.sidebar__datablock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 300px;
+  background-color: brown;
+  margin-bottom: 200px;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
 .sidebar__files {
   display: flex;
   flex-direction: column;
@@ -19,7 +32,7 @@
   button {
     margin: 5px;
     width: 100px;
-    height: 50px;
+    height: 40px;
     background-color: $primary-theme-color;
     color: white;
     font-size: 1.2em;
@@ -37,5 +50,18 @@
       background-color: darken($color: $primary-theme-color, $amount: 20);
       border: 2px inset darken($color: $primary-theme-color, $amount: 20);
     }
+  }
+}
+
+.sidebar__execution {
+  margin: 40px 0px;
+  button {
+    width: 100px;
+    height: 100px;
+    border: 5px double white;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.1em;
+    font-weight: 600;
   }
 }
