@@ -1,0 +1,74 @@
+@import "../../styles/colors.scss";
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+.login__banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5vh;
+  padding-bottom: 3vh;
+  width: 100%;
+  height: 20vh;
+  //   border-bottom: 2px solid $primary-theme-color;
+
+  &__title {
+    font-size: 5em;
+    font-weight: 700;
+    color: $primary-theme-color;
+  }
+}
+
+.login__selection__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  height: 400px;
+  border-bottom: 1px solid $primary-theme-color;
+}
+
+.login__selection__switch {
+  width: 100%;
+  height: 40px;
+  border-bottom: 2px solid $primary-theme-color;
+
+  button {
+    width: 50%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    border-radius: 0%;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: $primary-theme-color;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: lighten($primary-theme-color, 40%);
+      color: $primary-theme-color;
+    }
+
+    &.selected {
+      background-color: $primary-theme-color;
+      color: white;
+    }
+  }
+}
+
+.login__selection__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
