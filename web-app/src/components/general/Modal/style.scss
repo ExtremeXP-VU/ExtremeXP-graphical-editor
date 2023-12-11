@@ -12,8 +12,10 @@
   background-color: rgba(0, 0, 0, 0.7);
   &__text {
     display: table-cell;
-    font-size: 1.2em;
+    font-size: 1.3em;
+    font-weight: 600;
     color: $primary-button-text-color;
     vertical-align: middle;
+    text-align: center;
   }
 }

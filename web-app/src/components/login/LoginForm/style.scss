@@ -18,9 +18,9 @@
 
 .login__submit {
   width: 45%;
-  height: 40px;
+  height: 0.4rem;
   margin: 25px 0px;
-  border-radius: 10px;
+  border-radius: 0.2rem;
   background-color: $primary-theme-color;
   color: $primary-button-text-color;
   font-size: 1.2em;
@@ -30,8 +30,11 @@
     cursor: pointer;
     background-color: lighten($primary-theme-color, 20%);
   }
-  &:focus {
+  &:active {
     outline: none;
     background-color: darken($primary-theme-color, 20%);
+  }
+  &:focus {
+    outline: none;
   }
 }
