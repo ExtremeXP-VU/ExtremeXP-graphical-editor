@@ -1,0 +1,19 @@
+@import "../../../styles/colors.scss";
+
+.modal {
+  display: table;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3rem;
+  height: 1rem;
+  border-radius: 0.08rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  &__text {
+    display: table-cell;
+    font-size: 1.2em;
+    color: $primary-button-text-color;
+    vertical-align: middle;
+  }
+}

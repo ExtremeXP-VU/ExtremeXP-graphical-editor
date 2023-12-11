@@ -25,4 +25,13 @@
   color: $primary-button-text-color;
   font-size: 1.2em;
   font-weight: 700;
+
+  &:hover {
+    cursor: pointer;
+    background-color: lighten($primary-theme-color, 20%);
+  }
+  &:focus {
+    outline: none;
+    background-color: darken($primary-theme-color, 20%);
+  }
 }

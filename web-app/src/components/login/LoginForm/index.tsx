@@ -1,30 +1,45 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
 import "./style.scss";
 
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import useRequest from "../../../utils/useRequest";
+
+import Modal, { ModalInterfaceType } from "../../general/Modal";
+
+type ResponseType = {
+  message: string;
+  data: {
+    jwt: string;
+  };
+};
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [data, setData] = useState(null);
-  const [error, setError] = useState("");
-  const [loaded, setLoaded] = useState(false);
+  const modalRef = useRef<ModalInterfaceType>(null!); // ! means that we are sure that this variable is not null
+
+  const url = `http://localhost:80/users/login?username=${username}&password=${password}`;
+  const { request } = useRequest<ResponseType>(url, "POST", {});
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    axios
-      .get("http://localhost:5555/")
+    if (!username || !password)
+      return modalRef.current?.showMessage("username or password is empty");
+
+    request()
       .then((response) => {
-        console.log(response);
+        if (response) {
+          localStorage.setItem("jwt", response.data.jwt);
+          navigate(`/`);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        modalRef.current?.showMessage(
+          error.response.data?.message || "unknown error"
+        );
       });
-    // navigate(`/`);
   };
 
   return (
@@ -54,6 +69,7 @@ const LoginForm = () => {
       <button className="login__submit" onClick={handleLogin}>
         LOGIN
       </button>
+      <Modal ref={modalRef} />
     </>
   );
 };
