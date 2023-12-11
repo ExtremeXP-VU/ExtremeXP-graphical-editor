@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-import UserLogin from "../../components/login/UserLogin";
-import Register from "../../components/login/Register";
+import LoginForm from "../../components/login/LoginForm";
+import RegisterForm from "../../components/login/RegisterForm";
 
 import "./style.scss";
 
@@ -15,16 +14,10 @@ const Login = () => {
 
   const renderLoginComponent = () => {
     if (loginMode) {
-      return <UserLogin />;
+      return <LoginForm />;
     } else {
-      return <Register />;
+      return <RegisterForm />;
     }
-  };
-
-  const navigate = useNavigate();
-  const handleLogin = () => {
-    navigate(`/`);
-    window.location.reload();
   };
 
   return (
@@ -38,24 +31,26 @@ const Login = () => {
           />
           <div className="login__banner__title">ExtremeXP Graphical Editor</div>
         </div>
-        <div className="login__selection__wrapper">
-          <div className="login__selection__switch">
+        <div className="login__content">
+          <div className="login__content__tabs">
             <button
-              className={`login__button ${loginMode ? "selected" : ""}`}
+              className={`login__content__tabs__tab ${
+                loginMode ? "selected" : ""
+              }`}
               onClick={handleModeSwitch}
             >
               Login
             </button>
             <button
-              className={`login__button ${!loginMode ? "selected" : ""}`}
+              className={`login__content__tabs__tab ${
+                !loginMode ? "selected" : ""
+              }`}
               onClick={handleModeSwitch}
             >
               Register
             </button>
           </div>
-          <div className="login__selection__content">
-            {renderLoginComponent()}
-          </div>
+          <div className="login__content__form">{renderLoginComponent()}</div>
         </div>
       </div>
     </>

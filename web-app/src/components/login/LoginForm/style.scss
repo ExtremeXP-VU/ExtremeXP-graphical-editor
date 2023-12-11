@@ -1,0 +1,28 @@
+@import "../../../styles/colors.scss";
+
+.login__form {
+  width: 100%;
+  padding: 0px 15px;
+  box-sizing: border-box;
+}
+
+.login__form__item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+
+  color: darken($primary-theme-color, 10%);
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.login__submit {
+  width: 45%;
+  height: 40px;
+  margin: 25px 0px;
+  border-radius: 10px;
+  background-color: $primary-theme-color;
+  color: $primary-button-text-color;
+  font-size: 1.2em;
+  font-weight: 700;
+}
