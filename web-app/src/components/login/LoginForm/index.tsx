@@ -3,7 +3,6 @@ import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import useRequest from "../../../utils/useRequest";
-
 import Modal, { ModalInterfaceType } from "../../general/Modal";
 
 type ResponseType = {

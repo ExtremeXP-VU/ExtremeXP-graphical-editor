@@ -17,6 +17,7 @@
     "reactflow": "^11.10.1"
   },
   "devDependencies": {
+    "@types/node": "^20.10.4",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@types/wicg-file-system-access": "^2023.10.4",

@@ -1,9 +1,10 @@
+import "./style.scss";
+
 import React from "react";
 import { useState } from "react";
 
 import notationList from "../notations/notationConfigs/notationList.json";
-
-import "./style.scss";
+import { nodeImageSrc } from "../../../assets/nodes";
 
 interface PanelProps {
   selectedLink: string;
@@ -34,19 +35,14 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
       <div className="panel__info">
         <div className="panel__info__window">
           <div className="panel__info__window__notation">
-            <img src={`./nodes/${windowNode}.svg`} alt="task" />
+            <img src={nodeImageSrc(windowNode)} alt={windowNode} />
           </div>
           <div className="panel__info__window__title">
             <p>{windowNode}</p>
           </div>
         </div>
         <div className="panel__info__description">
-          <p>
-            Task node description: Task nodeTask nodeTask node Task nodeTask
-            nodeTask nodeTask node Task nodeTask node ask nodeTask node Task
-            nodeTask node ask nodeTask node Task nodeTask node ask nodeTask node
-            Task nodeTask node
-          </p>
+          <p>{windowNode} node description:</p>
         </div>
       </div>
       <div className="panel__nodes">
@@ -69,7 +65,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
                   setWindowNode(nodeType);
                 }}
               >
-                <img src={`./nodes/${nodeType}.svg`} alt="" />
+                <img src={nodeImageSrc(nodeType)} alt="" />
               </div>
             );
           })}

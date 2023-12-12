@@ -3,6 +3,8 @@ import { useState } from "react";
 import LoginForm from "../../components/login/LoginForm";
 import RegisterForm from "../../components/login/RegisterForm";
 
+import logo from "../../assets/extremeXP_logo.png";
+
 import "./style.scss";
 
 const Login = () => {
@@ -24,11 +26,7 @@ const Login = () => {
     <>
       <div className="login">
         <div className="login__banner">
-          <img
-            src="./extremeXP_logo.png"
-            alt="logo"
-            className="login__banner__logo"
-          />
+          <img src={logo} alt="logo" className="login__banner__logo" />
           <div className="login__banner__title">ExtremeXP Graphical Editor</div>
         </div>
         <div className="login__content">

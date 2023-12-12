@@ -1,6 +1,8 @@
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 
+import logo from "../../assets/extremeXP_logo.png";
+
 const Load = () => {
   const navigate = useNavigate();
 
@@ -52,11 +54,7 @@ const Load = () => {
   return (
     <div className="load">
       <div className="load__banner">
-        <img
-          src="./extremeXP_logo.png"
-          alt="logo"
-          className="load__banner__logo"
-        />
+        <img src={logo} alt="logo" className="load__banner__logo" />
         <div className="load__banner__title">ExtremeXP Graphical Editor</div>
       </div>
       <div className="load__file">
