@@ -28,7 +28,7 @@ const LoginForm = () => {
       return modalRef.current?.showMessage("username or password is empty");
 
     request({
-      url: `users/login/`,
+      url: `users/login`,
       method: "POST",
       data: {
         username: username,
