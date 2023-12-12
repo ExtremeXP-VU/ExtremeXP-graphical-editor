@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import logo from "../../assets/extremeXP_logo.png";
@@ -9,8 +10,16 @@ const Account = () => {
   const isLogin = location.pathname.includes("login");
   const loginSelectedClass = isLogin ? "selected" : "";
   const registerSelectedClass = isLogin ? "" : "selected";
-
   const navigate = useNavigate();
+
+  // If the user is already logged in, redirect to the repository page
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+      navigate(`/repository/${localStorage.getItem("username")}`);
+    } else {
+      navigate("/account/login");
+    }
+  }, [navigate]);
 
   const handleModeSwitch = () => {
     if (isLogin) {

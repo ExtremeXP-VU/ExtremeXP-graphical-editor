@@ -33,8 +33,8 @@ const Login = () => {
       },
     })
       .then((response) => {
-        if (response) {
-          localStorage.setItem("jwt", response.data.jwt);
+        if (response.data.jwt) {
+          localStorage.setItem("token", response.data.jwt);
           localStorage.setItem("username", username);
           navigate(`/repository/${username}`);
         }

@@ -7,7 +7,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleStart = () => {
-    navigate("/account/login");
+    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+      navigate(`/repository/${localStorage.getItem("username")}`);
+    } else {
+      navigate("/account/login");
+    }
   };
 
   return (
