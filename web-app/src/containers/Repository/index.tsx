@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../../assets/extremeXP_logo.png";
 
-const Load = () => {
+const Repository = () => {
   const navigate = useNavigate();
 
   const handleNewDeployment = async () => {
@@ -69,4 +69,4 @@ const Load = () => {
   );
 };
 
-export default Load;
+export default Repository;

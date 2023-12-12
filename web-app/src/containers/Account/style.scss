@@ -1,6 +1,6 @@
 @import "../../styles/colors.scss";
 
-.login {
+.account {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,12 +8,12 @@
   height: 100vh;
 }
 
-.login__banner {
+.account__banner {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 5vh;
-  padding-bottom: 3vh;
+  padding-top: 10vh;
+  padding-bottom: 5vh;
   width: 100%;
   height: 20vh;
   //   border-bottom: 2px solid $primary-theme-color;
@@ -25,7 +25,7 @@
   }
 }
 
-.login__content {
+.account__content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,7 +33,7 @@
   border-bottom: 2px solid $primary-theme-color;
 }
 
-.login__content__tabs {
+.account__content__tabs {
   width: 100%;
   height: 40px;
   margin-bottom: 20px;
@@ -66,11 +66,50 @@
   }
 }
 
-.login__content__form {
+.account__content__form {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.login__form {
+  width: 100%;
+  padding: 0px 15px;
+  box-sizing: border-box;
+}
+
+.login__form__item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+
+  color: darken($primary-theme-color, 10%);
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.login__submit {
+  width: 45%;
+  height: 0.4rem;
+  margin: 25px 0px;
+  border-radius: 0.2rem;
+  background-color: $primary-theme-color;
+  color: $primary-button-text-color;
+  font-size: 1.2em;
+  font-weight: 700;
+
+  &:hover {
+    cursor: pointer;
+    background-color: lighten($primary-theme-color, 20%);
+  }
+  &:active {
+    outline: none;
+    background-color: darken($primary-theme-color, 20%);
+  }
+  &:focus {
+    outline: none;
+  }
 }

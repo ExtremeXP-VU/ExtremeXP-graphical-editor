@@ -1,27 +1,20 @@
-import "../LoginForm/style.scss";
-
-import React, { useState, useRef } from "react";
-import useRequest from "../../../utils/useRequest";
-import Modal, { ModalInterfaceType } from "../../general/Modal";
-
-interface RegisterFormProps {
-  onSwitchMode: () => void;
-}
+import { useState, useRef } from "react";
+import useRequest from "../../utils/useRequest";
+import Modal, { ModalInterfaceType } from "../../components/general/Modal";
+import { useNavigate } from "react-router-dom";
 
 type ResponseType = {
   message: string;
-  data: {
-    jwt: string;
-  };
 };
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
+const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const modalRef = useRef<ModalInterfaceType>(null!);
   const { request } = useRequest<ResponseType>();
+  const navigate = useNavigate();
 
   const handleRegister = () => {
     if (!username || !password)
@@ -40,9 +33,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
     })
       .then((response) => {
         if (response) {
-          modalRef.current?.showMessage("User created successfully.");
+          modalRef.current?.showMessage("User successfully created.");
           setTimeout(() => {
-            onSwitchMode();
+            navigate(`/account/login`);
           }, 2000);
         }
       })
@@ -59,6 +52,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
         <div className="login__form__item">
           <div className="login__form__item__title"> username </div>
           <input
+            id="username"
             className="login__form__item__content"
             type="text"
             placeholder="admin"
@@ -69,6 +63,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
         <div className="login__form__item">
           <div className="login__form__item__title"> password </div>
           <input
+            id="password"
             className="login__form__item__content"
             type="password"
             placeholder="admin"
@@ -79,6 +74,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
         <div className="login__form__item">
           <div className="login__form__item__title"> confirm password </div>
           <input
+            id="confirmPassword"
             className="login__form__item__content"
             type="password"
             placeholder="admin"
@@ -95,4 +91,4 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
   );
 };
 
-export default RegisterForm;
+export default Register;

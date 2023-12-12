@@ -1,9 +1,7 @@
-import "./style.scss";
-
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
-import useRequest from "../../../utils/useRequest";
-import Modal, { ModalInterfaceType } from "../../general/Modal";
+import useRequest from "../../utils/useRequest";
+import Modal, { ModalInterfaceType } from "../../components/general/Modal";
 
 type ResponseType = {
   message: string;
@@ -12,7 +10,7 @@ type ResponseType = {
   };
 };
 
-const LoginForm = () => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -37,7 +35,8 @@ const LoginForm = () => {
       .then((response) => {
         if (response) {
           localStorage.setItem("jwt", response.data.jwt);
-          navigate(`/`);
+          localStorage.setItem("username", username);
+          navigate(`/repository/${username}`);
         }
       })
       .catch((error) => {
@@ -53,6 +52,7 @@ const LoginForm = () => {
         <div className="login__form__item">
           <div className="login__form__item__title"> username </div>
           <input
+            id="username"
             className="login__form__item__content"
             type="text"
             placeholder="admin"
@@ -63,6 +63,7 @@ const LoginForm = () => {
         <div className="login__form__item">
           <div className="login__form__item__title"> password </div>
           <input
+            id="password"
             className="login__form__item__content"
             type="password"
             placeholder="admin"
@@ -79,4 +80,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Login;
