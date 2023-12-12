@@ -64,3 +64,17 @@ def validation_check():
         return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
     else:
         return {"message": "Authentication Failed", "type": verify_result["message"]}, 401
+    
+@app.route('/users/delete', methods=["DELETE"])
+@cross_origin()
+def handle_deletion():
+    get_data = request.get_json()
+    username = get_data['username']
+    password = get_data['password']
+    if not apiHandler.user_exists(username):
+        return {"message": "username does not exist"}, 404
+    if not apiHandler.password_validated(username, password):
+        return {"message": "password is not valid"}, 403
+    apiHandler.handle_deletion(username)
+    return {"message": "account deleted"}, 204
+

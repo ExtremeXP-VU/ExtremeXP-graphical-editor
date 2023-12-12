@@ -30,6 +30,10 @@ class ApiHandler(object):
     def handle_register(self, username, password):
         self.user_info.insert_one({"username": username, "password": password})
     
+    def handle_deletion(self, username):
+        query = {"username": username}
+        self.user_info.delete_one(query)
+    
     def password_validated(self, username, password):
         query = {"username": username}
         document = self.user_info.find_one(query)
