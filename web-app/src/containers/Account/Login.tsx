@@ -55,7 +55,7 @@ const Login = () => {
             id="username"
             className="login__form__item__content"
             type="text"
-            placeholder="admin"
+            placeholder="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -66,7 +66,7 @@ const Login = () => {
             id="password"
             className="login__form__item__content"
             type="password"
-            placeholder="admin"
+            placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
