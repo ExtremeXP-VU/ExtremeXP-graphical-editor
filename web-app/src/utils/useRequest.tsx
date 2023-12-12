@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 function useRequest<T>(
   options: AxiosRequestConfig = {
-    url: "http://localhost:80",
+    url: "http://localhost",
     method: "GET",
     params: {},
     data: {},

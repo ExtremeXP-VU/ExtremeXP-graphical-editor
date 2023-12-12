@@ -18,7 +18,7 @@ const Login = () => {
     if (loginMode) {
       return <LoginForm />;
     } else {
-      return <RegisterForm />;
+      return <RegisterForm onSwitchMode={handleModeSwitch} />;
     }
   };
 
