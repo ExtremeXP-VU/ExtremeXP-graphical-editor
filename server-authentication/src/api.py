@@ -1,6 +1,4 @@
-
-from flask import Flask
-from flask import request
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from apiHandler import apiHandler
 from jwtHandler import jwtHandler
@@ -9,16 +7,16 @@ app = Flask(__name__)
 cors = CORS(app) # cors is added in advance to allow cors requests
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/', methods=["GET"])
+@app.route('/users', methods=["GET"])
 @cross_origin()
 def index():
     return "Authentication Connected" + "\nRegistered Users: " + apiHandler.get_users()
 
-@app.route('/users', methods=["POST"])
+@app.route('/users/create', methods=["POST"])
 @cross_origin()
 def post_user():
     if request.method == 'POST':
-        get_data = request.args.to_dict() # get_data gets the body of post request
+        get_data = request.get_json() # get_data gets the body of post request
         username = get_data['username']
         password = get_data['password']
         if len(username) < 1 or len(password) < 1 :
@@ -28,10 +26,10 @@ def post_user():
         apiHandler.handle_register(username, password)
         return {"message": "account created"}, 201
         
-@app.route('/users', methods=["PUT"])
+@app.route('/users/update', methods=["PUT"])
 @cross_origin()
 def update_password(): 
-    get_data = request.args.to_dict()
+    get_data = request.get_json()
     username = get_data['username']
     old_password = get_data['old-password']
     new_password = get_data['new-password']
@@ -46,7 +44,7 @@ def update_password():
 @cross_origin()
 def handle_login():
     if request.method == 'POST':
-        get_data=request.args.to_dict()
+        get_data = request.get_json()
         username = get_data['username']
         password = get_data['password']
         if not apiHandler.user_exists(username):

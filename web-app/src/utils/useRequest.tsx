@@ -1,10 +1,13 @@
 import { useState, useRef } from "react";
-import axios, { AxiosRequestConfig, Method } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 function useRequest<T>(
-  url: string,
-  method: Method,
-  payload: AxiosRequestConfig
+  options: AxiosRequestConfig = {
+    url: "http://localhost:80",
+    method: "GET",
+    params: {},
+    data: {},
+  }
 ) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState(null);
@@ -15,19 +18,19 @@ function useRequest<T>(
     controllerRef.current.abort();
   };
 
-  const request = () => {
+  const request = (requestOptions?: AxiosRequestConfig) => {
     // Reset state
     setData(null);
     setError(null);
     setLoaded(false);
 
-    // Make request
     return axios
       .request<T>({
-        url,
-        method,
+        url: `${options.url}/${requestOptions?.url || ""}`,
+        method: requestOptions?.method || options.method,
         signal: controllerRef.current.signal,
-        data: payload,
+        params: requestOptions?.params || options.params,
+        data: requestOptions?.data || options.data,
       })
       .then((response) => {
         setData(response.data);

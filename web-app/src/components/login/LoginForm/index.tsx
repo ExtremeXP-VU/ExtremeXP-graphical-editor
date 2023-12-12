@@ -19,8 +19,7 @@ const LoginForm = () => {
 
   const modalRef = useRef<ModalInterfaceType>(null!); // ! means that we are sure that this variable is not null
 
-  const url = `http://localhost:80/users/login?username=${username}&password=${password}`;
-  const { request } = useRequest<ResponseType>(url, "POST", {});
+  const { request } = useRequest<ResponseType>();
 
   const navigate = useNavigate();
 
@@ -28,7 +27,14 @@ const LoginForm = () => {
     if (!username || !password)
       return modalRef.current?.showMessage("username or password is empty");
 
-    request()
+    request({
+      url: `users/login/`,
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
+      },
+    })
       .then((response) => {
         if (response) {
           localStorage.setItem("jwt", response.data.jwt);
