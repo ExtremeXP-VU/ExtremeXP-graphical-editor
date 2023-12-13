@@ -93,3 +93,20 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@font-face {
+  font-family: "iconfont"; /* Project id 4372157 */
+  src: url("//at.alicdn.com/t/c/font_4372157_rblk6k3mp8.woff2?t=1702468714285")
+      format("woff2"),
+    url("//at.alicdn.com/t/c/font_4372157_rblk6k3mp8.woff?t=1702468714285")
+      format("woff"),
+    url("//at.alicdn.com/t/c/font_4372157_rblk6k3mp8.ttf?t=1702468714285")
+      format("truetype");
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

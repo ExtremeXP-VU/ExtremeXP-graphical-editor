@@ -1,6 +1,6 @@
 import "./style.scss";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 
 import logo from "../../assets/extremeXP_logo.png";
 
@@ -61,19 +61,9 @@ const Repository = () => {
   };
 
   return (
-    <div className="load">
-      <div className="load__banner">
-        <img src={logo} alt="logo" className="load__banner__logo" />
-        <div className="load__banner__title">ExtremeXP Graphical Editor</div>
-      </div>
-      <div className="load__file">
-        <div className="load__file__button" onClick={handleNewDeployment}>
-          New Experiment Specification
-        </div>
-        <div className="load__file__button" onClick={handleImportDeployment}>
-          Import Experiment Secification
-        </div>
-      </div>
+    <div className="page repository">
+      <div className="repository__panel"></div>
+      <div className="repository__content"></div>
     </div>
   );
 };
