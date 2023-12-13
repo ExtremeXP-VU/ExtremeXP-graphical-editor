@@ -1,5 +1,5 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./styles/app.scss";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "./containers/Home";
 import Account from "./containers/Account";

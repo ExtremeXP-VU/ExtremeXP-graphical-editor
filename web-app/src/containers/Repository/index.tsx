@@ -1,10 +1,19 @@
 import "./style.scss";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import logo from "../../assets/extremeXP_logo.png";
 
 const Repository = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+      navigate(`/repository/${localStorage.getItem("username")}`);
+    } else {
+      navigate("/account/login");
+    }
+  }, [navigate]);
 
   const handleNewDeployment = async () => {
     try {

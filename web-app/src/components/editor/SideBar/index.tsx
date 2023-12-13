@@ -11,7 +11,11 @@ const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(`/`);
+    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+      navigate(`/repository/${localStorage.getItem("username")}`);
+    } else {
+      navigate("/account/login");
+    }
   };
 
   return (
