@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import logo from "../../assets/extremeXP_logo.png";
 
@@ -15,19 +15,11 @@ const Account = () => {
   // If the user is already logged in, redirect to the repository page
   useEffect(() => {
     if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      navigate(`/repository/${localStorage.getItem("username")}/specification`);
+      navigate(`/repository/${localStorage.getItem("username")}/experiments`);
     } else {
       navigate("/account/login");
     }
   }, [navigate]);
-
-  const handleModeSwitch = () => {
-    if (isLogin) {
-      navigate("/account/register");
-    } else {
-      navigate("/account/login");
-    }
-  };
 
   return (
     <>
@@ -40,18 +32,20 @@ const Account = () => {
         </div>
         <div className="account__content">
           <div className="account__content__tabs">
-            <button
-              className={`account__content__tabs__tab ${loginSelectedClass}`}
-              onClick={handleModeSwitch}
-            >
-              Login
-            </button>
-            <button
-              className={`account__content__tabs__tab ${registerSelectedClass}`}
-              onClick={handleModeSwitch}
-            >
-              Register
-            </button>
+            <Link to="/account/login">
+              <button
+                className={`account__content__tabs__tab ${loginSelectedClass}`}
+              >
+                Login
+              </button>
+            </Link>
+            <Link to="/account/register">
+              <button
+                className={`account__content__tabs__tab ${registerSelectedClass}`}
+              >
+                Register
+              </button>
+            </Link>
           </div>
           <div className="account__content__form">
             <Outlet />

@@ -1,12 +1,12 @@
 import "./style.scss";
 
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { Link, useNavigate, Outlet, useLocation } from "react-router-dom";
 
 const Repository = () => {
   const location = useLocation();
-  const isSpecification = location.pathname.includes("/specification");
-  const specificationSelectedClass = isSpecification ? "selected" : "";
-  const datasetSelectedClass = isSpecification ? "" : "selected";
+  const isExperiment = location.pathname.includes("/experiments");
+  const experimentSelectedClass = isExperiment ? "selected" : "";
+  const userSelectedClass = isExperiment ? "" : "selected";
 
   const navigate = useNavigate();
 
@@ -16,14 +16,6 @@ const Repository = () => {
     navigate("/account/login");
   };
 
-  const handleModeSwitch = () => {
-    if (isSpecification) {
-      navigate(`/repository/${localStorage.getItem("username")}/dataset`);
-    } else {
-      navigate(`/repository/${localStorage.getItem("username")}/specification`);
-    }
-  };
-
   return (
     <div className="page repository">
       <div className="repository__panel">
@@ -31,20 +23,24 @@ const Repository = () => {
           <span>Repository</span>
         </div>
         <div className="repository__panel__items">
-          <div
-            className={`repository__panel__items__item ${specificationSelectedClass}`}
-            onClick={handleModeSwitch}
+          <Link
+            to={`/repository/${localStorage.getItem("username")}/experiments`}
           >
-            <span className="iconfont">&#xe610;</span>
-            <p>Specification</p>
-          </div>
-          <div
-            className={`repository__panel__items__item ${datasetSelectedClass}`}
-            onClick={handleModeSwitch}
-          >
-            <span className="iconfont">&#xe742;</span>
-            <p>Dataset</p>
-          </div>
+            <div
+              className={`repository__panel__items__item ${experimentSelectedClass}`}
+            >
+              <span className="iconfont">&#xe6cf;</span>
+              <p>Experiments</p>
+            </div>
+          </Link>
+          <Link to={`/repository/${localStorage.getItem("username")}/user`}>
+            <div
+              className={`repository__panel__items__item ${userSelectedClass}`}
+            >
+              <span className="iconfont">&#xe63d;</span>
+              <p>User</p>
+            </div>
+          </Link>
         </div>
         <div className="repository__panel__sign-out">
           <button

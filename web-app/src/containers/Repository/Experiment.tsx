@@ -1,4 +1,4 @@
-const Specification = () => {
+const Experiment = () => {
   const handleNewDeployment = async () => {
     try {
       // Sample JSON content for a new deployment
@@ -44,4 +44,4 @@ const Specification = () => {
   );
 };
 
-export default Specification;
+export default Experiment;

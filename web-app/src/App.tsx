@@ -6,8 +6,8 @@ import Account from "./containers/Account";
 import Login from "./containers/Account/Login";
 import Register from "./containers/Account/Register";
 import Repository from "./containers/Repository";
-import Specification from "./containers/Repository/Specification";
-import Dataset from "./containers/Repository/Dataset";
+import Experiment from "./containers/Repository/Experiment";
+import User from "./containers/Repository/User";
 import Editor from "./containers/Editor";
 
 const router = createBrowserRouter([
@@ -34,12 +34,12 @@ const router = createBrowserRouter([
     element: <Repository />,
     children: [
       {
-        path: "/repository/:userName/specification",
-        element: <Specification />,
+        path: "/repository/:userName/experiments",
+        element: <Experiment />,
       },
       {
-        path: "/repository/:userName/dataset",
-        element: <Dataset />,
+        path: "/repository/:userName/user",
+        element: <User />,
       },
     ],
   },

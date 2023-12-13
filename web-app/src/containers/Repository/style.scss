@@ -52,6 +52,11 @@
       margin-right: 0.2rem;
       font-size: 1.3em;
     }
+
+    &:hover {
+      cursor: pointer;
+      background-color: darken($color: $primary-theme-color, $amount: 30);
+    }
   }
 
   .selected {
@@ -102,5 +107,9 @@
 .specification {
 }
 
-.dataset {
+.user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
 }
