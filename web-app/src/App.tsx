@@ -6,7 +6,7 @@ import Account from "./containers/Account";
 import Login from "./containers/Account/Login";
 import Register from "./containers/Account/Register";
 import Repository from "./containers/Repository";
-import Experiment from "./containers/Repository/Experiment";
+import Experiments from "./containers/Repository/Experiments";
 import User from "./containers/Repository/User";
 import Editor from "./containers/Editor";
 
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/repository/:userName/experiments",
-        element: <Experiment />,
+        element: <Experiments />,
       },
       {
         path: "/repository/:userName/user",

@@ -1,4 +1,4 @@
-const Experiment = () => {
+const Experiments = () => {
   const handleNewDeployment = async () => {
     try {
       // Sample JSON content for a new deployment
@@ -39,9 +39,30 @@ const Experiment = () => {
   };
   return (
     <>
-      <div className="page specification">Specification</div>
+      <div className="page experiments">
+        <div className="experiments__folders">
+          <div className="experiments__folders__new">
+            <input
+              type="text"
+              placeholder="enter the experiment name"
+              className="experiments__folders__new__input"
+            />
+            <button className="experiments__folders__new__button">
+              create
+            </button>
+          </div>
+          <div className="experiments__folders__search">
+            <span className="iconfont">&#xe60a;</span>
+            <input type="text" />
+          </div>
+          <div className="experiments__folders__list">
+            <ul className="experiments__folders__list__item"></ul>
+          </div>
+        </div>
+        <div className="experiments__experiment"></div>
+      </div>
     </>
   );
 };
 
-export default Experiment;
+export default Experiments;
