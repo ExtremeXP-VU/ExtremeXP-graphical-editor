@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
-import useRequest from "../../utils/useRequest";
-import Modal, { ModalInterfaceType } from "../../components/general/Modal";
+import { useState } from "react";
+import useRequest from "../../hooks/useRequest";
+
+import { message } from "../../utils/message";
 
 type ResponseType = {
   message: string;
@@ -14,15 +15,12 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const modalRef = useRef<ModalInterfaceType>(null!); // ! means that we are sure that this variable is not null
-
   const { request } = useRequest<ResponseType>();
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!username || !password)
-      return modalRef.current?.showMessage("username or password is empty");
+    if (!username || !password) return message("username or password is empty");
 
     request({
       url: `users/login`,
@@ -40,9 +38,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
-        modalRef.current?.showMessage(
-          error.response.data?.message || "unknown error"
-        );
+        message(error.response.data?.message || "unknown error");
       });
   };
 
@@ -75,7 +71,6 @@ const Login = () => {
       <button className="login__submit" onClick={handleLogin}>
         LOGIN
       </button>
-      <Modal ref={modalRef} />
     </>
   );
 };

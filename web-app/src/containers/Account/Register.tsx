@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
-import useRequest from "../../utils/useRequest";
-import Modal, { ModalInterfaceType } from "../../components/general/Modal";
+import { useState } from "react";
+import useRequest from "../../hooks/useRequest";
 import { useNavigate } from "react-router-dom";
+import { message } from "../../utils/message";
 
 type ResponseType = {
   message: string;
@@ -12,16 +12,13 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const modalRef = useRef<ModalInterfaceType>(null!);
   const { request } = useRequest<ResponseType>();
   const navigate = useNavigate();
 
   const handleRegister = () => {
-    if (!username || !password)
-      return modalRef.current?.showMessage("username or password is empty");
+    if (!username || !password) return message("username or password is empty");
 
-    if (password !== confirmPassword)
-      return modalRef.current?.showMessage("passwords do not match");
+    if (password !== confirmPassword) return message("passwords do not match");
 
     request({
       url: `users/create`,
@@ -33,16 +30,14 @@ const Register = () => {
     })
       .then((response) => {
         if (response) {
-          modalRef.current?.showMessage("User successfully created.");
+          message("User successfully created.");
           setTimeout(() => {
             navigate(`/account/login`);
           }, 2000);
         }
       })
       .catch((error) => {
-        modalRef.current?.showMessage(
-          error.response.data?.message || "unknown error"
-        );
+        message(error.response.data?.message || "unknown error");
       });
   };
 
@@ -86,7 +81,6 @@ const Register = () => {
       <button className="login__submit" onClick={handleRegister}>
         REGISTER
       </button>
-      <Modal ref={modalRef} />
     </>
   );
 };
