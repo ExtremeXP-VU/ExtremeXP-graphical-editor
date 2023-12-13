@@ -1,44 +1,53 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import { useNavigate } from "react-router-dom";
+import { message } from "../utils/message";
 
-// Get the token from localStorage and add it to the request headers
-const loginToken = localStorage.getItem("token");
-const headers = loginToken ? { token: loginToken } : {};
-
-const defaultRequestConfig: AxiosRequestConfig = {
-  url: "http://localhost",
+// default request config
+const defaultRequestConfig = {
+  url: "/",
   method: "GET",
-  params: {},
   data: {},
-  headers,
+  params: {},
 };
 
-function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
+function useRequest<T>(
+  options: AxiosRequestConfig & { manual?: boolean } = defaultRequestConfig
+) {
   const navigate = useNavigate();
   const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [loaded, setLoaded] = useState(false);
-  const controllerRef = useRef(new AbortController()); // AbortController is used to cancel the request
+  const controllerRef = useRef(new AbortController());
 
-  const cancelRequest = () => {
+  const cancel = () => {
     controllerRef.current.abort();
   };
 
   const request = useCallback(
-    (requestOptions?: AxiosRequestConfig) => {
-      // Reset state
+    (requestOptions: AxiosRequestConfig) => {
+      // reset state
       setData(null);
-      setError(null);
+      setError("");
       setLoaded(false);
 
+      // get token from localStorage and set headers
+      const loginToken = localStorage.getItem("token");
+      const headers = loginToken
+        ? {
+            token: loginToken,
+          }
+        : {};
+
+      // send request
       return axios
         .request<T>({
-          url: `${options.url}/${requestOptions?.url || ""}`,
-          method: requestOptions?.method || options.method,
+          baseURL: "http://localhost",
+          url: requestOptions.url,
+          method: requestOptions.method,
           signal: controllerRef.current.signal,
-          params: requestOptions?.params || options.params,
-          data: requestOptions?.data || options.data,
+          data: requestOptions.data,
+          params: requestOptions.params,
           headers,
         })
         .then((response) => {
@@ -48,20 +57,27 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
         .catch((error) => {
           if (error?.response?.status === 403) {
             localStorage.removeItem("token");
-            localStorage.removeItem("username");
             navigate("/account/login");
           }
-          setError(error);
+          setError(error.message || "unknown request error.");
           throw error;
         })
         .finally(() => {
           setLoaded(true);
         });
     },
-    [navigate, options]
+    [navigate]
   );
 
-  return { data, error, loaded, request, cancelRequest };
+  // useEffect(() => {
+  //   if (!options.manual) {
+  //     request(options).catch((e) => {
+  //       message(e?.message);
+  //     });
+  //   }
+  // }, [options, request]);
+
+  return { data, error, loaded, request, cancel };
 }
 
 export default useRequest;

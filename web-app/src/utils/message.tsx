@@ -27,7 +27,7 @@ const element = document.createElement("div");
 
 const root = ReactDOM.createRoot(element);
 
-export const message = (message: string) => {
+export const message = (message: string, timeout = 1500) => {
   root.render(
     <div style={mondalStyle}>
       <div style={modalTextStyle}>{message}</div>
@@ -37,7 +37,7 @@ export const message = (message: string) => {
     document.body.appendChild(element);
     setTimeout(() => {
       document.body.removeChild(element);
-    }, 1500);
+    }, timeout);
   }
 };
 
