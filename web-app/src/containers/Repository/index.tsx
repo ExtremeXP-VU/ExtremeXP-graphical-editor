@@ -1,69 +1,63 @@
 import "./style.scss";
-import { useEffect } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
 
-import logo from "../../assets/extremeXP_logo.png";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 
 const Repository = () => {
+  const location = useLocation();
+  const isSpecification = location.pathname.includes("/specification");
+  const specificationSelectedClass = isSpecification ? "selected" : "";
+  const datasetSelectedClass = isSpecification ? "" : "selected";
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      navigate(`/repository/${localStorage.getItem("username")}`);
-    } else {
-      navigate("/account/login");
-    }
-  }, [navigate]);
-
-  const handleNewDeployment = async () => {
-    try {
-      // Sample JSON content for a new deployment
-      const diagram = { nodes: [], edges: [] };
-
-      const fileHandle = await window.showSaveFilePicker();
-      const writable = await fileHandle.createWritable();
-
-      await writable.write(JSON.stringify(diagram, null, 2));
-      await writable.close();
-
-      const file = await fileHandle.getFile();
-      const fileName = file.name;
-      const fileNameWithoutExtension = fileName.split(".")[0];
-      const content = await file.text();
-
-      localStorage.setItem("fileName", fileNameWithoutExtension);
-      localStorage.setItem("diagram", content);
-
-      navigate(`/editor/${fileName}`);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error creating file:", error);
-    }
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/account/login");
   };
 
-  const handleImportDeployment = async () => {
-    try {
-      const [fileHandle] = await window.showOpenFilePicker();
-      const file = await fileHandle.getFile();
-      const diagram = await file.text();
-
-      const fileName = file.name;
-      const fileNameWithoutExtension = fileName.split(".")[0];
-
-      localStorage.setItem("fileName", fileNameWithoutExtension);
-      localStorage.setItem("diagram", diagram);
-
-      navigate(`/editor/${fileNameWithoutExtension}`);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error importing file:", error);
+  const handleModeSwitch = () => {
+    if (isSpecification) {
+      navigate(`/repository/${localStorage.getItem("username")}/dataset`);
+    } else {
+      navigate(`/repository/${localStorage.getItem("username")}/specification`);
     }
   };
 
   return (
     <div className="page repository">
-      <div className="repository__panel"></div>
-      <div className="repository__content"></div>
+      <div className="repository__panel">
+        <div className="repository__panel__header">
+          <span>Repository</span>
+        </div>
+        <div className="repository__panel__items">
+          <div
+            className={`repository__panel__items__item ${specificationSelectedClass}`}
+            onClick={handleModeSwitch}
+          >
+            <span className="iconfont">&#xe610;</span>
+            <p>Specification</p>
+          </div>
+          <div
+            className={`repository__panel__items__item ${datasetSelectedClass}`}
+            onClick={handleModeSwitch}
+          >
+            <span className="iconfont">&#xe742;</span>
+            <p>Dataset</p>
+          </div>
+        </div>
+        <div className="repository__panel__sign-out">
+          <button
+            className="repository__panel__sign-out__button"
+            onClick={handleSignOut}
+          >
+            sign out
+          </button>
+        </div>
+      </div>
+      <div className="repository__content">
+        <Outlet />
+      </div>
     </div>
   );
 };

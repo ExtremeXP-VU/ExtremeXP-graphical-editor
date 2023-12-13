@@ -8,7 +8,7 @@ const Home = () => {
 
   const handleStart = () => {
     if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      navigate(`/repository/${localStorage.getItem("username")}`);
+      navigate(`/repository/${localStorage.getItem("username")}/specification`);
     } else {
       navigate("/account/login");
     }
