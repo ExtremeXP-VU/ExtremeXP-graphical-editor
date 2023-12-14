@@ -7,7 +7,7 @@ const loginToken = localStorage.getItem("token");
 const headers = loginToken ? { token: loginToken } : {};
 
 const defaultRequestConfig: AxiosRequestConfig = {
-  url: "http://localhost",
+  url: "/",
   method: "GET",
   params: {},
   data: {},

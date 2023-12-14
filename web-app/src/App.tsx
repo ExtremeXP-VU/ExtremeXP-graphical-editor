@@ -30,15 +30,15 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/repository/:userName",
+    path: "/repository/",
     element: <Repository />,
     children: [
       {
-        path: "/repository/:userName/experiments",
+        path: "/repository/experiments",
         element: <Experiments />,
       },
       {
-        path: "/repository/:userName/user",
+        path: "/repository/user",
         element: <User />,
       },
     ],

@@ -23,9 +23,7 @@ const Repository = () => {
           <span>ExtremeXP</span>
         </div>
         <div className="repository__panel__items">
-          <Link
-            to={`/repository/${localStorage.getItem("username")}/experiments`}
-          >
+          <Link to={"/repository/experiments"}>
             <div
               className={`repository__panel__items__item ${experimentSelectedClass}`}
             >
@@ -33,7 +31,7 @@ const Repository = () => {
               <p>Experiments</p>
             </div>
           </Link>
-          <Link to={`/repository/${localStorage.getItem("username")}/user`}>
+          <Link to={"/repository/user"}>
             <div
               className={`repository__panel__items__item ${userSelectedClass}`}
             >

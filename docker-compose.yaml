@@ -19,6 +19,12 @@ services:
     ports:
       - "5555:5555"
 
+  exp-service:
+    build: ./server-experiment
+    container_name: exp-service
+    ports:
+      - "5050:5050"
+
   web-app:
     build: ./web-app
     container_name: web-app
@@ -36,4 +42,5 @@ services:
       - "80:80"
     depends_on:
       - auth-service
+      - exp-service
     restart: always

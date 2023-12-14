@@ -15,7 +15,7 @@ const Account = () => {
   // If the user is already logged in, redirect to the repository page
   useEffect(() => {
     if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      navigate(`/repository/${localStorage.getItem("username")}/experiments`);
+      navigate("/repository/experiments");
     } else {
       navigate("/account/login");
     }

@@ -34,7 +34,7 @@ const Login = () => {
         if (response.data.jwt) {
           localStorage.setItem("token", response.data.jwt);
           localStorage.setItem("username", username);
-          navigate(`/repository/${username}/experiments`);
+          navigate("/repository/experiments");
         }
       })
       .catch((error) => {
