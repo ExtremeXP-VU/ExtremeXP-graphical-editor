@@ -24,6 +24,8 @@ services:
     container_name: exp-service
     ports:
       - "5050:5050"
+    depends_on:
+      - auth-service
 
   web-app:
     build: ./web-app
@@ -32,6 +34,7 @@ services:
       - "7001:7000"
     depends_on:
       - auth-service
+      - exp-service
 
   nginx:
     image: nginx:latest

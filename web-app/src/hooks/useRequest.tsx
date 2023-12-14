@@ -34,7 +34,7 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
 
       return axios
         .request<T>({
-          baseURL: "http://localhost",
+          baseURL: "http://127.0.0.1",
           url: requestOptions?.url || "",
           method: requestOptions?.method || options.method,
           signal: controllerRef.current.signal,
