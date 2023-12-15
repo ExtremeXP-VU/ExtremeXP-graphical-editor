@@ -21,6 +21,7 @@ type ExperimentType = {
 
 const Experiments = () => {
   const [experiments, setExperiments] = useState([]);
+  const [expName, setExpName] = useState("");
   const { request } = useRequest<ResponseType>();
 
   useEffect(() => {
@@ -38,6 +39,23 @@ const Experiments = () => {
         message(error.response.data?.message || "unknown error");
       });
   }, [request]);
+
+  const handleNewExperiment = () => {
+    if (!expName) return message("Experiment name can not be empty");
+    request({
+      url: `exp/experiments/create`,
+      method: "POST",
+      data: {
+        exp_name: expName,
+      },
+    })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        message(error.response.data?.message || "unknown error");
+      });
+  };
 
   // const handleNewDeployment = async () => {
   //   try {
@@ -86,8 +104,15 @@ const Experiments = () => {
               type="text"
               placeholder="enter the experiment name"
               className="experiments__new__input"
+              value={expName}
+              onChange={(e) => setExpName(e.target.value)}
             />
-            <button className="experiments__new__button">create</button>
+            <button
+              className="experiments__new__button"
+              onClick={handleNewExperiment}
+            >
+              create
+            </button>
           </div>
           <div className="experiments__search">
             <span className="iconfont">&#xe60a;</span>
@@ -95,8 +120,8 @@ const Experiments = () => {
           </div>
           <div className="experiments__folders">
             <div className="experiments__folders__header">
-              <span>experiment name</span>
-              <span>last update</span>
+              <span>Experiment name</span>
+              <span>Last update</span>
             </div>
             <ul className="experiments__folders__list">
               {experiments.map((experiment, index) => (
@@ -105,7 +130,7 @@ const Experiments = () => {
                     <span className="iconfont">&#xe7b8;</span>
                     <span>{experiment.name}</span>
                   </div>
-                  <div className="experiments__folders__list__date">
+                  <div className="experiments__folders__list__item__date">
                     {timestampToDate(experiment.update_at)}
                   </div>
                 </li>

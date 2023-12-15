@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 // Get the token from localStorage and add it to the request headers
 const loginToken = localStorage.getItem("token");
 const params = loginToken ? { token: loginToken } : {};
+const headers = loginToken ? { token: loginToken } : {};
 
 const defaultRequestConfig: AxiosRequestConfig = {
   url: "/",
   method: "GET",
   params: { ...params },
   data: {},
+  headers,
 };
 
 function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
@@ -33,12 +35,13 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
 
       return axios
         .request<T>({
-          baseURL: "http://localhost/",
+          baseURL: "http://127.0.0.1:80/",
           url: requestOptions?.url || "",
           method: requestOptions?.method || options.method,
           signal: controllerRef.current.signal,
           params: { ...params, ...requestOptions?.params },
           data: requestOptions?.data || options.data,
+          headers: { ...headers, "Access-Control-Allow-Origin": "*" },
         })
         .then((response) => {
           setData(response.data);
