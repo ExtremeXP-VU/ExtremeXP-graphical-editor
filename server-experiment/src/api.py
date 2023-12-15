@@ -26,11 +26,13 @@ def verify_user():
         return {"error":ERROR_FORBIDDEN, "message": auth_res['error_type']}, 403
     g.username = auth_res['username']
 
-# @app.after_request
-# def after_request(response):
-#     # to enable cors response
-#     response.headers['Access-Control-Allow-Origin'] = '*'
-#     return response
+@app.after_request
+def after_request(response):
+    # to enable cors response
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = '*'
+    return response
 
 @app.route('/exp/', methods=["GET"])
 @cross_origin()
@@ -40,18 +42,20 @@ def index():
 @app.route('/exp/experiments', methods=["GET"])
 @cross_origin()
 def get_experiments():
-    experiments = experimentHandler.get_experiments(g.username)
+    experiments = experimentHandler.get_experiments("admin")
     return {"message": "experiments retrieved", "data": {"experiments": experiments}}, 200
 
-@app.route('/exp/experiments/create/', methods=["POST"])
+@app.route('/exp/experiments/create', methods=["OPTIONS", "POST"])
 @cross_origin()
 def create_experiment():
+    print('heeeeeeere', flush=True)
     exp_name = request.json['exp_name']
-    if experimentHandler.detect_duplicate(g.username, exp_name):
+    print('enter post method', flush=True)
+    if experimentHandler.detect_duplicate("admin", exp_name):
         return {"error": ERROR_DUPLICATE, "message": "Experiment name already exists"}, 409
     else:
-        res = experimentHandler.create_experiment(g.username, exp_name)
-        return {"id_experiment": res}, 201
+        res = experimentHandler.create_experiment("admin", exp_name)
+    return {"id_experiment": res}, 201
         
 
 

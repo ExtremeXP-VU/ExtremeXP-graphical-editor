@@ -27,7 +27,6 @@ const Experiments = () => {
   useEffect(() => {
     request({
       url: `exp/experiments`,
-      method: "GET",
     })
       .then((data) => {
         const experiments = data.data.experiments;
