@@ -1,51 +1,45 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import { useNavigate } from "react-router-dom";
-import { message } from "../utils/message";
 
-const defaultRequestConfig = {
+// Get the token from localStorage and add it to the request headers
+const loginToken = localStorage.getItem("token");
+const headers = loginToken ? { token: loginToken } : {};
+
+const defaultRequestConfig: AxiosRequestConfig = {
   url: "/",
   method: "GET",
-  data: {},
   params: {},
+  data: {},
+  headers,
 };
 
-function useRequest<T>(
-  options: AxiosRequestConfig & { manual?: boolean } = defaultRequestConfig
-) {
+function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
   const navigate = useNavigate();
   const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const controllerRef = useRef(new AbortController());
+  const controllerRef = useRef(new AbortController()); // AbortController is used to cancel the request
 
-  const cancel = () => {
+  const cancelRequest = () => {
     controllerRef.current.abort();
   };
 
   const request = useCallback(
-    (requestOptions: AxiosRequestConfig) => {
-      // reset state
+    (requestOptions?: AxiosRequestConfig) => {
+      // Reset state
       setData(null);
-      setError("");
+      setError(null);
       setLoaded(false);
-
-      // bring token from localStorage in every request
-      const loginToken = localStorage.getItem("token");
-      const headers = loginToken
-        ? {
-            token: loginToken,
-          }
-        : {};
 
       return axios
         .request<T>({
-          baseURL: "http://127.0.0.1/",
-          url: requestOptions.url,
-          method: requestOptions.method,
+          baseURL: "http://127.0.0.1",
+          url: requestOptions?.url || "",
+          method: requestOptions?.method || options.method,
           signal: controllerRef.current.signal,
-          data: requestOptions.data,
-          params: requestOptions.params,
+          params: requestOptions?.params || options.params,
+          data: requestOptions?.data || options.data,
           headers,
         })
         .then((response) => {
@@ -55,27 +49,20 @@ function useRequest<T>(
         .catch((error) => {
           if (error?.response?.status === 403) {
             localStorage.removeItem("token");
-            navigate("/login");
+            localStorage.removeItem("username");
+            navigate("/account/login");
           }
-          setError(error.message || "unknown request error.");
-          throw new Error(error);
+          setError(error);
+          throw error;
         })
         .finally(() => {
           setLoaded(true);
         });
     },
-    [navigate]
+    [navigate, options]
   );
 
-  useEffect(() => {
-    if (!options.manual) {
-      request(options).catch((e) => {
-        message(e?.message);
-      });
-    }
-  }, [options, request]);
-
-  return { data, error, loaded, request, cancel };
+  return { data, error, loaded, request, cancelRequest };
 }
 
 export default useRequest;

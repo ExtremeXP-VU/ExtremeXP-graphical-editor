@@ -1,36 +1,4 @@
-import { useState, useEffect } from "react";
-import useRequest from "../../hooks/useRequest";
-import { message } from "../../utils/message";
-
-type ResponseType = {
-  message: string;
-  data: {
-    experiments: [];
-  };
-};
-
 const Experiments = () => {
-  const [experiments, setExperiments] = useState([]);
-  const { request } = useRequest<ResponseType>();
-
-  const getExperiments = () => {
-    request({
-      url: `exp/experiments`,
-      method: "GET",
-    })
-      .then((data) => {
-        const experiments = data.data.experiments;
-        if (experiments) {
-          setExperiments(experiments);
-        }
-      })
-      .catch((error) => {
-        message(error.response.data?.message || "unknown error");
-      });
-  };
-
-  useEffect(() => {}, []);
-
   // const handleNewDeployment = async () => {
   //   try {
   //     // Sample JSON content for a new deployment
