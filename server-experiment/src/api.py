@@ -10,12 +10,13 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 ERROR_FORBIDDEN = "Error: Forbidden"
 ERROR_DUPLICATE = "Error: Duplicate experiment name"
 
-ENDPOINT_WITHOUT_AUTH = []
+# ENDPOINT_WITHOUT_AUTH = []
 
-@app.before_request
+# there's a bug in flask_cors that headers is None when using before_request for OPTIONS request
+# @app.before_request
 def verify_user():
-    if request.endpoint in ENDPOINT_WITHOUT_AUTH:
-        return None
+    # if request.endpoint in ENDPOINT_WITHOUT_AUTH:
+    #     return None
     # get token from header {'token': 'token'} 
     token = request.headers.get('token')
     if token is None:
@@ -25,23 +26,28 @@ def verify_user():
         return {"error":ERROR_FORBIDDEN, "message": auth_res['error_type']}, 403
     g.username = auth_res['username']
 
-@app.after_request
-def after_request(response):
-    # to enable cors response
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    return response
+# @app.after_request
+# def after_request(response):
+#     # to enable cors response
+#     response.headers['Access-Control-Allow-Origin'] = '*'
+#     return response
 
 @app.route('/exp/', methods=["GET"])
+@cross_origin()
 def index():
     return "experiment service connected"
 
 @app.route('/exp/experiments', methods=["GET"])
+@cross_origin()
 def get_experiments():
+    verify_user()
     experiments = experimentHandler.get_experiments(g.username)
     return {"message": "experiments retreived", "data": {"experiments": experiments}}, 200
 
 @app.route('/exp/experiments/create/', methods=["POST"])
+@cross_origin()
 def create_experiment():
+    verify_user()
     exp_name = request.json['exp_name']
     if experimentHandler.detect_duplicate(g.username, exp_name):
         return {"error": ERROR_DUPLICATE, "message": "Experiment name already exists"}, 409
