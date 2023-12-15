@@ -1,4 +1,4 @@
-from flask import Flask, request, g
+from flask import Flask, request,g
 from flask_cors import CORS, cross_origin
 from userAuthHandler import userAuthHandler
 from experimentHandler import experimentHandler
@@ -38,7 +38,7 @@ def index():
 @app.route('/exp/experiments', methods=["GET"])
 def get_experiments():
     experiments = experimentHandler.get_experiments(g.username)
-    return experiments, 200
+    return {"message": "experiments retreived", "data": {"experiments": experiments}}, 200
 
 @app.route('/exp/experiments/create/', methods=["POST"])
 def create_experiment():

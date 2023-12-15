@@ -15,10 +15,10 @@ class ExperimentHandler(object):
     def get_experiments(self, username):
         query = {"owner": username}
         documents = self.collection_experiment.find(query).sort("create_date", pymongo.DESCENDING)
-        print("documents: ", documents)
-        
-        return json.dumps(list(documents), default=str)
+        # return documents in JSON format
+        return json.loads(json.dumps(list(documents), default=str))
 
+    # FIXME: bad implementation
     def detect_duplicate(self, username, exp_name):
         query = {"owner": username}
         documents = self.collection_experiment.find(query)
