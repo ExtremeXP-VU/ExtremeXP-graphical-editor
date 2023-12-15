@@ -101,7 +101,7 @@ const Experiments = () => {
           <div className="experiments__new">
             <input
               type="text"
-              placeholder="enter the experiment name"
+              placeholder="enter your new experiment name"
               className="experiments__new__input"
               value={expName}
               onChange={(e) => setExpName(e.target.value)}

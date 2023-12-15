@@ -42,6 +42,12 @@ const Login = () => {
       });
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <>
       <div className="login__form">
@@ -65,6 +71,7 @@ const Login = () => {
             placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyUp={handleKeyPress}
           />
         </div>
       </div>

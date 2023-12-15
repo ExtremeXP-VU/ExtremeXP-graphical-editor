@@ -42,7 +42,7 @@ def index():
 @app.route('/exp/experiments', methods=["GET"])
 @cross_origin()
 def get_experiments():
-    experiments = experimentHandler.get_experiments("admin")
+    experiments = experimentHandler.get_experiments(g.username)
     return {"message": "experiments retrieved", "data": {"experiments": experiments}}, 200
 
 @app.route('/exp/experiments/create', methods=["OPTIONS", "POST"])
@@ -51,10 +51,10 @@ def create_experiment():
     print('heeeeeeere', flush=True)
     exp_name = request.json['exp_name']
     print('enter post method', flush=True)
-    if experimentHandler.detect_duplicate("admin", exp_name):
+    if experimentHandler.detect_duplicate(g.username, exp_name):
         return {"error": ERROR_DUPLICATE, "message": "Experiment name already exists"}, 409
     else:
-        res = experimentHandler.create_experiment("admin", exp_name)
+        res = experimentHandler.create_experiment(g.username, exp_name)
     return {"id_experiment": res}, 201
         
 
