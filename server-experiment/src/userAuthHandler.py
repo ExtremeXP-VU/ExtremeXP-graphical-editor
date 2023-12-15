@@ -2,7 +2,8 @@ import requests
 
 class UserAuthHandler(object):
     def __init__(self):
-        # host depend on the host url of auth-service (if using nginx)
+        # host depend on the host url of auth-service 
+        # or the name of the container of auth-service in docker-compose.yml if you use docker-compose
         self.userAuthUrl = "http://auth-service:5555/users/validation" 
 
     def verify_user(self, token):
