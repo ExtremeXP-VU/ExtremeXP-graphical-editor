@@ -7,7 +7,18 @@ app = Flask(__name__)
 cors = CORS(app) # cors is added in advance to allow cors requests
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/users/', methods=["GET"])
+@app.after_request
+def after_request(response):
+    # to enable cors response
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+@app.route('/', methods=["GET"])
+@cross_origin()
+def pin():
+    return "authentication service connected"
+
+@app.route('/users', methods=["GET"])
 @cross_origin()
 def index():
     return apiHandler.get_users()

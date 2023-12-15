@@ -31,7 +31,8 @@ def after_request(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-@app.route('/exp/', methods=["GET"])
+@app.route('/exp', methods=["GET"])
+@cross_origin()
 def index():
     return "experiment service connected"
 
