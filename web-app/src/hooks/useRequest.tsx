@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 // Get the token from localStorage and add it to the request headers
 const loginToken = localStorage.getItem("token");
-const headers = loginToken ? { token: loginToken } : {};
+const params = loginToken ? { token: loginToken } : {};
 
 const defaultRequestConfig: AxiosRequestConfig = {
   url: "/",
   method: "GET",
-  params: {},
+  params: { ...params },
   data: {},
-  headers,
 };
 
 function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
@@ -38,9 +37,8 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
           url: requestOptions?.url || "",
           method: requestOptions?.method || options.method,
           signal: controllerRef.current.signal,
-          params: requestOptions?.params || options.params,
+          params: { ...params, ...requestOptions?.params },
           data: requestOptions?.data || options.data,
-          headers,
         })
         .then((response) => {
           setData(response.data);

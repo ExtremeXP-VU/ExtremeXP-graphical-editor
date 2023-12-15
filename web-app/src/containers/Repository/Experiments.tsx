@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
-import { request } from "http";
+import { timestampToDate } from "../../utils/timeToDate";
 
 type ResponseType = {
   message: string;
   data: {
-    experiments: [];
+    experiments: [ExperimentType];
   };
+};
+
+type ExperimentType = {
+  id_experiment: string;
+  name: string;
+  create_at: number;
+  update_at: number;
+  specifications: [];
+  dataset: [];
 };
 
 const Experiments = () => {
@@ -23,7 +32,6 @@ const Experiments = () => {
         const experiments = data.data.experiments;
         if (experiments) {
           setExperiments(experiments);
-          console.log(experiments);
         }
       })
       .catch((error) => {
@@ -72,23 +80,37 @@ const Experiments = () => {
   return (
     <>
       <div className="page experiments">
-        <div className="experiments__folders">
-          <div className="experiments__folders__new">
+        <div className="experiments__wrapper">
+          <div className="experiments__new">
             <input
               type="text"
               placeholder="enter the experiment name"
-              className="experiments__folders__new__input"
+              className="experiments__new__input"
             />
-            <button className="experiments__folders__new__button">
-              create
-            </button>
+            <button className="experiments__new__button">create</button>
           </div>
-          <div className="experiments__folders__search">
+          <div className="experiments__search">
             <span className="iconfont">&#xe60a;</span>
             <input type="text" />
           </div>
-          <div className="experiments__folders__list">
-            <ul className="experiments__folders__list__item"></ul>
+          <div className="experiments__folders">
+            <div className="experiments__folders__header">
+              <span>experiment name</span>
+              <span>last update</span>
+            </div>
+            <ul className="experiments__folders__list">
+              {experiments.map((experiment, index) => (
+                <li className="experiments__folders__list__item" key={index}>
+                  <div className="experiments__folders__list__item__name">
+                    <span className="iconfont">&#xe7b8;</span>
+                    <span>{experiment.name}</span>
+                  </div>
+                  <div className="experiments__folders__list__date">
+                    {timestampToDate(experiment.update_at)}
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
         <div className="experiments__experiment"></div>
