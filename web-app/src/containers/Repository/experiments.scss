@@ -25,10 +25,6 @@
     margin-right: 0.2rem;
     padding: 0 0.1rem;
     box-sizing: border-box;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   button {
@@ -45,13 +41,8 @@
     }
 
     &:active {
-      outline: none;
       background-color: lighten($color: $secondary-theme-color, $amount: 30);
       color: $primary-button-text-color;
-    }
-
-    &:focus {
-      outline: none;
     }
   }
 }
@@ -75,10 +66,6 @@
     flex: 1;
     background-color: transparent;
     border: none;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   .iconfont {
@@ -182,4 +169,107 @@
     border-radius: 0.1rem;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
   }
+}
+
+.experiments__experiment__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: 1.6rem;
+  padding: 0.1rem 0.2rem;
+  box-sizing: border-box;
+}
+
+.experiments__experiment__header__info {
+  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 7rem;
+  height: 1.3rem;
+  box-sizing: border-box;
+
+  &__name {
+    font-size: 2em;
+    text-align: left;
+    text-wrap: nowrap;
+    border-bottom: 1px solid lighten($color: #000000, $amount: 90);
+
+    .iconfont {
+      margin-right: 0.05rem;
+      font-size: 0.7em;
+      color: lighten($color: #000000, $amount: 35);
+    }
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 0.05rem;
+    height: 1rem;
+    color: lighten($color: #000000, $amount: 35);
+
+    p {
+      text-align: left;
+    }
+  }
+
+  &__delete {
+    button {
+      width: 0.9rem;
+      height: 0.4rem;
+      background-color: $alert-background-color;
+      color: $primary-button-text-color;
+      font-size: 1.2em;
+      font-weight: bold;
+
+      &:hover {
+        cursor: pointer;
+        background-color: darken($alert-background-color, 20);
+      }
+
+      &:active {
+        background-color: lighten($color: $alert-background-color, $amount: 30);
+        color: $primary-button-text-color;
+      }
+    }
+  }
+}
+
+.experiments__experiment__links {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 0.4rem;
+  padding-left: 0.2rem;
+
+  &__link {
+    margin-right: 0.4rem;
+    font-size: 1.4em;
+    color: $primary-text-color;
+
+    &:hover {
+      cursor: pointer;
+      color: $primary-theme-color;
+    }
+  }
+
+  .selected {
+    color: $primary-theme-color;
+    border-bottom: 3px solid $primary-theme-color;
+  }
+}
+
+.experiments__experiment__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100% - 2rem);
+  box-sizing: border-box;
 }

@@ -95,14 +95,9 @@
     }
 
     &:active {
-      outline: none;
       border: 3px solid $primary-theme-color;
       background-color: lighten($color: $primary-theme-color, $amount: 30);
       color: $primary-button-text-color;
-    }
-
-    &:focus {
-      outline: none;
     }
   }
 }

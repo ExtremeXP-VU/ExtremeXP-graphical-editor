@@ -31,7 +31,7 @@ class ExperimentHandler(object):
         create_time = calendar.timegm(time.gmtime()) # get current time in seconds
         exp_id = username + "-" + exp_name.replace(" ", "") + "-" + str(create_time)
         query = {"id_experiment": exp_id, "owner": username, 
-                 "name": exp_name, "create_at": create_time, "update_at": create_time,
+                 "name": exp_name, "create_at": create_time, "update_at": create_time, "description": "",
                  "specifications": [], "dataset": []}
         self.collection_experiment.insert_one(query)
         return exp_id

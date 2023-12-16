@@ -49,10 +49,6 @@
     font-weight: 600;
     color: $primary-theme-color;
 
-    &:focus {
-      outline: none;
-    }
-
     &:hover {
       cursor: pointer;
       background-color: lighten($primary-theme-color, 40%);
@@ -106,10 +102,6 @@
     background-color: lighten($primary-theme-color, 20%);
   }
   &:active {
-    outline: none;
     background-color: darken($primary-theme-color, 20%);
-  }
-  &:focus {
-    outline: none;
   }
 }

@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
-
-import Experiment from "../../components/repository/Experiment";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 
 type ResponseType = {
   message: string;
@@ -13,11 +12,15 @@ type ResponseType = {
   };
 };
 
+const timeNow = Math.floor(Date.now() / 1000);
+
 const defaultExperiment = {
-  id_experiment: "",
-  name: "something is wrong, please login",
-  create_at: NaN,
-  update_at: NaN,
+  id_experiment: "default",
+  name: "create your first experiment",
+  description:
+    "Create your experiment folder by enter the experiment name and press the create button. The name should be less than 30 characters. You can only start editing specification after the experiment folder is created.",
+  create_at: timeNow,
+  update_at: timeNow,
   specifications: [],
   dataset: [],
 };
@@ -28,11 +31,17 @@ const Experiments = () => {
   const [currentExp, setCurrentExp] = useState(defaultExperiment);
   const { request } = useRequest<ResponseType>();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isSpecification = location.pathname.includes("/specifications");
+
   useEffect(() => {
     if (experiments.length > 0) {
-      setCurrentExp(experiments[0]);
+      if (!location.pathname.includes("/specifications" || "/dataset")) {
+        setCurrentExp(experiments[0]);
+      }
     }
-  }, [experiments]);
+  }, [experiments, location.pathname]);
 
   useEffect(() => {
     request({
@@ -50,8 +59,11 @@ const Experiments = () => {
       });
   }, [request]);
 
+  // FIXME: Add experiment name validation
   const handleNewExperiment = () => {
     if (!newExpName) return message("Experiment name can not be empty");
+    if (newExpName.length > 50)
+      return message("Experiment name should be less than 50 characters");
     request({
       url: `exp/experiments/create`,
       method: "POST",
@@ -72,46 +84,11 @@ const Experiments = () => {
 
   const handleSelectExperiment = (index: number) => {
     setCurrentExp(experiments[index]);
+    navigate(
+      `/repository/experiments/${experiments[index].id_experiment}/specifications`
+    );
   };
 
-  // const handleNewDeployment = async () => {
-  //   try {
-  //     // Sample JSON content for a new deployment
-  //     const diagram = { nodes: [], edges: [] };
-
-  //     const fileHandle = await window.showSaveFilePicker();
-  //     const writable = await fileHandle.createWritable();
-
-  //     await writable.write(JSON.stringify(diagram, null, 2));
-  //     await writable.close();
-
-  //     const file = await fileHandle.getFile();
-  //     const fileName = file.name;
-  //     const fileNameWithoutExtension = fileName.split(".")[0];
-  //     const content = await file.text();
-
-  //     localStorage.setItem("fileName", fileNameWithoutExtension);
-  //     localStorage.setItem("diagram", content);
-  //   } catch (error) {
-  //     console.error("Error creating file:", error);
-  //   }
-  // };
-
-  // const handleImportDeployment = async () => {
-  //   try {
-  //     const [fileHandle] = await window.showOpenFilePicker();
-  //     const file = await fileHandle.getFile();
-  //     const diagram = await file.text();
-
-  //     const fileName = file.name;
-  //     const fileNameWithoutExtension = fileName.split(".")[0];
-
-  //     localStorage.setItem("fileName", fileNameWithoutExtension);
-  //     localStorage.setItem("diagram", diagram);
-  //   } catch (error) {
-  //     console.error("Error importing file:", error);
-  //   }
-  // };
   return (
     <>
       <div className="page experiments">
@@ -169,8 +146,47 @@ const Experiments = () => {
         <div className="experiments__experiment">
           {/* <Experiment expID={currentExp.id_experiment} /> */}
           <div className="experiments__experiment__board">
-            <div className="experiments__experiment__header"></div>
-            <div className="experiments__experiment__content"></div>
+            <div className="experiments__experiment__header">
+              <div className="experiments__experiment__header__info">
+                <div className="experiments__experiment__header__info__name">
+                  <span className="iconfont">&#xe63c;</span>
+                  <span>{currentExp.name}</span>
+                </div>
+                <div className="experiments__experiment__header__info__description">
+                  <p>{currentExp.description}</p>
+                </div>
+              </div>
+              <div className="experiments__experiment__header__info__delete">
+                <button>Delete</button>
+              </div>
+            </div>
+            <div className="experiments__experiment__links">
+              <Link
+                to={`/repository/experiments/${currentExp.id_experiment}/specifications`}
+              >
+                <div
+                  className={`experiments__experiment__links__link ${
+                    isSpecification ? "selected" : ""
+                  }`}
+                >
+                  Specifications
+                </div>
+              </Link>
+              <Link
+                to={`/repository/experiments/${currentExp.id_experiment}/dataset`}
+              >
+                <div
+                  className={`experiments__experiment__links__link ${
+                    !isSpecification ? "selected" : ""
+                  }`}
+                >
+                  Dataset
+                </div>
+              </Link>
+            </div>
+            <div className="experiments__experiment__content">
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>

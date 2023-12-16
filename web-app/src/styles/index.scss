@@ -79,11 +79,17 @@ button {
   background-color: $primary-theme-color;
   cursor: pointer;
   transition: border-color 0.25s;
+
+  &:active {
+    outline: none;
+  }
 }
 button:hover {
   border: none;
 }
-button:focus,
+button:focus {
+  outline: none;
+}
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
@@ -103,11 +109,11 @@ button:focus-visible {
 
 @font-face {
   font-family: "iconfont"; /* Project id 4372157 */
-  src: url("//at.alicdn.com/t/c/font_4372157_iphdpyqytsk.woff2?t=1702726228413")
+  src: url("//at.alicdn.com/t/c/font_4372157_rzlnwnijqts.woff2?t=1702744220837")
       format("woff2"),
-    url("//at.alicdn.com/t/c/font_4372157_iphdpyqytsk.woff?t=1702726228413")
+    url("//at.alicdn.com/t/c/font_4372157_rzlnwnijqts.woff?t=1702744220837")
       format("woff"),
-    url("//at.alicdn.com/t/c/font_4372157_iphdpyqytsk.ttf?t=1702726228413")
+    url("//at.alicdn.com/t/c/font_4372157_rzlnwnijqts.ttf?t=1702744220837")
       format("truetype");
 }
 

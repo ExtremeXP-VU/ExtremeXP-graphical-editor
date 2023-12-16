@@ -43,9 +43,6 @@
       border: none;
       background-color: lighten($color: $primary-theme-color, $amount: 20);
     }
-    &:focus {
-      outline: none;
-    }
     &:active {
       background-color: darken($color: $primary-theme-color, $amount: 20);
       border: 2px inset darken($color: $primary-theme-color, $amount: 20);
