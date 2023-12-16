@@ -73,6 +73,10 @@
   height: 1rem;
 
   button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 1rem;
     height: 0.5rem;
     border-radius: 0.5rem;
@@ -80,6 +84,10 @@
     color: $primary-theme-color;
     font-size: 1.2em;
     font-weight: bold;
+
+    .iconfont {
+      font-size: 1.3em;
+    }
 
     &:hover {
       cursor: pointer;

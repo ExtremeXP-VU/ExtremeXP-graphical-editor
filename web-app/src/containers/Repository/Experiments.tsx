@@ -115,41 +115,41 @@ const Experiments = () => {
   return (
     <>
       <div className="page experiments">
-        <div className="experiments__wrapper">
-          <div className="experiments__new">
+        <div className="experiments__panel">
+          <div className="experiments__panel__new">
             <input
               type="text"
               placeholder="enter your new experiment name"
-              className="experiments__new__input"
+              className="experiments__panel__new__input"
               value={newExpName}
               onChange={(e) => setNewExpName(e.target.value)}
             />
             <button
-              className="experiments__new__button"
+              className="experiments__panel__new__button"
               onClick={handleNewExperiment}
             >
               create
             </button>
           </div>
-          <div className="experiments__search">
+          <div className="experiments__panel__search">
             <span className="iconfont">&#xe60a;</span>
             <input type="text" />
           </div>
-          <div className="experiments__folders">
-            <div className="experiments__folders__header">
+          <div className="experiments__panel__folders">
+            <div className="experiments__panel__folders__header">
               <span>Experiment name</span>
               <span>Last update</span>
             </div>
-            <ul className="experiments__folders__list">
+            <ul className="experiments__panel__folders__list">
               {experiments.map((experiment, index) => (
                 <li
-                  className={`experiments__folders__list__item ${
+                  className={`experiments__panel__folders__list__item ${
                     currentExp.name === experiment.name ? "selected" : ""
                   }`}
                   key={index}
                   onClick={handleSelectExperiment.bind(null, index)}
                 >
-                  <div className="experiments__folders__list__item__name">
+                  <div className="experiments__panel__folders__list__item__name">
                     {currentExp.name !== experiment.name && (
                       <span className="iconfont">&#xeabf;</span>
                     )}
@@ -158,7 +158,7 @@ const Experiments = () => {
                     )}
                     <span>{experiment.name}</span>
                   </div>
-                  <div className="experiments__folders__list__item__date">
+                  <div className="experiments__panel__folders__list__item__date">
                     {timestampToDate(experiment.update_at)}
                   </div>
                 </li>
@@ -167,7 +167,11 @@ const Experiments = () => {
           </div>
         </div>
         <div className="experiments__experiment">
-          <Experiment expID={currentExp.id_experiment} />
+          {/* <Experiment expID={currentExp.id_experiment} /> */}
+          <div className="experiments__experiment__board">
+            <div className="experiments__experiment__header"></div>
+            <div className="experiments__experiment__content"></div>
+          </div>
         </div>
       </div>
     </>

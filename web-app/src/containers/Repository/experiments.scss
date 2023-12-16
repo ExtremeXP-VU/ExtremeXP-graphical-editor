@@ -3,17 +3,18 @@
   display: flex;
 }
 
-.experiments__wrapper {
+.experiments__panel {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 4rem;
   height: 100%;
-  box-shadow: 5px 5px 5px 5px lighten($color: $primary-theme-color, $amount: 50);
+  // box-shadow: 5px 5px 5px 5px lighten($color: $primary-theme-color, $amount: 50);
+  background-color: lighten($color: $primary-theme-color, $amount: 50);
 }
 
-.experiments__new {
+.experiments__panel__new {
   display: flex;
   width: 3.5rem;
   height: 0.4rem;
@@ -55,7 +56,7 @@
   }
 }
 
-.experiments__search {
+.experiments__panel__search {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,7 +87,7 @@
   }
 }
 
-.experiments__folders {
+.experiments__panel__folders {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,6 +120,7 @@
     padding-bottom: 0.2rem;
 
     &__item {
+      z-index: 999;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -136,7 +138,8 @@
       }
 
       &.selected {
-        background-color: lighten($color: $primary-theme-color, $amount: 50);
+        background-color: white;
+        // background-color: lighten($color: $primary-theme-color, $amount: 50);
         font-weight: bold;
         box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
       }
@@ -163,7 +166,20 @@
 }
 
 .experiments__experiment {
-  width: calc(100% - 4rem);
+  // display: grid;
+  // place-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: calc(100% - 6rem);
   height: 100%;
   background-color: lighten($color: $primary-theme-color, $amount: 50);
+
+  &__board {
+    width: 99%;
+    height: 98%;
+    background-color: white;
+    border-radius: 0.1rem;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+  }
 }

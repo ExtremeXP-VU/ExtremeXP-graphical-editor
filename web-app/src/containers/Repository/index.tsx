@@ -45,7 +45,8 @@ const Repository = () => {
             className="repository__panel__sign-out__button"
             onClick={handleSignOut}
           >
-            sign out
+            <span className="iconfont">&#xe6a5;</span>
+            <span>sign out</span>
           </button>
         </div>
       </div>
