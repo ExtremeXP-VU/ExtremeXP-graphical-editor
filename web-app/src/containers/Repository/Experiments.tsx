@@ -1,59 +1,77 @@
+import "./experiments.scss";
 import { useState, useEffect } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
 
+import Experiment from "../../components/repository/Experiment";
+
 type ResponseType = {
   message: string;
   data: {
-    experiments: [ExperimentType];
+    experiments: [];
   };
 };
 
-type ExperimentType = {
-  id_experiment: string;
-  name: string;
-  create_at: number;
-  update_at: number;
-  specifications: [];
-  dataset: [];
+const defaultExperiment = {
+  id_experiment: "",
+  name: "something is wrong, please login",
+  create_at: NaN,
+  update_at: NaN,
+  specifications: [],
+  dataset: [],
 };
 
 const Experiments = () => {
-  const [experiments, setExperiments] = useState([]);
-  const [expName, setExpName] = useState("");
+  const [experiments, setExperiments] = useState([defaultExperiment]);
+  const [newExpName, setNewExpName] = useState("");
+  const [currentExp, setCurrentExp] = useState(defaultExperiment);
   const { request } = useRequest<ResponseType>();
+
+  useEffect(() => {
+    if (experiments.length > 0) {
+      setCurrentExp(experiments[0]);
+    }
+  }, [experiments]);
 
   useEffect(() => {
     request({
       url: `exp/experiments`,
     })
       .then((data) => {
-        const experiments = data.data.experiments;
-        if (experiments) {
-          setExperiments(experiments);
+        if (data.data.experiments) {
+          setExperiments(data.data.experiments);
         }
       })
       .catch((error) => {
-        message(error.response.data?.message || "unknown error");
+        if (error.name === "AxiosError") {
+          message("Please login first");
+        }
       });
   }, [request]);
 
   const handleNewExperiment = () => {
-    if (!expName) return message("Experiment name can not be empty");
+    if (!newExpName) return message("Experiment name can not be empty");
     request({
       url: `exp/experiments/create`,
       method: "POST",
       data: {
-        exp_name: expName,
+        exp_name: newExpName,
       },
     })
       .then(() => {
         window.location.reload();
       })
       .catch((error) => {
+        if (error.name === "AxiosError") {
+          message("Please login first");
+        }
         message(error.response.data?.message || "unknown error");
       });
+  };
+
+  const handleSelectExperiment = (index: number) => {
+    setCurrentExp(experiments[index]);
   };
 
   // const handleNewDeployment = async () => {
@@ -103,8 +121,8 @@ const Experiments = () => {
               type="text"
               placeholder="enter your new experiment name"
               className="experiments__new__input"
-              value={expName}
-              onChange={(e) => setExpName(e.target.value)}
+              value={newExpName}
+              onChange={(e) => setNewExpName(e.target.value)}
             />
             <button
               className="experiments__new__button"
@@ -124,7 +142,13 @@ const Experiments = () => {
             </div>
             <ul className="experiments__folders__list">
               {experiments.map((experiment, index) => (
-                <li className="experiments__folders__list__item" key={index}>
+                <li
+                  className={`experiments__folders__list__item ${
+                    currentExp.name === experiment.name ? "selected" : ""
+                  }`}
+                  key={index}
+                  onClick={handleSelectExperiment.bind(null, index)}
+                >
                   <div className="experiments__folders__list__item__name">
                     <span className="iconfont">&#xe7b8;</span>
                     <span>{experiment.name}</span>
@@ -137,7 +161,9 @@ const Experiments = () => {
             </ul>
           </div>
         </div>
-        <div className="experiments__experiment"></div>
+        <div className="experiments__experiment">
+          <Experiment expID={currentExp.id_experiment} />
+        </div>
       </div>
     </>
   );
