@@ -3,13 +3,10 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useNavigate } from "react-router-dom";
 
 // Get the token from localStorage and add it to the request headers
-const loginToken = localStorage.getItem("token");
-const params = loginToken ? { token: loginToken } : {};
 
 const defaultRequestConfig: AxiosRequestConfig = {
   url: "/",
   method: "GET",
-  params: { ...params },
   data: {},
 };
 
@@ -30,6 +27,9 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
       setData(null);
       setError(null);
       setLoaded(false);
+
+      const loginToken = localStorage.getItem("token");
+      const params = loginToken ? { token: loginToken } : {};
 
       return axios
         .request<T>({

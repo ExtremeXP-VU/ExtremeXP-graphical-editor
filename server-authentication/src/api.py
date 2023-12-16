@@ -53,18 +53,7 @@ def handle_login():
             return {"message": "password is not valid"}, 403
         jwt = jwtHandler.generate_jwt(username)
         return {"message": "Login Success", "data":{"jwt": jwt}}, 200
-
-@app.route('/users/validation', methods=["GET"])
-@cross_origin()
-def validation_check():
-    get_data=request.args.to_dict()
-    token = get_data['jwt']
-    verify_result = apiHandler.verify_signiture(token)
-    if verify_result["verified"]:
-        return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
-    else:
-        return {"message": "Authentication Failed", "type": verify_result["message"]}, 401
-    
+   
 @app.route('/users/delete', methods=["DELETE"])
 @cross_origin()
 def handle_deletion():
@@ -78,3 +67,13 @@ def handle_deletion():
     apiHandler.handle_deletion(username)
     return {"message": "account deleted"}, 204
 
+@app.route('/users/validation', methods=["GET"])
+@cross_origin()
+def validation_check():
+    get_data=request.args.to_dict()
+    token = get_data['jwt']
+    verify_result = apiHandler.verify_signiture(token)
+    if verify_result["verified"]:
+        return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
+    else:
+        return {"message": "Authentication Failed", "type": verify_result["message"]}, 401

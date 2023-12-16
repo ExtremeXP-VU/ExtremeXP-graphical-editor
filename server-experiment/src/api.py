@@ -48,9 +48,7 @@ def get_experiments():
 @app.route('/exp/experiments/create', methods=["OPTIONS", "POST"])
 @cross_origin()
 def create_experiment():
-    print('heeeeeeere', flush=True)
     exp_name = request.json['exp_name']
-    print('enter post method', flush=True)
     if experimentHandler.detect_duplicate(g.username, exp_name):
         return {"error": ERROR_DUPLICATE, "message": "Experiment name already exists"}, 409
     else:
