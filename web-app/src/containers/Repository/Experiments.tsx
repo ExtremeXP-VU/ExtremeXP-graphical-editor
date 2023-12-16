@@ -150,7 +150,12 @@ const Experiments = () => {
                   onClick={handleSelectExperiment.bind(null, index)}
                 >
                   <div className="experiments__folders__list__item__name">
-                    <span className="iconfont">&#xe7b8;</span>
+                    {currentExp.name !== experiment.name && (
+                      <span className="iconfont">&#xeabf;</span>
+                    )}
+                    {currentExp.name === experiment.name && (
+                      <span className="iconfont">&#xeabe;</span>
+                    )}
                     <span>{experiment.name}</span>
                   </div>
                   <div className="experiments__folders__list__item__date">
