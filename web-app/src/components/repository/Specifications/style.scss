@@ -1,5 +1,65 @@
+@import "../../../styles/colors.scss";
+
 .specification {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   width: 100%;
-  height: 100%;
-  background-color: azure;
+  height: 98%;
+  padding: 0 0.2rem;
+  box-sizing: border-box;
+}
+
+.specification__functions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 0.5rem;
+
+  border-bottom: 1px solid #e0e0e0;
+
+  button {
+    width: 2rem;
+    height: 0.4rem;
+
+    background-color: $secondary-theme-color;
+    color: $primary-button-text-color;
+    font-size: 1.3em;
+    font-weight: bold;
+  }
+
+  &__new {
+    margin-right: 0.5rem;
+  }
+}
+
+.specification__contents {
+  width: 100%;
+  height: calc(100% - 0.5rem);
+  border-bottom: 1px solid #e0e0e0;
+
+  &__header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 0.2rem;
+    color: lighten($color: #000000, $amount: 50);
+    font-size: 0.9em;
+    text-align: left;
+
+    &__title {
+      width: 30%;
+    }
+
+    &__create {
+      width: 15%;
+    }
+
+    &__update {
+      width: 15%;
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import "./style.scss";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Specifications = () => {
   // const handleNewDeployment = async () => {
@@ -41,7 +42,28 @@ const Specifications = () => {
   // };
   return (
     <div className="specification">
-      <h1>Specificaiton</h1>
+      <div className="specification__functions">
+        <button className="specification__functions__new">
+          new specification
+        </button>
+        <button className="specification__functions__import">
+          import specification
+        </button>
+      </div>
+      <div className="specification__contents">
+        <div className="specification__contents__header">
+          <div className="specification__contents__header__title">
+            Specification
+          </div>
+          <div className="specification__contents__header__create">
+            Create At
+          </div>
+          <div className="specification__contents__header__update">
+            Update At
+          </div>
+        </div>
+        <ul className="specification__contents__list"></ul>
+      </div>
     </div>
   );
 };

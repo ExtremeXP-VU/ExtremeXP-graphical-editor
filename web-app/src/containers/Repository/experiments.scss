@@ -223,6 +223,7 @@
     button {
       width: 0.9rem;
       height: 0.4rem;
+      margin-top: 0.1rem;
       background-color: $alert-background-color;
       color: $primary-button-text-color;
       font-size: 1.2em;
@@ -268,7 +269,7 @@
 .experiments__experiment__content {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   height: calc(100% - 2rem);
   box-sizing: border-box;
