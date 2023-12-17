@@ -2,7 +2,7 @@ import "./experiments.scss";
 import { useState, useEffect } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
-import { timestampToDate } from "../../utils/timeToDate";
+import { timestampToDate, timeNow } from "../../utils/timeToDate";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 
 type ResponseType = {
@@ -12,8 +12,6 @@ type ResponseType = {
   };
 };
 
-const timeNow = Math.floor(Date.now() / 1000);
-
 const defaultExperiment = {
   id_experiment: "default",
   name: "create a new experiment",
@@ -21,8 +19,6 @@ const defaultExperiment = {
     "Create your experiment folder by enter the experiment name and press the create button. The name should be less than 30 characters. You can only start editing specification after the experiment folder is created.",
   create_at: timeNow,
   update_at: timeNow,
-  specifications: [],
-  dataset: [],
 };
 
 const Experiments = () => {
@@ -149,15 +145,23 @@ const Experiments = () => {
             <div className="experiments__experiment__header">
               <div className="experiments__experiment__header__info">
                 <div className="experiments__experiment__header__info__name">
-                  <span className="iconfont">&#xe63c;</span>
+                  <span
+                    title="edit the name and description"
+                    className="iconfont"
+                  >
+                    &#xe63c;
+                  </span>
                   <span>{currentExp.name}</span>
                 </div>
                 <div className="experiments__experiment__header__info__description">
-                  <p>{currentExp.description}</p>
+                  <p>
+                    {currentExp.description} Here should be the description of
+                    the experiment.
+                  </p>
                 </div>
               </div>
               <div className="experiments__experiment__header__info__delete">
-                <button>Delete</button>
+                <button title="delete the entire experiment">Delete</button>
               </div>
             </div>
             <div className="experiments__experiment__links">

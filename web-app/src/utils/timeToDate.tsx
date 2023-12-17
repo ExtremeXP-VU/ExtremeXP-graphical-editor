@@ -21,3 +21,5 @@ export function timestampToDate(timestamp: number) {
     return `${day}-${month}-${year}`;
   }
 }
+
+export const timeNow = Math.floor(Date.now() / 1000);

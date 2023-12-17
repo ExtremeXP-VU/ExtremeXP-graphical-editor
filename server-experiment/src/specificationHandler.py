@@ -23,13 +23,18 @@ class SpecificationHandler(object):
     def create_specification(self, username, exp_id, spec_name):
         create_time = calendar.timegm(time.gmtime())  # get current time in seconds
         spec_id = username + "-" + spec_name.replace(" ", "") + "-" + str(create_time)
+        verification_code = "extremexp-graphical-model"
         query = {
             "id_specification": spec_id,
             "experiment_id": exp_id,
             "name": spec_name,
             "create_at": create_time,
             "update_at": create_time,
-            "graphical_model": {},
+            "graphical_model": {
+                "verification": verification_code,
+                "nodes": [],
+                "edges": [],
+            },
         }
         self.collection_specification.insert_one(query)
         return spec_id

@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   height: 98%;
   padding: 0 0.2rem;
@@ -12,13 +12,13 @@
 }
 
 .specification__functions {
+  margin-top: -0.44rem;
+  margin-bottom: 0.2rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width: 100%;
+  width: 4.5rem;
   height: 0.5rem;
-
-  border-bottom: 1px solid #e0e0e0;
 
   button {
     width: 2rem;
@@ -46,8 +46,10 @@
     align-items: center;
     width: 100%;
     height: 0.2rem;
+    border-bottom: 2px solid #e0e0e0;
     color: lighten($color: #000000, $amount: 50);
     font-size: 0.9em;
+    font-weight: bold;
     text-align: left;
 
     &__title {
@@ -60,6 +62,62 @@
 
     &__update {
       width: 15%;
+    }
+  }
+
+  &__list {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    max-height: calc(100% - 0.2rem);
+
+    &__item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 0.5rem;
+      border-bottom: 1px solid #e0e0e0;
+      text-align: left;
+
+      &__title {
+        width: 30%;
+        font-weight: bold;
+      }
+
+      &__create {
+        width: 15%;
+      }
+
+      &__update {
+        width: 15%;
+      }
+
+      &__operations {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 40%;
+
+        .iconfont {
+          margin-right: 0.2rem;
+          color: lighten($color: #000000, $amount: 50);
+
+          &:hover {
+            cursor: pointer;
+            color: $primary-theme-color;
+          }
+        }
+
+        button {
+          width: 0.9rem;
+          background-color: $secondary-theme-color;
+          color: $primary-button-text-color;
+          font-size: 1em;
+          font-weight: bold;
+        }
+      }
     }
   }
 }
