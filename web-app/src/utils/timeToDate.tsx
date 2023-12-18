@@ -22,4 +22,6 @@ export function timestampToDate(timestamp: number) {
   }
 }
 
-export const timeNow = Math.floor(Date.now() / 1000);
+export function timeNow() {
+  return Math.floor(Date.now() / 1000);
+}

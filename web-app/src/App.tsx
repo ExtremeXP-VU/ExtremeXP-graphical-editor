@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/editor/:fileName",
+    path: "/editor/:specificationID",
     element: <Editor />,
   },
 ]);

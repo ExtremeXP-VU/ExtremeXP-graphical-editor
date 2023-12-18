@@ -1,9 +1,9 @@
 import "./style.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
-import { timestampToDate } from "../../../utils/timeToDate";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { timestampToDate, timeNow } from "../../../utils/timeToDate";
+import { useNavigate, useLocation } from "react-router-dom";
 
 type ResponseType = {
   message: string;
@@ -27,14 +27,16 @@ const Specifications = () => {
   const expID = useLocation().pathname.split("/")[3];
 
   const { request } = useRequest<ResponseType>();
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  const getSpecifications = useCallback(() => {
     request({
       url: `exp/experiments/${expID}/specifications`,
     })
       .then((data) => {
         if (data.data.specifications) {
-          setSpecifications(data.data.specifications);
+          const specifications = data.data.specifications;
+          setSpecifications(specifications);
         }
       })
       .catch((error) => {
@@ -43,30 +45,35 @@ const Specifications = () => {
         }
       });
   }, [request, expID]);
-  // const handleNewDeployment = async () => {
-  //   try {
-  //     // Sample JSON content for a new deployment
-  //     const diagram = { nodes: [], edges: [] };
 
-  //     const fileHandle = await window.showSaveFilePicker();
-  //     const writable = await fileHandle.createWritable();
+  useEffect(() => {
+    getSpecifications();
+  }, [getSpecifications]);
 
-  //     await writable.write(JSON.stringify(diagram, null, 2));
-  //     await writable.close();
+  const handleOpenSpecification = (specification: any) => {
+    localStorage.setItem("specification", JSON.stringify(specification));
+    navigate(`/editor/${specification.id_specification}`);
+  };
 
-  //     const file = await fileHandle.getFile();
-  //     const fileName = file.name;
-  //     const fileNameWithoutExtension = fileName.split(".")[0];
-  //     const content = await file.text();
+  const handleNewSpecification = () => {
+    request({
+      url: `/exp/experiments/${expID}/specifications/create`,
+      method: "POST",
+      data: {
+        spec_name: `specification-${timeNow()}`,
+      },
+    })
+      .then(() => {
+        getSpecifications();
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
+  };
 
-  //     localStorage.setItem("fileName", fileNameWithoutExtension);
-  //     localStorage.setItem("diagram", content);
-  //   } catch (error) {
-  //     console.error("Error creating file:", error);
-  //   }
-  // };
-
-  // const handleImportDeployment = async () => {
+  // const handleImportSpecification = async () => {
   //   try {
   //     const [fileHandle] = await window.showOpenFilePicker();
   //     const file = await fileHandle.getFile();
@@ -84,7 +91,10 @@ const Specifications = () => {
   return (
     <div className="specification">
       <div className="specification__functions">
-        <button className="specification__functions__new">
+        <button
+          className="specification__functions__new"
+          onClick={handleNewSpecification}
+        >
           new specification
         </button>
         <button className="specification__functions__import">
@@ -105,11 +115,7 @@ const Specifications = () => {
         </div>
         <ul className="specification__contents__list">
           {specifications.map((specification, index) => (
-            <li
-              className="specification__contents__list__item"
-              key={index}
-              onClick={() => {}}
-            >
+            <li className="specification__contents__list__item" key={index}>
               <div className="specification__contents__list__item__title">
                 {specification.name}
               </div>
@@ -120,9 +126,20 @@ const Specifications = () => {
                 {timestampToDate(specification.update_at)}
               </div>
               <div className="specification__contents__list__item__operations">
-                <span className="iconfont">&#xe627;</span>
-                <span className="iconfont">&#xe634;</span>
-                <button> open </button>
+                <span title="download graphical model" className="iconfont">
+                  &#xe627;
+                </span>
+                <span title="delete this specification" className="iconfont">
+                  &#xe634;
+                </span>
+                <button
+                  title="open specification in the graphical editor"
+                  onClick={() => {
+                    handleOpenSpecification(specification);
+                  }}
+                >
+                  open
+                </button>
               </div>
             </li>
           ))}

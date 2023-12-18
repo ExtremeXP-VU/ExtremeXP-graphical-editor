@@ -12,7 +12,13 @@ const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
 
   const handleGoBack = () => {
     if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      navigate("/repository/experiments");
+      const specification = localStorage.getItem("specification");
+      if (specification) {
+        const experimentID = JSON.parse(specification).experiment_id;
+        navigate(`/repository/experiments/${experimentID}/specifications`);
+      } else {
+        navigate("/repository/experiments");
+      }
     } else {
       navigate("/account/login");
     }
@@ -33,7 +39,10 @@ const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
           Save
         </button>
         <button className="sidebar__files__button__saveAs">Save as</button>
-        <button className="sidebar__files__button__load" onClick={handleGoBack}>
+        <button
+          className="sidebar__files__button__load"
+          onClick={() => handleGoBack()}
+        >
           Back
         </button>
       </div>

@@ -30,13 +30,6 @@ import Markers from "../../components/editor/notations/edges/Markers";
 
 import linkProps from "../../components/editor/notations/notationConfigs/linkProps.json";
 
-const diagramString =
-  localStorage.getItem("diagram") || JSON.stringify({ nodes: [], edges: [] });
-const diagram = JSON.parse(diagramString);
-
-const initialNodes = diagram.nodes;
-const initialEdges: Edge[] = diagram.edges;
-
 const nodeTypes = {
   start: EventStart,
   end: EventEnd,
@@ -51,25 +44,32 @@ const edgeTypes = {
   dataflow: DataflowLink,
 };
 
-const getId = (nodes: any) => {
-  if (nodes.length === 0) {
-    return `0`;
-  }
-  const ids = nodes.map((node) => node.id);
-  const maxId = Math.max(...ids);
-  return `${maxId + 1}`;
-};
-
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
+  const [selectedLink, setSelectedLink] = useState("regular");
+
+  const specificationString = localStorage.getItem("specification") || "{}";
+  const specificaiton = JSON.parse(specificationString);
+  const graphicalModel = specificaiton.graphical_model;
+
+  const initialNodes = graphicalModel.nodes;
+  const initialEdges: Edge[] = graphicalModel.edges;
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const [selectedLink, setSelectedLink] = useState("regular");
-
   const handleLinkSelection = (linkType: string) => {
     setSelectedLink(linkType);
+  };
+
+  const getId = (nodes: any) => {
+    if (nodes.length === 0) {
+      return `0`;
+    }
+    const ids = nodes.map((node) => node.id);
+    const maxId = Math.max(...ids);
+    return `${maxId + 1}`;
   };
 
   const getLinkProps = useCallback(() => {
@@ -136,7 +136,7 @@ const Editor = () => {
   return (
     <div className="editor">
       <div className="editor__top">
-        <Header />
+        <Header specName={specificaiton.name} />
       </div>
       <ReactFlowProvider>
         <div className="editor__bottom">

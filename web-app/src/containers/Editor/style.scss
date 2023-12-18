@@ -19,10 +19,10 @@
 .editor__top {
   width: 100%;
   height: 0.5rem;
-  background-color: $header-color;
+  background-color: $panel-color;
   box-sizing: border-box;
   border-bottom: 1px solid darken($color: $panel-color, $amount: 10);
-  color: $header-text-color;
+  color: $primary-text-color;
 }
 
 .editor__bottom {

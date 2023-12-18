@@ -17,8 +17,8 @@ const defaultExperiment = {
   name: "create a new experiment",
   description:
     "Create your experiment folder by enter the experiment name and press the create button. The name should be less than 30 characters. You can only start editing specification after the experiment folder is created.",
-  create_at: timeNow,
-  update_at: timeNow,
+  create_at: timeNow(),
+  update_at: timeNow(),
 };
 
 const Experiments = () => {
@@ -31,13 +31,13 @@ const Experiments = () => {
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
 
-  useEffect(() => {
-    if (experiments.length > 0) {
-      if (!location.pathname.includes("/specifications" || "/dataset")) {
-        setCurrentExp(experiments[0]);
-      }
-    }
-  }, [experiments, location.pathname]);
+  // useEffect(() => {
+  //   if (experiments.length > 0) {
+  //     if (!location.pathname.includes("/specifications" || "/dataset")) {
+  //       setCurrentExp(experiments[0]);
+  //     }
+  //   }
+  // }, [experiments, location.pathname]);
 
   useEffect(() => {
     request({
