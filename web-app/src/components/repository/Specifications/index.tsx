@@ -4,7 +4,6 @@ import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
 import { timestampToDate, timeNow } from "../../../utils/timeToDate";
 import { useNavigate, useLocation } from "react-router-dom";
-import { get } from "http";
 
 type ResponseType = {
   message: string;
@@ -113,6 +112,11 @@ const Specifications = () => {
       });
   };
 
+  const handleDownloadSpecification = (index: number) => {
+    message("download now implemented yet");
+    console.log(index);
+  };
+
   // const handleImportSpecification = async () => {
   //   try {
   //     const [fileHandle] = await window.showOpenFilePicker();
@@ -182,7 +186,11 @@ const Specifications = () => {
                 {timestampToDate(specification.update_at)}
               </div>
               <div className="specification__contents__list__item__operations">
-                <span title="download graphical model" className="iconfont">
+                <span
+                  title="download graphical model"
+                  className="iconfont"
+                  onClick={() => handleDownloadSpecification(index)}
+                >
                   &#xe627;
                 </span>
                 <span

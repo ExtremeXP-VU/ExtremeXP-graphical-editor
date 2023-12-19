@@ -101,6 +101,7 @@ const Experiments = () => {
         }
         message(error.response.data?.message || "unknown error");
       });
+    setNewExpName("");
   };
 
   const handleSelectExperiment = (index: number) => {
