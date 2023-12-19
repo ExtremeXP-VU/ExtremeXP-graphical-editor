@@ -18,42 +18,20 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
+
+import Header from "../../components/editor/Header";
+import Panel from "../../components/editor/Panel";
+import SideBar from "../../components/editor/SideBar";
+
 import {
   SpecificationType,
   defaultGraphicalModel,
   defaultSpecification,
 } from "../../types/experiment";
 
-import Header from "../../components/editor/Header";
-import Panel from "../../components/editor/Panel";
-import SideBar from "../../components/editor/SideBar";
-
-import EventStart from "../../components/editor/notations/nodes/EventStart";
-import EventEnd from "../../components/editor/notations/nodes/EventEnd";
-import Task from "../../components/editor/notations/nodes/Task";
-import Data from "../../components/editor/notations/nodes/Data";
-
-import RegularLink from "../../components/editor/notations/edges/RegularLink";
-import ConditionalLink from "../../components/editor/notations/edges/ConditionalLink";
-import ExceptionalLink from "../../components/editor/notations/edges/ExceptionalLink";
-import DataflowLink from "../../components/editor/notations/edges/DataflowLink";
 import Markers from "../../components/editor/notations/edges/Markers";
-
+import { nodeTypes, edgeTypes } from "./notationTypes";
 import { linkProps } from "../../components/editor/notations/notationConfigs/linkProps";
-
-const nodeTypes = {
-  start: EventStart,
-  end: EventEnd,
-  task: Task,
-  data: Data,
-};
-
-const edgeTypes = {
-  regular: RegularLink,
-  conditional: ConditionalLink,
-  exceptional: ExceptionalLink,
-  dataflow: DataflowLink,
-};
 
 type ResponseType = {
   message: string;
@@ -153,10 +131,6 @@ const Editor = () => {
       if (typeof type === "undefined" || !type) {
         return;
       }
-
-      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
 
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
