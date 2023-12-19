@@ -3,7 +3,6 @@ import "./style.scss";
 
 import ReactFlow, {
   ReactFlowProvider,
-  ReactFlowInstance,
   Node,
   Edge,
   Connection,
@@ -77,8 +76,7 @@ const Editor = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(graphicalModel.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(graphicalModel.edges);
-  const [reactFlowInstance, setReactFlowInstance] =
-    useState<ReactFlowInstance>(Object);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   useEffect(() => {
     request({
@@ -157,12 +155,10 @@ const Editor = () => {
       // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
       // and you don't need to subtract the reactFlowBounds.left/top anymore
       // details: https://reactflow.dev/whats-new/2023-11-10
-
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
-
       const newNode = {
         id: getId(nodes),
         type,
@@ -204,7 +200,7 @@ const Editor = () => {
           <div className="editor__bottom__left">
             <Panel
               selectedLink={selectedLink}
-              onLinkSelection={() => handleLinkSelection}
+              onLinkSelection={handleLinkSelection}
             />
           </div>
           <div className="editor__bottom__middle">
