@@ -28,6 +28,16 @@
     color: $primary-button-text-color;
     font-size: 1.3em;
     font-weight: bold;
+
+    &:hover {
+      cursor: pointer;
+      background-color: darken($secondary-theme-color, 20);
+    }
+
+    &:active {
+      background-color: lighten($color: $secondary-theme-color, $amount: 30);
+      color: $primary-button-text-color;
+    }
   }
 
   &__new {
@@ -53,7 +63,7 @@
     text-align: left;
 
     &__title {
-      width: 30%;
+      width: 45%;
     }
 
     &__create {
@@ -71,19 +81,44 @@
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
-    max-height: calc(100% - 0.2rem);
+    height: calc(100% - 0.2rem);
 
     &__item {
       display: flex;
       align-items: center;
       width: 100%;
-      height: 0.5rem;
+      min-height: 0.5rem;
       border-bottom: 1px solid #e0e0e0;
       text-align: left;
 
       &__title {
-        width: 30%;
+        display: flex;
+        width: 45%;
         font-weight: bold;
+        padding-right: 0.2rem;
+        box-sizing: border-box;
+
+        .iconfont {
+          margin-right: 0.1rem;
+          color: lighten($color: #000000, $amount: 50);
+
+          &:hover {
+            cursor: pointer;
+            color: $alert-background-color;
+          }
+        }
+
+        input {
+          flex: 1;
+          border: none;
+          border-bottom: 1px solid #888888;
+          box-sizing: border-box;
+          background-color: transparent;
+
+          &:focus {
+            outline: none;
+          }
+        }
       }
 
       &__create {
@@ -98,7 +133,7 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        width: 40%;
+        width: 25%;
 
         .iconfont {
           margin-right: 0.2rem;

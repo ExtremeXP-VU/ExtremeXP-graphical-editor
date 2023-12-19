@@ -1,5 +1,5 @@
 import "./experiments.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate, timeNow } from "../../utils/timeToDate";
@@ -31,15 +31,7 @@ const Experiments = () => {
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
 
-  // useEffect(() => {
-  //   if (experiments.length > 0) {
-  //     if (!location.pathname.includes("/specifications" || "/dataset")) {
-  //       setCurrentExp(experiments[0]);
-  //     }
-  //   }
-  // }, [experiments, location.pathname]);
-
-  useEffect(() => {
+  const getExperiments = useCallback(() => {
     request({
       url: `exp/experiments`,
     })
@@ -55,6 +47,22 @@ const Experiments = () => {
       });
   }, [request]);
 
+  useEffect(() => {
+    getExperiments();
+    if (experiments.length > 0 && currentExp.id_experiment === "default") {
+      setCurrentExp(experiments[0]);
+    }
+  }, [getExperiments, experiments, currentExp.id_experiment]);
+
+  useEffect(() => {
+    // find the experiment id from the url
+    const expID = location.pathname.split("/")[3];
+    if (expID && expID !== currentExp.id_experiment) {
+      const exp = experiments.find((exp) => exp.id_experiment === expID);
+      if (exp) setCurrentExp(exp);
+    }
+  }, [currentExp.id_experiment, experiments, location.pathname]);
+
   // FIXME: Add experiment name validation
   const handleNewExperiment = () => {
     if (!newExpName) return message("Experiment name can not be empty");
@@ -68,7 +76,7 @@ const Experiments = () => {
       },
     })
       .then(() => {
-        window.location.reload();
+        getExperiments();
       })
       .catch((error) => {
         if (error.name === "AxiosError") {

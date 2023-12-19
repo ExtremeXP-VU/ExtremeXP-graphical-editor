@@ -12,16 +12,28 @@ type ResponseType = {
   };
 };
 
+type SpecificationType = {
+  id_specification: string;
+  experiment_id: string;
+  name: string;
+  create_at: number;
+  update_at: number;
+  graphical_model: string;
+};
+
 const defaultSpecification = {
   id_specification: "",
   experiment_id: "",
   name: "",
   create_at: NaN,
   update_at: NaN,
+  graphical_model: "{}",
 };
 
 const Specifications = () => {
   const [specifications, setSpecifications] = useState([defaultSpecification]);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [newSpecName, setNewSpecName] = useState("");
 
   // make sure the expID is the same as the one in the url
   const expID = useLocation().pathname.split("/")[3];
@@ -50,7 +62,7 @@ const Specifications = () => {
     getSpecifications();
   }, [getSpecifications]);
 
-  const handleOpenSpecification = (specification: any) => {
+  const handleOpenSpecification = (specification: SpecificationType) => {
     localStorage.setItem("specification", JSON.stringify(specification));
     navigate(`/editor/${specification.id_specification}`);
   };
@@ -71,6 +83,18 @@ const Specifications = () => {
           message(error.message);
         }
       });
+  };
+
+  const handleStartEditingName = (index: number) => {
+    setNewSpecName(specifications[index].name);
+    setEditingIndex(index);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setEditingIndex(null);
+      // handleRenameSpecification();
+    }
   };
 
   // const handleImportSpecification = async () => {
@@ -117,7 +141,23 @@ const Specifications = () => {
           {specifications.map((specification, index) => (
             <li className="specification__contents__list__item" key={index}>
               <div className="specification__contents__list__item__title">
-                {specification.name}
+                <span
+                  title="modify the name"
+                  className="iconfont"
+                  onClick={() => handleStartEditingName(index)}
+                >
+                  &#xe63c;
+                </span>
+                {editingIndex === index ? (
+                  <input
+                    type="text"
+                    value={newSpecName}
+                    onChange={(e) => setNewSpecName(e.target.value)}
+                    onKeyUp={handleKeyPress}
+                  />
+                ) : (
+                  <p>{specification.name}</p>
+                )}
               </div>
               <div className="specification__contents__list__item__create">
                 {timestampToDate(specification.create_at)}
