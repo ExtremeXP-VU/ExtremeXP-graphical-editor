@@ -63,9 +63,23 @@ def create_experiment():
             "error": ERROR_DUPLICATE,
             "message": "Experiment name already exists",
         }, 409
-    else:
-        res = experimentHandler.create_experiment(g.username, exp_name)
+
+    res = experimentHandler.create_experiment(g.username, exp_name)
     return {"id_experiment": res}, 201
+
+
+@app.route("/exp/experiments/<exp_id>/update", methods=["OPTIONS", "PUT"])
+@cross_origin()
+def update_experiment_info(exp_id):
+    exp_name = request.json["exp_name"]
+    if experimentHandler.detect_duplicate(g.username, exp_name):
+        return {
+            "error": ERROR_DUPLICATE,
+            "message": "Experiment name already exists",
+        }, 409
+    description = request.json["description"]  # can be empty
+    experimentHandler.update_experiment_info(exp_id, exp_name, description)
+    return {"message": "experiment info updated"}, 200
 
 
 @app.route("/exp/experiments/<exp_id>/specifications", methods=["GET"])
@@ -89,6 +103,5 @@ def create_specification(exp_id):
             "error": ERROR_DUPLICATE,
             "message": "Specification name already exists",
         }, 409
-    else:
-        res = specificationHandler.create_specification(g.username, exp_id, spec_name)
+    res = specificationHandler.create_specification(g.username, exp_id, spec_name)
     return {"id_specification": res}, 201

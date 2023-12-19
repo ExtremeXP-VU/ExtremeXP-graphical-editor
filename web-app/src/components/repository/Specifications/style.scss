@@ -6,14 +6,14 @@
   justify-content: flex-start;
   align-items: flex-end;
   width: 100%;
-  height: 98%;
+  height: 100%;
   padding: 0 0.2rem;
   box-sizing: border-box;
 }
 
 .specification__functions {
   margin-top: -0.44rem;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.24rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -48,7 +48,6 @@
 .specification__contents {
   width: 100%;
   height: calc(100% - 0.5rem);
-  border-bottom: 1px solid #e0e0e0;
 
   &__header {
     display: flex;

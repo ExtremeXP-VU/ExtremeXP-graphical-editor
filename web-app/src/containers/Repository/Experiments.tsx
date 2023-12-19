@@ -25,8 +25,12 @@ const Experiments = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
   const [newExpName, setNewExpName] = useState("");
   const [currentExp, setCurrentExp] = useState(defaultExperiment);
-  const { request } = useRequest<ResponseType>();
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [expNameInput, setExpNameInput] = useState("");
+  const [descriptionInput, setDescriptionInput] = useState("");
+
+  const { request } = useRequest<ResponseType>();
   const navigate = useNavigate();
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
@@ -67,10 +71,20 @@ const Experiments = () => {
   }, [currentExp.id_experiment, experiments, location.pathname]);
 
   // FIXME: Add experiment name validation
+  const isExperimentNameValid = (name: string) => {
+    if (!name) {
+      message("Experiment name can not be empty");
+      return false;
+    }
+    if (name.length > 50) {
+      message("Experiment name should be less than 50 characters");
+      return false;
+    }
+    return true;
+  };
+
   const handleNewExperiment = () => {
-    if (!newExpName) return message("Experiment name can not be empty");
-    if (newExpName.length > 50)
-      return message("Experiment name should be less than 50 characters");
+    if (!isExperimentNameValid(newExpName)) return;
     request({
       url: `exp/experiments/create`,
       method: "POST",
@@ -94,6 +108,53 @@ const Experiments = () => {
     navigate(
       `/repository/experiments/${experiments[index].id_experiment}/specifications`
     );
+  };
+
+  const handleStartEditing = () => {
+    setExpNameInput(currentExp.name);
+    setDescriptionInput(currentExp.description);
+    setIsEditing(true);
+  };
+
+  const handleChangeNameKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter") {
+      setIsEditing(false);
+      if (!isExperimentNameValid(expNameInput)) return;
+      if (currentExp.name === expNameInput) return;
+      updateExperimentInfo();
+    }
+  };
+
+  const handleChangeDescriptionKeyPress = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      setIsEditing(false);
+      if (currentExp.description === descriptionInput) return;
+      updateExperimentInfo();
+    }
+  };
+
+  const updateExperimentInfo = () => {
+    request({
+      url: `exp/experiments/${currentExp.id_experiment}/update`,
+      method: "PUT",
+      data: {
+        exp_name: expNameInput,
+        description: descriptionInput,
+      },
+    })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.name === "AxiosError") {
+          message("Please login first");
+        }
+        message(error.response.data?.message || "unknown error");
+      });
   };
 
   return (
@@ -159,16 +220,31 @@ const Experiments = () => {
                   <span
                     title="edit the name and description"
                     className="iconfont"
+                    onClick={handleStartEditing}
                   >
                     &#xe63c;
                   </span>
-                  <span>{currentExp.name}</span>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={expNameInput}
+                      onChange={(e) => setExpNameInput(e.target.value)}
+                      onKeyUp={handleChangeNameKeyPress}
+                    />
+                  ) : (
+                    <span>{currentExp.name}</span>
+                  )}
                 </div>
                 <div className="experiments__experiment__header__info__description">
-                  <p>
-                    {currentExp.description} Here should be the description of
-                    the experiment.
-                  </p>
+                  {isEditing ? (
+                    <textarea
+                      value={descriptionInput}
+                      onChange={(e) => setDescriptionInput(e.target.value)}
+                      onKeyUp={handleChangeDescriptionKeyPress}
+                    />
+                  ) : (
+                    <p>{currentExp.description}</p>
+                  )}
                 </div>
               </div>
               <div className="experiments__experiment__header__info__delete">
