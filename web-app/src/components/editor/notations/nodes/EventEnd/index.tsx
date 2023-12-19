@@ -1,4 +1,4 @@
-// import { memo } from "react";
+import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const EventEnd = ({
@@ -51,5 +51,5 @@ const EventEnd = ({
 
 EventEnd.displayName = "EventEnd";
 
-// export default memo(EventEnd);
-export default EventEnd;
+export default memo(EventEnd);
+// export default EventEnd;

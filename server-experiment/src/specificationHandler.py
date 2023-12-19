@@ -32,12 +32,11 @@ class SpecificationHandler(object):
     def get_specification(self, spec_id):
         query = {"id_specification": spec_id}
         documents = self.collection_specification.find(query)
-        return json.loads(json.dumps(list(documents), default=str))
+        return json.loads(json.dumps(documents[0], default=str))
 
     def create_specification(self, username, exp_id, spec_name):
         create_time = calendar.timegm(time.gmtime())  # get current time in seconds
         spec_id = username + "-" + spec_name.replace(" ", "") + "-" + str(create_time)
-        verification_code = "extremexp-graphical-model"
         query = {
             "id_specification": spec_id,
             "experiment_id": exp_id,
@@ -45,7 +44,6 @@ class SpecificationHandler(object):
             "create_at": create_time,
             "update_at": create_time,
             "graphical_model": {
-                "verification": verification_code,
                 "nodes": [],
                 "edges": [],
             },
@@ -78,6 +76,17 @@ class SpecificationHandler(object):
         update_time = calendar.timegm(time.gmtime())
         query = {"id_specification": spec_id}
         new_values = {"$set": {"name": spec_name, "update_at": update_time}}
+        self.collection_specification.update_one(query, new_values)
+
+        experimentHandler.update_experiment_update_at(exp_id)
+        return True
+
+    def update_specification_graphical_model(self, spec_id, exp_id, graphical_model):
+        update_time = calendar.timegm(time.gmtime())
+        query = {"id_specification": spec_id}
+        new_values = {
+            "$set": {"graphical_model": graphical_model, "update_at": update_time}
+        }
         self.collection_specification.update_one(query, new_values)
 
         experimentHandler.update_experiment_update_at(exp_id)

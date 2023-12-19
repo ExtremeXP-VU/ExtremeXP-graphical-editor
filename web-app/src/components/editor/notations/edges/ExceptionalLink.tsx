@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { BaseEdge, EdgeProps, getSmoothStepPath } from "reactflow";
 
 function ExceptionalLink(props: EdgeProps) {
@@ -20,4 +21,4 @@ function ExceptionalLink(props: EdgeProps) {
   );
 }
 
-export default ExceptionalLink;
+export default memo(ExceptionalLink);

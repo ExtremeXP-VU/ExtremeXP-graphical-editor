@@ -122,10 +122,12 @@
 
       &__create {
         width: 15%;
+        color: lighten($color: #000000, $amount: 50);
       }
 
       &__update {
         width: 15%;
+        color: lighten($color: #000000, $amount: 50);
       }
 
       &__operations {

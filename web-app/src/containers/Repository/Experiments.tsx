@@ -2,8 +2,9 @@ import "./experiments.scss";
 import { useState, useEffect, useCallback } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
-import { timestampToDate, timeNow } from "../../utils/timeToDate";
+import { timestampToDate } from "../../utils/timeToDate";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import { defaultExperiment } from "../../types/experiment";
 
 type ResponseType = {
   message: string;
@@ -12,19 +13,10 @@ type ResponseType = {
   };
 };
 
-const defaultExperiment = {
-  id_experiment: "default",
-  name: "create a new experiment",
-  description:
-    "Create your experiment folder by enter the experiment name and press the create button. The name should be less than 30 characters. You can only start editing specification after the experiment folder is created.",
-  create_at: timeNow(),
-  update_at: timeNow(),
-};
-
 const Experiments = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
-  const [newExpName, setNewExpName] = useState("");
   const [currentExp, setCurrentExp] = useState(defaultExperiment);
+  const [createExpName, setCreateExpName] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
   const [expNameInput, setExpNameInput] = useState("");
@@ -84,12 +76,12 @@ const Experiments = () => {
   };
 
   const handleNewExperiment = () => {
-    if (!isExperimentNameValid(newExpName)) return;
+    if (!isExperimentNameValid(createExpName)) return;
     request({
       url: `exp/experiments/create`,
       method: "POST",
       data: {
-        exp_name: newExpName,
+        exp_name: createExpName,
       },
     })
       .then(() => {
@@ -101,7 +93,7 @@ const Experiments = () => {
         }
         message(error.response.data?.message || "unknown error");
       });
-    setNewExpName("");
+    setCreateExpName("");
   };
 
   const handleSelectExperiment = (index: number) => {
@@ -183,8 +175,8 @@ const Experiments = () => {
               type="text"
               placeholder="enter your new experiment name"
               className="experiments__panel__new__input"
-              value={newExpName}
-              onChange={(e) => setNewExpName(e.target.value)}
+              value={createExpName}
+              onChange={(e) => setCreateExpName(e.target.value)}
             />
             <button
               className="experiments__panel__new__button"

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import "./style.scss";
 
@@ -9,13 +9,13 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
   const navigate = useNavigate();
+  const expID = useLocation().pathname.split("/")[2];
+  const specificationID = useLocation().pathname.split("/")[3];
 
   const handleGoBack = () => {
     if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      const specification = localStorage.getItem("specification");
-      if (specification) {
-        const experimentID = JSON.parse(specification).experiment_id;
-        navigate(`/repository/experiments/${experimentID}/specifications`);
+      if (specificationID && expID) {
+        navigate(`/repository/experiments/${expID}/specifications`);
       } else {
         navigate("/repository/experiments");
       }

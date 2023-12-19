@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { BaseEdge, EdgeProps, getSmoothStepPath } from "reactflow";
 
 function RegularLink(props: EdgeProps) {
@@ -20,4 +21,4 @@ function RegularLink(props: EdgeProps) {
   );
 }
 
-export default RegularLink;
+export default memo(RegularLink);

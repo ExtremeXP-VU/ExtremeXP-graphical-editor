@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { BaseEdge, EdgeProps, getSmoothStepPath } from "reactflow";
 
 function DataflowLink(props: EdgeProps) {
@@ -20,4 +21,4 @@ function DataflowLink(props: EdgeProps) {
   );
 }
 
-export default DataflowLink;
+export default memo(DataflowLink);

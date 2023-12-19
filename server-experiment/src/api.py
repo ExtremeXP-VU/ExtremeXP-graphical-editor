@@ -103,7 +103,7 @@ def get_specifications(exp_id):
     }, 200
 
 
-@app.route("/exp/experiments/<exp_id>/specifications/<spec_id>", methods=["GET"])
+@app.route("/exp/experiments/specifications/<spec_id>", methods=["GET"])
 @cross_origin()
 def get_specification(spec_id):
     specification = specificationHandler.get_specification(spec_id)
@@ -154,3 +154,16 @@ def update_specification_name(exp_id, spec_id):
         }, 409
     specificationHandler.update_specification_name(spec_id, exp_id, spec_name)
     return {"message": "specification name updated"}, 200
+
+
+@app.route(
+    "/exp/experiments/<exp_id>/specifications/<spec_id>/update/graphical_model",
+    methods=["OPTIONS", "PUT"],
+)
+@cross_origin()
+def update_specification_graphical_model(exp_id, spec_id):
+    graphical_model = request.json["graphical_model"]
+    specificationHandler.update_specification_graphical_model(
+        spec_id, exp_id, graphical_model
+    )
+    return {"message": "specification graphical model updated"}, 200

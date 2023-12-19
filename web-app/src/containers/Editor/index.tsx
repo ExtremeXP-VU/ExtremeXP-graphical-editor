@@ -1,10 +1,9 @@
-import React, { useState, useRef, useCallback } from "react";
-import Header from "../../components/editor/Header";
-import Panel from "../../components/editor/Panel";
-import SideBar from "../../components/editor/SideBar";
+import "reactflow/dist/style.css";
+import "./style.scss";
 
 import ReactFlow, {
   ReactFlowProvider,
+  Node,
   Edge,
   Connection,
   addEdge,
@@ -14,8 +13,19 @@ import ReactFlow, {
   Background,
 } from "reactflow";
 
-import "reactflow/dist/style.css";
-import "./style.scss";
+import React, { useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router-dom";
+import useRequest from "../../hooks/useRequest";
+import { message } from "../../utils/message";
+import {
+  SpecificationType,
+  defaultGraphicalModel,
+  defaultSpecification,
+} from "../../types/experiment";
+
+import Header from "../../components/editor/Header";
+import Panel from "../../components/editor/Panel";
+import SideBar from "../../components/editor/SideBar";
 
 import EventStart from "../../components/editor/notations/nodes/EventStart";
 import EventEnd from "../../components/editor/notations/nodes/EventEnd";
@@ -28,7 +38,7 @@ import ExceptionalLink from "../../components/editor/notations/edges/Exceptional
 import DataflowLink from "../../components/editor/notations/edges/DataflowLink";
 import Markers from "../../components/editor/notations/edges/Markers";
 
-import linkProps from "../../components/editor/notations/notationConfigs/linkProps.json";
+import { linkProps } from "../../components/editor/notations/notationConfigs/linkProps";
 
 const nodeTypes = {
   start: EventStart,
@@ -44,31 +54,65 @@ const edgeTypes = {
   dataflow: DataflowLink,
 };
 
+type ResponseType = {
+  message: string;
+  data: {
+    specification: SpecificationType;
+  };
+};
+
+type LinksPropsType = keyof typeof linkProps;
+
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
-  const [selectedLink, setSelectedLink] = useState("regular");
+  const { request } = useRequest<ResponseType>();
+  const [specification, setSpecification] = useState(defaultSpecification);
+  const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const specificationString = localStorage.getItem("specification") || "{}";
-  const specificaiton = JSON.parse(specificationString);
-  const graphicalModel = specificaiton.graphical_model;
+  const expID = useLocation().pathname.split("/")[2];
+  const specificaitonID = useLocation().pathname.split("/")[3];
 
-  const initialNodes = graphicalModel.nodes;
-  const initialEdges: Edge[] = graphicalModel.edges;
+  const [selectedLink, setSelectedLink] = useState<LinksPropsType>("regular");
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(graphicalModel.nodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(graphicalModel.edges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const handleLinkSelection = (linkType: string) => {
+  useEffect(() => {
+    request({
+      url: `exp/experiments/specifications/${specificaitonID}`,
+    })
+      .then((data) => {
+        if (data.data.specification) {
+          const newSpecification = data.data.specification;
+          setSpecification(newSpecification);
+        }
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    setGraphicalModel(specification.graphical_model);
+  }, [specification]);
+
+  useEffect(() => {
+    setNodes(graphicalModel.nodes);
+    setEdges(graphicalModel.edges);
+  }, [graphicalModel]);
+
+  const handleLinkSelection = (linkType: LinksPropsType) => {
     setSelectedLink(linkType);
   };
 
-  const getId = (nodes: any) => {
+  const getId = (nodes: Node[]) => {
     if (nodes.length === 0) {
       return `0`;
     }
-    const ids = nodes.map((node) => node.id);
-    const maxId = Math.max(...ids);
+    const maxId = Math.max(...nodes.map((node) => parseInt(node.id)));
     return `${maxId + 1}`;
   };
 
@@ -83,7 +127,7 @@ const Editor = () => {
         addEdge(
           {
             ...params,
-            ...getLinkProps(),
+            ...(getLinkProps() as Edge),
           },
           eds
         )
@@ -128,15 +172,28 @@ const Editor = () => {
   );
 
   const handleSave = useCallback(() => {
-    console.log("save");
-    const diagram = { nodes, edges };
-    localStorage.setItem("diagram", JSON.stringify(diagram));
-  }, [nodes, edges]);
+    const graphicalModel = { nodes, edges };
+    request({
+      url: `/exp/experiments/${expID}/specifications/${specificaitonID}/update/graphical_model`,
+      method: "PUT",
+      data: {
+        graphical_model: graphicalModel,
+      },
+    })
+      .then(() => {
+        message("Saved");
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
+  }, [nodes, edges, request, expID, specificaitonID]);
 
   return (
     <div className="editor">
       <div className="editor__top">
-        <Header specName={specificaiton.name} />
+        <Header specName={specification.name} />
       </div>
       <ReactFlowProvider>
         <div className="editor__bottom">

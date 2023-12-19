@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { BaseEdge, EdgeProps, getSmoothStepPath } from "reactflow";
 
 function ConditionalLink(props: EdgeProps) {
@@ -20,4 +21,4 @@ function ConditionalLink(props: EdgeProps) {
   );
 }
 
-export default ConditionalLink;
+export default memo(ConditionalLink);

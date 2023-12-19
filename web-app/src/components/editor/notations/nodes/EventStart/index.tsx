@@ -1,4 +1,4 @@
-// import { memo } from "react";
+import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const EventStart = ({
@@ -46,5 +46,5 @@ const EventStart = ({
 
 EventStart.displayName = "EventStart";
 
-// export default memo(EventStart);
-export default EventStart;
+export default memo(EventStart);
+// export default EventStart;

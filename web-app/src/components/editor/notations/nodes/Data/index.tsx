@@ -1,4 +1,4 @@
-// import { memo } from "react";
+import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const Data = ({
@@ -57,5 +57,4 @@ const Data = ({
   );
 };
 
-// export default memo(EventStart);
-export default Data;
+export default memo(Data);

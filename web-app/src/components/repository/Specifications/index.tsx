@@ -4,30 +4,16 @@ import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
 import { timestampToDate, timeNow } from "../../../utils/timeToDate";
 import { useNavigate, useLocation } from "react-router-dom";
+import {
+  SpecificationType,
+  defaultSpecification,
+} from "../../../types/experiment";
 
 type ResponseType = {
   message: string;
   data: {
     specifications: [];
   };
-};
-
-type SpecificationType = {
-  id_specification: string;
-  experiment_id: string;
-  name: string;
-  create_at: number;
-  update_at: number;
-  graphical_model: string;
-};
-
-const defaultSpecification = {
-  id_specification: "",
-  experiment_id: "",
-  name: "",
-  create_at: NaN,
-  update_at: NaN,
-  graphical_model: "{}",
 };
 
 const Specifications = () => {
@@ -61,11 +47,6 @@ const Specifications = () => {
   useEffect(() => {
     getSpecifications();
   }, [getSpecifications]);
-
-  const handleOpenSpecification = (specification: SpecificationType) => {
-    localStorage.setItem("specification", JSON.stringify(specification));
-    navigate(`/editor/${specification.id_specification}`);
-  };
 
   const handleNewSpecification = () => {
     request({
@@ -135,6 +116,10 @@ const Specifications = () => {
   const handleDownloadSpecification = (index: number) => {
     message("download now implemented yet");
     console.log(index);
+  };
+
+  const handleOpenSpecification = (specification: SpecificationType) => {
+    navigate(`/editor/${expID}/${specification.id_specification}`);
   };
 
   // const handleImportSpecification = async () => {

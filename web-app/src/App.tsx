@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/editor/:specificationID",
+    path: "/editor/:expID/:specificationID",
     element: <Editor />,
   },
 ]);
