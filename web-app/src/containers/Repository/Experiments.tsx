@@ -157,6 +157,22 @@ const Experiments = () => {
       });
   };
 
+  const handleDeleteExperiment = () => {
+    request({
+      url: `exp/experiments/${currentExp.id_experiment}/delete`,
+      method: "DELETE",
+    })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.name === "AxiosError") {
+          message("Please login first");
+        }
+        message(error.response.data?.message || "unknown error");
+      });
+  };
+
   return (
     <>
       <div className="page experiments">
@@ -248,7 +264,12 @@ const Experiments = () => {
                 </div>
               </div>
               <div className="experiments__experiment__header__info__delete">
-                <button title="delete the entire experiment">Delete</button>
+                <button
+                  title="delete the entire experiment"
+                  onClick={handleDeleteExperiment}
+                >
+                  Delete
+                </button>
               </div>
             </div>
             <div className="experiments__experiment__links">

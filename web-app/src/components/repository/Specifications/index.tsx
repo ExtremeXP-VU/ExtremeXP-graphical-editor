@@ -4,6 +4,7 @@ import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
 import { timestampToDate, timeNow } from "../../../utils/timeToDate";
 import { useNavigate, useLocation } from "react-router-dom";
+import { get } from "http";
 
 type ResponseType = {
   message: string;
@@ -97,6 +98,21 @@ const Specifications = () => {
     }
   };
 
+  const handleDeleteSpecification = (index: number) => {
+    request({
+      url: `/exp/experiments/${expID}/specifications/${specifications[index].id_specification}/delete`,
+      method: "DELETE",
+    })
+      .then(() => {
+        getSpecifications();
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
+  };
+
   // const handleImportSpecification = async () => {
   //   try {
   //     const [fileHandle] = await window.showOpenFilePicker();
@@ -169,7 +185,11 @@ const Specifications = () => {
                 <span title="download graphical model" className="iconfont">
                   &#xe627;
                 </span>
-                <span title="delete this specification" className="iconfont">
+                <span
+                  title="delete this specification"
+                  className="iconfont"
+                  onClick={() => handleDeleteSpecification(index)}
+                >
                   &#xe634;
                 </span>
                 <button

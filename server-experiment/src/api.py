@@ -82,6 +82,17 @@ def update_experiment_info(exp_id):
     return {"message": "experiment info updated"}, 200
 
 
+@app.route("/exp/experiments/<exp_id>/delete", methods=["OPTIONS", "DELETE"])
+@cross_origin()
+# TODO: if data involves, data also need to be deleted.
+def delete_experiment(exp_id):
+    if not experimentHandler.experiment_exists(exp_id):
+        return {"message": "experiment does not exist"}, 404
+    experimentHandler.delete_experiment(exp_id)
+    specificationHandler.delete_specifications(exp_id)
+    return {"message": "experiment deleted"}, 204
+
+
 @app.route("/exp/experiments/<exp_id>/specifications", methods=["GET"])
 @cross_origin()
 def get_specifications(exp_id):
@@ -89,6 +100,16 @@ def get_specifications(exp_id):
     return {
         "message": "specifications retrieved",
         "data": {"specifications": specifications},
+    }, 200
+
+
+@app.route("/exp/experiments/<exp_id>/specifications/<spec_id>", methods=["GET"])
+@cross_origin()
+def get_specification(spec_id):
+    specification = specificationHandler.get_specification(spec_id)
+    return {
+        "message": "specification retrieved",
+        "data": {"specification": specification},
     }, 200
 
 
@@ -105,3 +126,15 @@ def create_specification(exp_id):
         }, 409
     res = specificationHandler.create_specification(g.username, exp_id, spec_name)
     return {"id_specification": res}, 201
+
+
+@app.route(
+    "/exp/experiments/<exp_id>/specifications/<spec_id>/delete",
+    methods=["OPTIONS", "DELETE"],
+)
+@cross_origin()
+def delete_specification(exp_id, spec_id):
+    if not specificationHandler.specification_exists(spec_id):
+        return {"message": "specification does not exist"}, 404
+    specificationHandler.delete_specification(spec_id, exp_id)
+    return {"message": "specification deleted"}, 204

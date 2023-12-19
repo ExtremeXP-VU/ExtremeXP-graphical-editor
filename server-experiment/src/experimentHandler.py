@@ -19,6 +19,14 @@ class ExperimentHandler(object):
         # return documents in JSON format
         return json.loads(json.dumps(list(documents), default=str))
 
+    def experiment_exists(self, exp_id):
+        query = {"id_experiment": exp_id}
+        documents = self.collection_experiment.find(query)
+        for doc in documents:
+            if doc["id_experiment"] == exp_id:
+                return True
+        return False
+
     def create_experiment(self, username, exp_name):
         create_time = calendar.timegm(time.gmtime())  # get current time in seconds
         exp_id = username + "-" + exp_name.replace(" ", "") + "-" + str(create_time)
