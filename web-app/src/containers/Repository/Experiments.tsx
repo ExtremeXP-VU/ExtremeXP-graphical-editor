@@ -49,10 +49,13 @@ const Experiments = () => {
 
   useEffect(() => {
     getExperiments();
+  }, []);
+
+  useEffect(() => {
     if (experiments.length > 0 && currentExp.id_experiment === "default") {
       setCurrentExp(experiments[0]);
     }
-  }, [getExperiments, experiments, currentExp.id_experiment]);
+  }, [experiments, currentExp.id_experiment]);
 
   useEffect(() => {
     // find the experiment id from the url
