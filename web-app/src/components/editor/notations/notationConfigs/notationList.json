@@ -1,4 +1,0 @@
-{
-  "nodes": ["start", "end", "task", "data"],
-  "edges": ["regular", "conditional", "exceptional", "dataflow"]
-}

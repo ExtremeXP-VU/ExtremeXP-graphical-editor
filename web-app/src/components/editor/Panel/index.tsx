@@ -3,12 +3,15 @@ import "./style.scss";
 import React from "react";
 import { useState } from "react";
 
-import notationList from "../notations/notationConfigs/notationList.json";
 import { nodeImageSrc } from "../../../assets/nodes";
+import {
+  LinksPropsType,
+  notationList,
+} from "../notations/notationConfigs/linkProps";
 
 interface PanelProps {
   selectedLink: string;
-  onLinkSelection: (linkType: string) => void;
+  onLinkSelection: (linkType: LinksPropsType) => void;
 }
 
 const nodesList = notationList.nodes;
@@ -26,7 +29,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const handleLinkSelection = (linkType: string) => {
+  const handleLinkSelection = (linkType: LinksPropsType) => {
     onLinkSelection(linkType);
   };
 
@@ -87,7 +90,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
                   selectedLink === edgeType ? "selected" : ""
                 }`}
                 onClick={() => {
-                  handleLinkSelection(edgeType);
+                  handleLinkSelection(edgeType as LinksPropsType);
                 }}
               >
                 {edgeType}

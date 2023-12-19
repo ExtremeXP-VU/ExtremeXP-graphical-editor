@@ -43,3 +43,10 @@ export const linkProps = {
     },
   },
 };
+
+export type LinksPropsType = keyof typeof linkProps;
+
+export const notationList = {
+  nodes: ["start", "end", "task", "data"],
+  edges: ["regular", "conditional", "exceptional", "dataflow"],
+};

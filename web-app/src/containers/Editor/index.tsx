@@ -31,7 +31,10 @@ import {
 
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
-import { linkProps } from "../../components/editor/notations/notationConfigs/linkProps";
+import {
+  linkProps,
+  LinksPropsType,
+} from "../../components/editor/notations/notationConfigs/linkProps";
 
 type ResponseType = {
   message: string;
@@ -39,8 +42,6 @@ type ResponseType = {
     specification: SpecificationType;
   };
 };
-
-type LinksPropsType = keyof typeof linkProps;
 
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
@@ -178,7 +179,7 @@ const Editor = () => {
           <div className="editor__bottom__left">
             <Panel
               selectedLink={selectedLink}
-              onLinkSelection={() => handleLinkSelection}
+              onLinkSelection={handleLinkSelection}
             />
           </div>
           <div className="editor__bottom__middle">
