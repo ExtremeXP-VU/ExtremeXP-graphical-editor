@@ -92,9 +92,29 @@ const Specifications = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      renameSpecification();
       setEditingIndex(null);
-      // handleRenameSpecification();
     }
+  };
+
+  const renameSpecification = () => {
+    request({
+      url: `/exp/experiments/${expID}/specifications/${
+        specifications[editingIndex!].id_specification
+      }/update/name`,
+      method: "PUT",
+      data: {
+        spec_name: newSpecName,
+      },
+    })
+      .then(() => {
+        getSpecifications();
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
   };
 
   const handleDeleteSpecification = (index: number) => {

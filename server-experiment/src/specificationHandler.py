@@ -51,12 +51,14 @@ class SpecificationHandler(object):
             },
         }
         self.collection_specification.insert_one(query)
+
         experimentHandler.update_experiment_update_at(exp_id)
         return spec_id
 
     def delete_specification(self, spec_id, exp_id):
         query = {"id_specification": spec_id}
         self.collection_specification.delete_one(query)
+
         experimentHandler.update_experiment_update_at(exp_id)
 
     def delete_specifications(self, exp_id):
@@ -71,6 +73,15 @@ class SpecificationHandler(object):
             if doc["name"] == spec_name:
                 return True
         return False
+
+    def update_specification_name(self, spec_id, exp_id, spec_name):
+        update_time = calendar.timegm(time.gmtime())
+        query = {"id_specification": spec_id}
+        new_values = {"$set": {"name": spec_name, "update_at": update_time}}
+        self.collection_specification.update_one(query, new_values)
+
+        experimentHandler.update_experiment_update_at(exp_id)
+        return True
 
 
 specificationHandler = SpecificationHandler()

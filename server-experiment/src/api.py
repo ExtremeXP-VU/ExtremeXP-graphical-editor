@@ -138,3 +138,19 @@ def delete_specification(exp_id, spec_id):
         return {"message": "specification does not exist"}, 404
     specificationHandler.delete_specification(spec_id, exp_id)
     return {"message": "specification deleted"}, 204
+
+
+@app.route(
+    "/exp/experiments/<exp_id>/specifications/<spec_id>/update/name",
+    methods=["OPTIONS", "PUT"],
+)
+@cross_origin()
+def update_specification_name(exp_id, spec_id):
+    spec_name = request.json["spec_name"]
+    if specificationHandler.detect_duplicate(exp_id, spec_name):
+        return {
+            "error": ERROR_DUPLICATE,
+            "message": "Specification name already exists",
+        }, 409
+    specificationHandler.update_specification_name(spec_id, exp_id, spec_name)
+    return {"message": "specification name updated"}, 200
