@@ -16,6 +16,7 @@ import {
 const Experiments = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
   const [currentExp, setCurrentExp] = useState(defaultExperiment);
+  const [searchInput, setSearchInput] = useState("");
   const [createExpName, setCreateExpName] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +36,10 @@ const Experiments = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
+
+  const filteredExperiments = experiments.filter((experiment) => {
+    return experiment.name.toLowerCase().includes(searchInput.toLowerCase());
+  });
 
   const getExperiments = useCallback(() => {
     experimentsRequest({
@@ -109,8 +114,11 @@ const Experiments = () => {
     setCreateExpName("");
   };
 
-  const handleSelectExperiment = (index: number) => {
+  const handleSelectExperiment = (expID: string) => {
     if (isEditing) return;
+    const index = experiments.findIndex(
+      (experiment) => experiment.id_experiment === expID
+    );
     setCurrentExp(experiments[index]);
     navigate(
       `/repository/experiments/${experiments[index].id_experiment}/specifications`
@@ -218,7 +226,12 @@ const Experiments = () => {
           </div>
           <div className="experiments__panel__search">
             <span className="iconfont">&#xe60a;</span>
-            <input type="text" />
+            <input
+              type="text"
+              disabled={isEditing}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
           </div>
           <div className="experiments__panel__folders">
             <div className="experiments__panel__folders__header">
@@ -226,13 +239,16 @@ const Experiments = () => {
               <span>Last update</span>
             </div>
             <ul className="experiments__panel__folders__list">
-              {experiments.map((experiment, index) => (
+              {filteredExperiments.map((experiment, index) => (
                 <li
                   className={`experiments__panel__folders__list__item ${
                     currentExp.name === experiment.name ? "selected" : ""
                   }`}
                   key={index}
-                  onClick={handleSelectExperiment.bind(null, index)}
+                  onClick={handleSelectExperiment.bind(
+                    null,
+                    experiment.id_experiment
+                  )}
                 >
                   <div className="experiments__panel__folders__list__item__name">
                     {currentExp.name !== experiment.name && (

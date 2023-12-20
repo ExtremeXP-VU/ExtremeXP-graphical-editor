@@ -83,7 +83,7 @@ const Specifications = () => {
           }
         });
     },
-    []
+    [expID, createSpecificationRequest, getSpecifications]
   );
 
   const handleNewSpecification = () => {

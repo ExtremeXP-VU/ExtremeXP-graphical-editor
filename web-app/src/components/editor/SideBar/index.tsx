@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { message } from "../../../utils/message";
 
 import "./style.scss";
 
@@ -24,6 +25,10 @@ const SideBar: React.FC<SideBarProps> = ({ onSave, onSaveAs }) => {
       navigate("/account/login");
     }
   };
+
+  function handleExecution() {
+    message("Execution is not implemented yet");
+  }
 
   return (
     <div className="sidebar">
@@ -55,7 +60,12 @@ const SideBar: React.FC<SideBarProps> = ({ onSave, onSaveAs }) => {
         </button>
       </div>
       <div className="sidebar__execution">
-        <button className="sidebar__execution__button">Execution</button>
+        <button
+          className="sidebar__execution__button"
+          onClick={handleExecution}
+        >
+          Execution
+        </button>
       </div>
     </div>
   );
