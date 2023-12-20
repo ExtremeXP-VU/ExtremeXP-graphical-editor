@@ -121,12 +121,15 @@ def get_specification(spec_id):
 @cross_origin()
 def create_specification(exp_id):
     spec_name = request.json["spec_name"]
+    graphical_model = request.json["graphical_model"]
     if specificationHandler.detect_duplicate(exp_id, spec_name):
         return {
             "error": ERROR_DUPLICATE,
             "message": "Specification name already exists",
         }, 409
-    res = specificationHandler.create_specification(g.username, exp_id, spec_name)
+    res = specificationHandler.create_specification(
+        g.username, exp_id, spec_name, graphical_model
+    )
     return {"message": "Specification created", "data": {"id_specification": res}}, 201
 
 

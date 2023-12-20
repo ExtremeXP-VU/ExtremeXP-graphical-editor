@@ -4,8 +4,13 @@ import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
 import { timestampToDate, timeNow } from "../../../utils/timeToDate";
 import { useNavigate, useLocation } from "react-router-dom";
+import {
+  downloadGraphicalModel,
+  uploadGraphicalModel,
+} from "../../../utils/fileIO";
 import Popover from "../../general/Popover";
 import {
+  GraphicalModelType,
   SpecificationType,
   defaultSpecification,
 } from "../../../types/experiment";
@@ -59,22 +64,33 @@ const Specifications = () => {
     getSpecifications();
   }, [getSpecifications]);
 
-  const handleNewSpecification = () => {
-    createSpecificationRequest({
-      url: `/exp/experiments/${expID}/specifications/create`,
-      method: "POST",
-      data: {
-        spec_name: `specification-${timeNow()}`,
-      },
-    })
-      .then(() => {
-        getSpecifications();
+  const postNewSpecification = useCallback(
+    (name: string, graphicalModel: GraphicalModelType) => {
+      createSpecificationRequest({
+        url: `/exp/experiments/${expID}/specifications/create`,
+        method: "POST",
+        data: {
+          spec_name: name,
+          graphical_model: graphicalModel,
+        },
       })
-      .catch((error) => {
-        if (error.message) {
-          message(error.message);
-        }
-      });
+        .then(() => {
+          getSpecifications();
+        })
+        .catch((error) => {
+          if (error.message) {
+            message(error.message);
+          }
+        });
+    },
+    []
+  );
+
+  const handleNewSpecification = () => {
+    postNewSpecification(`specification-${timeNow()}`, {
+      nodes: [],
+      edges: [],
+    });
   };
 
   const handleStartEditingName = (index: number) => {
@@ -120,8 +136,10 @@ const Specifications = () => {
   };
 
   const handleDownloadSpecification = (index: number) => {
-    message("download now implemented yet");
-    console.log(index);
+    downloadGraphicalModel(
+      specifications[index].graphical_model,
+      specifications[index].name
+    );
   };
 
   const handleOpenSpecification = (specification: SpecificationType) => {
@@ -157,21 +175,14 @@ const Specifications = () => {
     closeMask();
   };
 
-  // const handleImportSpecification = async () => {
-  //   try {
-  //     const [fileHandle] = await window.showOpenFilePicker();
-  //     const file = await fileHandle.getFile();
-  //     const diagram = await file.text();
+  async function handleImportSpecification() {
+    const model = await uploadGraphicalModel();
+    if (!model) {
+      return;
+    }
+    postNewSpecification(`imported-specification-${timeNow()}`, model);
+  }
 
-  //     const fileName = file.name;
-  //     const fileNameWithoutExtension = fileName.split(".")[0];
-
-  //     localStorage.setItem("fileName", fileNameWithoutExtension);
-  //     localStorage.setItem("diagram", diagram);
-  //   } catch (error) {
-  //     console.error("Error importing file:", error);
-  //   }
-  // };
   return (
     <div className="specification">
       <div className="specification__functions">
@@ -181,7 +192,10 @@ const Specifications = () => {
         >
           new specification
         </button>
-        <button className="specification__functions__import">
+        <button
+          className="specification__functions__import"
+          onClick={handleImportSpecification}
+        >
           import specification
         </button>
       </div>

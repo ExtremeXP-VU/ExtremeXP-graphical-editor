@@ -34,7 +34,7 @@ class SpecificationHandler(object):
         documents = self.collection_specification.find(query)
         return json.loads(json.dumps(documents[0], default=str))
 
-    def create_specification(self, username, exp_id, spec_name):
+    def create_specification(self, username, exp_id, spec_name, graphical_model):
         create_time = calendar.timegm(time.gmtime())  # get current time in seconds
         spec_id = username + "-" + spec_name.replace(" ", "") + "-" + str(create_time)
         query = {
@@ -43,10 +43,7 @@ class SpecificationHandler(object):
             "name": spec_name,
             "create_at": create_time,
             "update_at": create_time,
-            "graphical_model": {
-                "nodes": [],
-                "edges": [],
-            },
+            "graphical_model": graphical_model,
         }
         self.collection_specification.insert_one(query)
 

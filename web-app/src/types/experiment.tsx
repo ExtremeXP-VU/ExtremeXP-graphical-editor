@@ -10,8 +10,8 @@ export interface Experiment {
 }
 
 export interface GraphicalModelType {
-  nodes: Node[];
-  edges: Edge[];
+  nodes: Array<Node>;
+  edges: Array<Edge>;
 }
 
 export interface SpecificationType {

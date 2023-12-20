@@ -162,10 +162,10 @@ const Editor = () => {
     [reactFlowInstance, nodes]
   );
 
-  function updateGraphicalModel(specID: string) {
+  function updateGraphicalModel() {
     const graphicalModel = { nodes, edges };
     updateGraphRequest({
-      url: `/exp/experiments/${expID}/specifications/${specID}/update/graphical_model`,
+      url: `/exp/experiments/${expID}/specifications/${specificaitonID}/update/graphical_model`,
       method: "PUT",
       data: {
         graphical_model: graphicalModel,
@@ -182,7 +182,7 @@ const Editor = () => {
   }
 
   const handleSave = () => {
-    updateGraphicalModel(specificaitonID);
+    updateGraphicalModel();
   };
 
   const handleShowPopover = () => {
@@ -200,16 +200,17 @@ const Editor = () => {
 
   function handleSaveAs() {
     closeMask();
+    const graphicalModel = { nodes, edges };
     createSpecRequest({
       url: `/exp/experiments/${expID}/specifications/create`,
       method: "POST",
       data: {
         spec_name: newSpecName,
+        graphical_model: graphicalModel,
       },
     })
       .then((data) => {
         const specID = data.data.id_specification;
-        updateGraphicalModel(specID);
         navigate(`/editor/${expID}/${specID}`);
         window.location.reload();
       })
