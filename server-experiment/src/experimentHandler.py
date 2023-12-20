@@ -19,6 +19,11 @@ class ExperimentHandler(object):
         # return documents in JSON format
         return json.loads(json.dumps(list(documents), default=str))
 
+    def get_experiment(self, exp_id):
+        query = {"id_experiment": exp_id}
+        documents = self.collection_experiment.find(query)
+        return json.loads(json.dumps(documents[0], default=str))
+
     def experiment_exists(self, exp_id):
         query = {"id_experiment": exp_id}
         documents = self.collection_experiment.find(query)

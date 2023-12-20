@@ -72,11 +72,13 @@ def create_experiment():
 @cross_origin()
 def update_experiment_info(exp_id):
     exp_name = request.json["exp_name"]
-    if experimentHandler.detect_duplicate(g.username, exp_name):
-        return {
-            "error": ERROR_DUPLICATE,
-            "message": "Experiment name already exists",
-        }, 409
+    get_exp = experimentHandler.get_experiment(exp_id)
+    if get_exp["name"] != exp_name:
+        if experimentHandler.detect_duplicate(g.username, exp_name):
+            return {
+                "error": ERROR_DUPLICATE,
+                "message": "Experiment name already exists",
+            }, 409
     description = request.json["description"]  # can be empty
     experimentHandler.update_experiment_info(exp_id, exp_name, description)
     return {"message": "experiment info updated"}, 200

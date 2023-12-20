@@ -104,6 +104,7 @@ const Experiments = () => {
   };
 
   const handleSelectExperiment = (index: number) => {
+    if (isEditing) return;
     setCurrentExp(experiments[index]);
     navigate(
       `/repository/experiments/${experiments[index].id_experiment}/specifications`
@@ -113,16 +114,13 @@ const Experiments = () => {
   const handleStartEditing = () => {
     setExpNameInput(currentExp.name);
     setDescriptionInput(currentExp.description);
-    setIsEditing(true);
+    setIsEditing(!isEditing);
   };
 
   const handleChangeNameKeyPress = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === "Enter") {
-      setIsEditing(false);
-      if (!isExperimentNameValid(expNameInput)) return;
-      if (currentExp.name === expNameInput) return;
       updateExperimentInfo();
     }
   };
@@ -131,13 +129,24 @@ const Experiments = () => {
     e: React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
     if (e.key === "Enter") {
-      setIsEditing(false);
-      if (currentExp.description === descriptionInput) return;
       updateExperimentInfo();
     }
   };
 
   const updateExperimentInfo = () => {
+    console.log("currentExp.description:", currentExp.description);
+    console.log("descriptionInput:", descriptionInput);
+    console.log(currentExp.description === descriptionInput);
+
+    setIsEditing(false);
+    if (!isExperimentNameValid(expNameInput)) return;
+    if (
+      currentExp.name === expNameInput &&
+      currentExp.description === descriptionInput
+    ) {
+      return;
+    }
+
     request({
       url: `exp/experiments/${currentExp.id_experiment}/update`,
       method: "PUT",

@@ -72,7 +72,11 @@ const Specifications = () => {
 
   const handleStartEditingName = (index: number) => {
     setNewSpecName(specifications[index].name);
-    setEditingIndex(index);
+    if (editingIndex === null) {
+      setEditingIndex(index);
+    } else {
+      setEditingIndex(null);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
