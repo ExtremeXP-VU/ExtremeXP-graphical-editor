@@ -23,6 +23,7 @@ const Specifications = () => {
   const [newSpecName, setNewSpecName] = useState("");
 
   const [showPopover, setShowPopover] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   // make sure the expID is the same as the one in the url
   const expID = useLocation().pathname.split("/")[3];
@@ -111,13 +112,13 @@ const Specifications = () => {
   };
 
   function handleOpenPopover(index: number) {
-    setEditingIndex(index);
+    setDeleteIndex(index);
     setShowPopover(true);
   }
 
   function closeMask() {
     setShowPopover(false);
-    setEditingIndex(null);
+    setDeleteIndex(null);
   }
 
   function handleCancelDelete() {
@@ -125,9 +126,9 @@ const Specifications = () => {
   }
 
   const handleDeleteSpecification = () => {
-    if (editingIndex === null) return;
+    if (deleteIndex === null) return;
     request({
-      url: `/exp/experiments/${expID}/specifications/${specifications[editingIndex].id_specification}/delete`,
+      url: `/exp/experiments/${expID}/specifications/${specifications[deleteIndex].id_specification}/delete`,
       method: "DELETE",
     })
       .then(() => {
@@ -241,8 +242,8 @@ const Specifications = () => {
         <div className="popover__delete">
           <div className="popover__delete__text">
             {`Do you want to delete ${
-              editingIndex
-                ? specifications[editingIndex].name
+              deleteIndex
+                ? specifications[deleteIndex].name
                 : "the specification"
             }?`}
           </div>
