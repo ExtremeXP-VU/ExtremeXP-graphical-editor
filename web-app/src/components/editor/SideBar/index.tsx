@@ -5,9 +5,10 @@ import "./style.scss";
 
 interface SideBarProps {
   onSave: () => void;
+  onSaveAs: () => void;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
+const SideBar: React.FC<SideBarProps> = ({ onSave, onSaveAs }) => {
   const navigate = useNavigate();
   const expID = useLocation().pathname.split("/")[2];
   const specificationID = useLocation().pathname.split("/")[3];
@@ -38,7 +39,14 @@ const SideBar: React.FC<SideBarProps> = ({ onSave }) => {
         >
           Save
         </button>
-        <button className="sidebar__files__button__saveAs">Save as</button>
+        <button
+          className="sidebar__files__button__saveAs"
+          onClick={() => {
+            onSaveAs();
+          }}
+        >
+          Save as
+        </button>
         <button
           className="sidebar__files__button__load"
           onClick={() => handleGoBack()}

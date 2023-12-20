@@ -15,13 +15,14 @@ import ReactFlow, {
 } from "reactflow";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 
 import Header from "../../components/editor/Header";
 import Panel from "../../components/editor/Panel";
 import SideBar from "../../components/editor/SideBar";
+import Popover from "../../components/general/Popover";
 
 import {
   SpecificationType,
@@ -46,6 +47,8 @@ type ResponseType = {
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
   const { request } = useRequest<ResponseType>();
+  const navigate = useNavigate();
+
   const [specification, setSpecification] = useState(defaultSpecification);
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
@@ -58,6 +61,9 @@ const Editor = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(graphicalModel.edges);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
+
+  const [showPopover, setShowPopover] = useState(false);
+  const [newSpecName, setNewSpecName] = useState("");
 
   useEffect(() => {
     request({
@@ -150,10 +156,10 @@ const Editor = () => {
     [reactFlowInstance, nodes]
   );
 
-  const handleSave = useCallback(() => {
+  function updateGraphicalModel(specID: string) {
     const graphicalModel = { nodes, edges };
     request({
-      url: `/exp/experiments/${expID}/specifications/${specificaitonID}/update/graphical_model`,
+      url: `/exp/experiments/${expID}/specifications/${specID}/update/graphical_model`,
       method: "PUT",
       data: {
         graphical_model: graphicalModel,
@@ -167,7 +173,46 @@ const Editor = () => {
           message(error.message);
         }
       });
-  }, [nodes, edges, request, expID, specificaitonID]);
+  }
+
+  const handleSave = () => {
+    updateGraphicalModel(specificaitonID);
+  };
+
+  const handleShowPopover = () => {
+    setShowPopover(true);
+    setNewSpecName(specification.name);
+  };
+
+  function closeMask() {
+    setShowPopover(false);
+  }
+
+  function handleCancelSave() {
+    setShowPopover(false);
+  }
+
+  function handleSaveAs() {
+    closeMask();
+    request({
+      url: `/exp/experiments/${expID}/specifications/create`,
+      method: "POST",
+      data: {
+        spec_name: newSpecName,
+      },
+    })
+      .then((data) => {
+        const specID = data.id_specification;
+        updateGraphicalModel(specID);
+        navigate(`/editor/${expID}/${specID}`);
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
+  }
 
   return (
     <div className="editor">
@@ -202,10 +247,43 @@ const Editor = () => {
             </ReactFlow>
           </div>
           <div className="editor__bottom__right">
-            <SideBar onSave={handleSave} />
+            <SideBar onSave={handleSave} onSaveAs={handleShowPopover} />
           </div>
         </div>
       </ReactFlowProvider>
+      <Popover show={showPopover} blankClickCallback={closeMask}>
+        <div className="popover__save">
+          <div className="popover__save__text">
+            Save as a new specification?
+          </div>
+          <input
+            type="text"
+            className="popover__save__input"
+            placeholder="specification name"
+            value={newSpecName}
+            onChange={(e) => setNewSpecName(e.target.value)}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                handleSaveAs();
+              }
+            }}
+          />
+          <div className="popover__save__buttons">
+            <button
+              className="popover__save__buttons__cancel"
+              onClick={handleCancelSave}
+            >
+              cancel
+            </button>
+            <button
+              className="popover__save__buttons__confirm"
+              onClick={handleSaveAs}
+            >
+              confirm
+            </button>
+          </div>
+        </div>
+      </Popover>
     </div>
   );
 };
