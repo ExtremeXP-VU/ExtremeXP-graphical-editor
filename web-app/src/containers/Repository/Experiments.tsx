@@ -5,6 +5,7 @@ import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { defaultExperiment } from "../../types/experiment";
+import Popover from "../../components/general/Popover";
 
 type ResponseType = {
   message: string;
@@ -21,6 +22,8 @@ const Experiments = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [expNameInput, setExpNameInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
+
+  const [showPopover, setShowPopover] = useState(false);
 
   const { request } = useRequest<ResponseType>();
   const navigate = useNavigate();
@@ -47,9 +50,13 @@ const Experiments = () => {
     getExperiments();
   }, []);
 
+  // set the first experiment as the current experiment when enter the page
   useEffect(() => {
     if (experiments.length > 0 && currentExp.id_experiment === "default") {
       setCurrentExp(experiments[0]);
+      navigate(
+        `/repository/experiments/${experiments[0].id_experiment}/specifications`
+      );
     }
   }, [experiments, currentExp.id_experiment]);
 
@@ -75,7 +82,7 @@ const Experiments = () => {
     return true;
   };
 
-  const handleNewExperiment = () => {
+  const handleCreateExperiment = () => {
     if (!isExperimentNameValid(createExpName)) return;
     request({
       url: `exp/experiments/create`,
@@ -150,6 +157,18 @@ const Experiments = () => {
       });
   };
 
+  function handleOpenPopover() {
+    setShowPopover(true);
+  }
+
+  function closeMask() {
+    setShowPopover(false);
+  }
+
+  function handleCancelDelete() {
+    closeMask();
+  }
+
   const handleDeleteExperiment = () => {
     request({
       url: `exp/experiments/${currentExp.id_experiment}/delete`,
@@ -164,6 +183,7 @@ const Experiments = () => {
         }
         message(error.response.data?.message || "unknown error");
       });
+    closeMask();
   };
 
   return (
@@ -180,7 +200,7 @@ const Experiments = () => {
             />
             <button
               className="experiments__panel__new__button"
-              onClick={handleNewExperiment}
+              onClick={handleCreateExperiment}
             >
               create
             </button>
@@ -259,7 +279,7 @@ const Experiments = () => {
               <div className="experiments__experiment__header__info__delete">
                 <button
                   title="delete the entire experiment"
-                  onClick={handleDeleteExperiment}
+                  onClick={handleOpenPopover}
                 >
                   Delete
                 </button>
@@ -294,6 +314,27 @@ const Experiments = () => {
             </div>
           </div>
         </div>
+        <Popover show={showPopover} blankClickCallback={closeMask}>
+          <div className="popover__delete">
+            <div className="popover__delete__text">
+              Do you want to delete the experiment?
+            </div>
+            <div className="popover__delete__buttons">
+              <button
+                className="popover__delete__buttons__cancel"
+                onClick={handleCancelDelete}
+              >
+                cancel
+              </button>
+              <button
+                className="popover__delete__buttons__confirm"
+                onClick={handleDeleteExperiment}
+              >
+                confirm
+              </button>
+            </div>
+          </div>
+        </Popover>
       </div>
     </>
   );

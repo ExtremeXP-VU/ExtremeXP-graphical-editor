@@ -1,0 +1,19 @@
+.popover__mask {
+  position: fixed;
+  z-index: 99;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000;
+  opacity: 0.5;
+}
+.popover__content {
+  position: fixed;
+  z-index: 100;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 0.05rem;
+}

@@ -111,7 +111,7 @@
     padding-bottom: 0.2rem;
 
     &__item {
-      z-index: 999;
+      z-index: 2;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -306,4 +306,65 @@
   width: 100%;
   height: calc(100% - 2rem);
   box-sizing: border-box;
+}
+
+.popover__delete {
+  width: 3rem;
+  height: 1.5rem;
+
+  &__text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    height: 1.15rem;
+    color: darken($color: $primary-theme-color, $amount: 40);
+    font-size: 1.2em;
+  }
+
+  &__buttons {
+    width: 3rem;
+    height: 0.35rem;
+    font-size: 1.2em;
+    font-weight: bold;
+
+    &__cancel {
+      width: 50%;
+      height: 100%;
+      border-radius: 0 0 0 0.05rem;
+      background-color: $cancel-background-color;
+      color: $primary-button-text-color;
+
+      &:hover {
+        cursor: pointer;
+        background-color: darken($cancel-background-color, 20);
+      }
+
+      &:active {
+        background-color: lighten(
+          $color: $cancel-background-color,
+          $amount: 30
+        );
+        color: $primary-button-text-color;
+      }
+    }
+
+    &__confirm {
+      width: 50%;
+      height: 100%;
+      border-radius: 0 0 0.05rem 0;
+      color: $primary-button-text-color;
+      background-color: $alert-background-color;
+
+      &:hover {
+        cursor: pointer;
+        background-color: darken($alert-background-color, 20);
+      }
+
+      &:active {
+        background-color: lighten($color: $alert-background-color, $amount: 30);
+        color: $primary-button-text-color;
+      }
+    }
+  }
 }

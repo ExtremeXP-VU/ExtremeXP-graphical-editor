@@ -4,6 +4,7 @@ import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
 import { timestampToDate, timeNow } from "../../../utils/timeToDate";
 import { useNavigate, useLocation } from "react-router-dom";
+import Popover from "../../general/Popover";
 import {
   SpecificationType,
   defaultSpecification,
@@ -20,6 +21,8 @@ const Specifications = () => {
   const [specifications, setSpecifications] = useState([defaultSpecification]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newSpecName, setNewSpecName] = useState("");
+
+  const [showPopover, setShowPopover] = useState(false);
 
   // make sure the expID is the same as the one in the url
   const expID = useLocation().pathname.split("/")[3];
@@ -98,9 +101,33 @@ const Specifications = () => {
       });
   };
 
-  const handleDeleteSpecification = (index: number) => {
+  const handleDownloadSpecification = (index: number) => {
+    message("download now implemented yet");
+    console.log(index);
+  };
+
+  const handleOpenSpecification = (specification: SpecificationType) => {
+    navigate(`/editor/${expID}/${specification.id_specification}`);
+  };
+
+  function handleOpenPopover(index: number) {
+    setEditingIndex(index);
+    setShowPopover(true);
+  }
+
+  function closeMask() {
+    setShowPopover(false);
+    setEditingIndex(null);
+  }
+
+  function handleCancelDelete() {
+    closeMask();
+  }
+
+  const handleDeleteSpecification = () => {
+    if (editingIndex === null) return;
     request({
-      url: `/exp/experiments/${expID}/specifications/${specifications[index].id_specification}/delete`,
+      url: `/exp/experiments/${expID}/specifications/${specifications[editingIndex].id_specification}/delete`,
       method: "DELETE",
     })
       .then(() => {
@@ -111,15 +138,7 @@ const Specifications = () => {
           message(error.message);
         }
       });
-  };
-
-  const handleDownloadSpecification = (index: number) => {
-    message("download now implemented yet");
-    console.log(index);
-  };
-
-  const handleOpenSpecification = (specification: SpecificationType) => {
-    navigate(`/editor/${expID}/${specification.id_specification}`);
+    closeMask();
   };
 
   // const handleImportSpecification = async () => {
@@ -201,7 +220,7 @@ const Specifications = () => {
                 <span
                   title="delete this specification"
                   className="iconfont"
-                  onClick={() => handleDeleteSpecification(index)}
+                  onClick={() => handleOpenPopover(index)}
                 >
                   &#xe634;
                 </span>
@@ -218,6 +237,31 @@ const Specifications = () => {
           ))}
         </ul>
       </div>
+      <Popover show={showPopover} blankClickCallback={closeMask}>
+        <div className="popover__delete">
+          <div className="popover__delete__text">
+            {`Do you want to delete ${
+              editingIndex
+                ? specifications[editingIndex].name
+                : "the specification"
+            }?`}
+          </div>
+          <div className="popover__delete__buttons">
+            <button
+              className="popover__delete__buttons__cancel"
+              onClick={handleCancelDelete}
+            >
+              cancel
+            </button>
+            <button
+              className="popover__delete__buttons__confirm"
+              onClick={handleDeleteSpecification}
+            >
+              confirm
+            </button>
+          </div>
+        </div>
+      </Popover>
     </div>
   );
 };
