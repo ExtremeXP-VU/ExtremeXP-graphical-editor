@@ -25,10 +25,15 @@ import SideBar from "../../components/editor/SideBar";
 import Popover from "../../components/general/Popover";
 
 import {
-  SpecificationType,
   defaultGraphicalModel,
   defaultSpecification,
 } from "../../types/experiment";
+
+import {
+  SpecificationResponseType,
+  UpdateGraphicalModelResponseType,
+  CreateSpecificationResponseType,
+} from "../../types/requests";
 
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
@@ -37,16 +42,17 @@ import {
   LinksPropsType,
 } from "../../components/editor/notations/notationConfigs/linkProps";
 
-type ResponseType = {
-  message: string;
-  data: {
-    specification: SpecificationType;
-  };
-};
-
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
-  const { request } = useRequest<ResponseType>();
+  const { request: specificationRequest } =
+    useRequest<SpecificationResponseType>();
+
+  const { request: updateGraphRequest } =
+    useRequest<UpdateGraphicalModelResponseType>();
+
+  const { request: createSpecRequest } =
+    useRequest<CreateSpecificationResponseType>();
+
   const navigate = useNavigate();
 
   const [specification, setSpecification] = useState(defaultSpecification);
@@ -66,7 +72,7 @@ const Editor = () => {
   const [newSpecName, setNewSpecName] = useState("");
 
   useEffect(() => {
-    request({
+    specificationRequest({
       url: `exp/experiments/specifications/${specificaitonID}`,
     })
       .then((data) => {
@@ -158,7 +164,7 @@ const Editor = () => {
 
   function updateGraphicalModel(specID: string) {
     const graphicalModel = { nodes, edges };
-    request({
+    updateGraphRequest({
       url: `/exp/experiments/${expID}/specifications/${specID}/update/graphical_model`,
       method: "PUT",
       data: {
@@ -194,7 +200,7 @@ const Editor = () => {
 
   function handleSaveAs() {
     closeMask();
-    request({
+    createSpecRequest({
       url: `/exp/experiments/${expID}/specifications/create`,
       method: "POST",
       data: {
@@ -202,7 +208,7 @@ const Editor = () => {
       },
     })
       .then((data) => {
-        const specID = data.id_specification;
+        const specID = data.data.id_specification;
         updateGraphicalModel(specID);
         navigate(`/editor/${expID}/${specID}`);
         window.location.reload();

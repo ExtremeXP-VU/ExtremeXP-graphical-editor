@@ -1,28 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useRequest from "../../hooks/useRequest";
-
+import { LoginResponseType } from "../../types/requests";
 import { message } from "../../utils/message";
-
-type ResponseType = {
-  message: string;
-  data: {
-    jwt: string;
-  };
-};
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { request } = useRequest<ResponseType>();
+  const { request: loginRequest } = useRequest<LoginResponseType>();
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
     if (!username || !password) return message("username or password is empty");
 
-    request({
+    loginRequest({
       url: `users/login`,
       method: "POST",
       data: {

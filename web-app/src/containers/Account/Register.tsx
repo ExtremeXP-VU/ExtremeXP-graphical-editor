@@ -2,17 +2,14 @@ import { useState } from "react";
 import useRequest from "../../hooks/useRequest";
 import { useNavigate } from "react-router-dom";
 import { message } from "../../utils/message";
-
-type ResponseType = {
-  message: string;
-};
+import { RegisterResponseType } from "../../types/requests";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { request } = useRequest<ResponseType>();
+  const { request: registerRequest } = useRequest<RegisterResponseType>();
   const navigate = useNavigate();
 
   const handleRegister = () => {
@@ -20,7 +17,7 @@ const Register = () => {
 
     if (password !== confirmPassword) return message("passwords do not match");
 
-    request({
+    registerRequest({
       url: `users/create`,
       method: "POST",
       data: {
@@ -30,7 +27,7 @@ const Register = () => {
     })
       .then((response) => {
         if (response) {
-          message("User successfully created.");
+          message("Account created.");
           setTimeout(() => {
             navigate(`/account/login`);
           }, 2000);

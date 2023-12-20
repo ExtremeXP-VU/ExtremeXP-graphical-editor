@@ -9,13 +9,12 @@ import {
   SpecificationType,
   defaultSpecification,
 } from "../../../types/experiment";
-
-type ResponseType = {
-  message: string;
-  data: {
-    specifications: [];
-  };
-};
+import {
+  SpecificationsResponseType,
+  CreateSpecificationResponseType,
+  UpdateSpecificationNameResponseType,
+  DeleteSpecificationResponseType,
+} from "../../../types/requests";
 
 const Specifications = () => {
   const [specifications, setSpecifications] = useState([defaultSpecification]);
@@ -28,11 +27,19 @@ const Specifications = () => {
   // make sure the expID is the same as the one in the url
   const expID = useLocation().pathname.split("/")[3];
 
-  const { request } = useRequest<ResponseType>();
+  const { request: specificationsRequest } =
+    useRequest<SpecificationsResponseType>();
+  const { request: createSpecificationRequest } =
+    useRequest<CreateSpecificationResponseType>();
+  const { request: updateSpecNameRequest } =
+    useRequest<UpdateSpecificationNameResponseType>();
+  const { request: deleteSpecificationRequest } =
+    useRequest<DeleteSpecificationResponseType>();
+
   const navigate = useNavigate();
 
   const getSpecifications = useCallback(() => {
-    request({
+    specificationsRequest({
       url: `exp/experiments/${expID}/specifications`,
     })
       .then((data) => {
@@ -46,14 +53,14 @@ const Specifications = () => {
           message(error.message);
         }
       });
-  }, [request, expID]);
+  }, [specificationsRequest, expID]);
 
   useEffect(() => {
     getSpecifications();
   }, [getSpecifications]);
 
   const handleNewSpecification = () => {
-    request({
+    createSpecificationRequest({
       url: `/exp/experiments/${expID}/specifications/create`,
       method: "POST",
       data: {
@@ -81,13 +88,21 @@ const Specifications = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      if (editingIndex === null) return;
+      if (
+        newSpecName === "" ||
+        newSpecName === specifications[editingIndex].name
+      ) {
+        setEditingIndex(null);
+        return;
+      }
       renameSpecification();
       setEditingIndex(null);
     }
   };
 
   const renameSpecification = () => {
-    request({
+    updateSpecNameRequest({
       url: `/exp/experiments/${expID}/specifications/${
         specifications[editingIndex!].id_specification
       }/update/name`,
@@ -100,9 +115,7 @@ const Specifications = () => {
         getSpecifications();
       })
       .catch((error) => {
-        if (error.message) {
-          message(error.message);
-        }
+        message(error.response.data?.message || error.message);
       });
   };
 
@@ -131,7 +144,7 @@ const Specifications = () => {
 
   const handleDeleteSpecification = () => {
     if (deleteIndex === null) return;
-    request({
+    deleteSpecificationRequest({
       url: `/exp/experiments/${expID}/specifications/${specifications[deleteIndex].id_specification}/delete`,
       method: "DELETE",
     })
@@ -139,9 +152,7 @@ const Specifications = () => {
         getSpecifications();
       })
       .catch((error) => {
-        if (error.message) {
-          message(error.message);
-        }
+        message(error.response.data?.message || error.message);
       });
     closeMask();
   };

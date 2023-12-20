@@ -6,13 +6,12 @@ import { timestampToDate } from "../../utils/timeToDate";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { defaultExperiment } from "../../types/experiment";
 import Popover from "../../components/general/Popover";
-
-type ResponseType = {
-  message: string;
-  data: {
-    experiments: [];
-  };
-};
+import {
+  ExperimentsResponseType,
+  CreateExperimentResponseType,
+  UpdateExperimentResponseType,
+  DeleteExperimentResponseType,
+} from "../../types/requests";
 
 const Experiments = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
@@ -25,13 +24,20 @@ const Experiments = () => {
 
   const [showPopover, setShowPopover] = useState(false);
 
-  const { request } = useRequest<ResponseType>();
+  const { request: experimentsRequest } = useRequest<ExperimentsResponseType>();
+  const { request: createExpRequest } =
+    useRequest<CreateExperimentResponseType>();
+  const { request: updateExpRequest } =
+    useRequest<UpdateExperimentResponseType>();
+  const { request: deleteExpRequest } =
+    useRequest<DeleteExperimentResponseType>();
+
   const navigate = useNavigate();
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
 
   const getExperiments = useCallback(() => {
-    request({
+    experimentsRequest({
       url: `exp/experiments`,
     })
       .then((data) => {
@@ -44,7 +50,7 @@ const Experiments = () => {
           message("Please login first");
         }
       });
-  }, [request]);
+  }, [experimentsRequest]);
 
   useEffect(() => {
     getExperiments();
@@ -84,7 +90,7 @@ const Experiments = () => {
 
   const handleCreateExperiment = () => {
     if (!isExperimentNameValid(createExpName)) return;
-    request({
+    createExpRequest({
       url: `exp/experiments/create`,
       method: "POST",
       data: {
@@ -92,7 +98,7 @@ const Experiments = () => {
       },
     })
       .then(() => {
-        getExperiments();
+        window.location.reload();
       })
       .catch((error) => {
         if (error.name === "AxiosError") {
@@ -134,10 +140,6 @@ const Experiments = () => {
   };
 
   const updateExperimentInfo = () => {
-    console.log("currentExp.description:", currentExp.description);
-    console.log("descriptionInput:", descriptionInput);
-    console.log(currentExp.description === descriptionInput);
-
     setIsEditing(false);
     if (!isExperimentNameValid(expNameInput)) return;
     if (
@@ -147,7 +149,7 @@ const Experiments = () => {
       return;
     }
 
-    request({
+    updateExpRequest({
       url: `exp/experiments/${currentExp.id_experiment}/update`,
       method: "PUT",
       data: {
@@ -179,7 +181,7 @@ const Experiments = () => {
   }
 
   const handleDeleteExperiment = () => {
-    request({
+    deleteExpRequest({
       url: `exp/experiments/${currentExp.id_experiment}/delete`,
       method: "DELETE",
     })

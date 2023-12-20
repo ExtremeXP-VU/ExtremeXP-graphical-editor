@@ -65,7 +65,7 @@ def create_experiment():
         }, 409
 
     res = experimentHandler.create_experiment(g.username, exp_name)
-    return {"id_experiment": res}, 201
+    return {"message": "Experiment created.", "data": {"id_experiment": res}}, 201
 
 
 @app.route("/exp/experiments/<exp_id>/update", methods=["OPTIONS", "PUT"])
@@ -127,7 +127,7 @@ def create_specification(exp_id):
             "message": "Specification name already exists",
         }, 409
     res = specificationHandler.create_specification(g.username, exp_id, spec_name)
-    return {"id_specification": res}, 201
+    return {"message": "Specification created", "data": {"id_specification": res}}, 201
 
 
 @app.route(
