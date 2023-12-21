@@ -1,5 +1,5 @@
 import "./experiments.scss";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
@@ -37,9 +37,15 @@ const Experiments = () => {
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
 
-  const filteredExperiments = experiments.filter((experiment) => {
-    return experiment.name.toLowerCase().includes(searchInput.toLowerCase());
-  });
+  const filteredExperiments = useMemo(() => {
+    return experiments.filter((experiment) => {
+      return experiment.name.toLowerCase().includes(searchInput.toLowerCase());
+    });
+  }, [experiments, searchInput]);
+
+  const urlExpID = useMemo(() => {
+    return location.pathname.split("/")[3];
+  }, [location.pathname]);
 
   const getExperiments = useCallback(() => {
     experimentsRequest({
@@ -73,12 +79,11 @@ const Experiments = () => {
 
   useEffect(() => {
     // find the experiment id from the url
-    const expID = location.pathname.split("/")[3];
-    if (expID && expID !== currentExp.id_experiment) {
-      const exp = experiments.find((exp) => exp.id_experiment === expID);
+    if (urlExpID && urlExpID !== currentExp.id_experiment) {
+      const exp = experiments.find((exp) => exp.id_experiment === urlExpID);
       if (exp) setCurrentExp(exp);
     }
-  }, [currentExp.id_experiment, experiments, location.pathname]);
+  }, [currentExp.id_experiment, experiments, location.pathname, urlExpID]);
 
   // FIXME: Add experiment name validation
   const isExperimentNameValid = (name: string) => {
@@ -103,7 +108,7 @@ const Experiments = () => {
       },
     })
       .then(() => {
-        window.location.reload();
+        getExperiments();
       })
       .catch((error) => {
         if (error.name === "AxiosError") {
@@ -114,14 +119,11 @@ const Experiments = () => {
     setCreateExpName("");
   };
 
-  const handleSelectExperiment = (expID: string) => {
+  const handleSelectExperiment = (index: number) => {
     if (isEditing) return;
-    const index = experiments.findIndex(
-      (experiment) => experiment.id_experiment === expID
-    );
-    setCurrentExp(experiments[index]);
+    setCurrentExp(filteredExperiments[index]);
     navigate(
-      `/repository/experiments/${experiments[index].id_experiment}/specifications`
+      `/repository/experiments/${filteredExperiments[index].id_experiment}/specifications`
     );
   };
 
@@ -244,18 +246,15 @@ const Experiments = () => {
                   className={`experiments__panel__folders__list__item ${
                     currentExp.name === experiment.name ? "selected" : ""
                   }`}
-                  key={index}
-                  onClick={handleSelectExperiment.bind(
-                    null,
-                    experiment.id_experiment
-                  )}
+                  key={experiment.id_experiment}
+                  onClick={() => handleSelectExperiment(index)}
                 >
                   <div className="experiments__panel__folders__list__item__name">
                     {currentExp.name !== experiment.name && (
-                      <span className="iconfont">&#xeabf;</span>
+                      <span className="iconfont closed-folder">&#xeabf;</span>
                     )}
                     {currentExp.name === experiment.name && (
-                      <span className="iconfont">&#xeabe;</span>
+                      <span className="iconfont open-folder">&#xeabe;</span>
                     )}
                     <span>{experiment.name}</span>
                   </div>
