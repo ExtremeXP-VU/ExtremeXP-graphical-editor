@@ -120,6 +120,12 @@ const Specifications = () => {
   };
 
   const renameSpecification = () => {
+    if (newSpecName === "" || editingIndex === null) return;
+    if (newSpecName === specifications[editingIndex].name) return;
+    if (newSpecName.length > 35) {
+      message("The length of the name should be less than 35 characters.");
+      return;
+    }
     updateSpecNameRequest({
       url: `/exp/experiments/${expID}/specifications/${
         specifications[editingIndex!].id_specification

@@ -9,10 +9,13 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ specName }) => {
   return (
     <div className="header">
-      <div className="header__logo">
-        <img src={logo} alt="logo" />
+      <div className="header__left">
+        <div className="header__left__logo">
+          <img src={logo} alt="logo" />
+        </div>
+        <div className="header__left__name">{`${specName}`}</div>
       </div>
-      <div className="header__name">{`${specName}`}</div>
+      <div className="header__right"></div>
     </div>
   );
 };
