@@ -12,6 +12,7 @@ import ReactFlow, {
   useEdgesState,
   Controls,
   Background,
+  MiniMap,
 } from "reactflow";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -265,6 +266,7 @@ const Editor = () => {
               fitView
             >
               <Controls />
+              <MiniMap />
               <Background />
             </ReactFlow>
           </div>

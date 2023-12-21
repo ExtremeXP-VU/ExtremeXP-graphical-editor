@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+
 import { message } from "../../../utils/message";
 
 import "./style.scss";
@@ -10,22 +10,6 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({ onSave, onSaveAs }) => {
-  const navigate = useNavigate();
-  const expID = useLocation().pathname.split("/")[2];
-  const specificationID = useLocation().pathname.split("/")[3];
-
-  const handleGoBack = () => {
-    if (localStorage.getItem("token") && localStorage.getItem("username")) {
-      if (specificationID && expID) {
-        navigate(`/repository/experiments/${expID}/specifications`);
-      } else {
-        navigate("/repository/experiments");
-      }
-    } else {
-      navigate("/account/login");
-    }
-  };
-
   function handleExecution() {
     message("Execution is not implemented yet");
   }
@@ -56,12 +40,6 @@ const SideBar: React.FC<SideBarProps> = ({ onSave, onSaveAs }) => {
           }}
         >
           Save as
-        </button>
-      </div>
-      <div className="sidebar__back">
-        <button className="sidebar__back__button" onClick={handleGoBack}>
-          <span className="iconfont">&#xe79b;</span>
-          <p> repository</p>
         </button>
       </div>
     </div>

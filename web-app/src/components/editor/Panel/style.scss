@@ -70,7 +70,7 @@ $panel-info-height: 2.1rem;
 }
 
 .panel__nodes {
-  max-height: calc((100% - $panel-info-height) * (2 / 5));
+  max-height: calc((100% - $panel-info-height) * (3 / 5));
   border-top: 2px groove darken($color: $panel-color, $amount: 30);
 }
 
@@ -183,13 +183,36 @@ $panel-info-height: 2.1rem;
   }
 }
 
-.panel__ui {
+.panel__back {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 2rem;
-  background-color: antiquewhite;
-  font-size: 1.2em;
-  font-weight: 700;
+  height: 1.2rem;
+
+  button {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 1.5rem;
+    height: 0.4rem;
+    border-radius: 0.05rem;
+    background-color: $secondary-theme-color;
+    color: $primary-button-text-color;
+    font-size: 1.2em;
+    font-weight: 800;
+
+    .iconfont {
+      font-size: 1.4em;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: lighten($color: $secondary-theme-color, $amount: 20);
+    }
+
+    &:active {
+      background-color: darken($color: $secondary-theme-color, $amount: 20);
+    }
+  }
 }

@@ -2,6 +2,7 @@ import "./style.scss";
 
 import React from "react";
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { nodeImageSrc } from "../../../assets/nodes";
 import {
@@ -19,6 +20,22 @@ const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
+
+  const navigate = useNavigate();
+  const expID = useLocation().pathname.split("/")[2];
+  const specificationID = useLocation().pathname.split("/")[3];
+
+  const handleGoBack = () => {
+    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+      if (specificationID && expID) {
+        navigate(`/repository/experiments/${expID}/specifications`);
+      } else {
+        navigate("/repository/experiments");
+      }
+    } else {
+      navigate("/account/login");
+    }
+  };
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
@@ -99,8 +116,11 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           })}
         </div>
       </div>
-      <div className="panel__ui">
-        <div>UI elements</div>
+      <div className="panel__back">
+        <button className="panel__back__button" onClick={handleGoBack}>
+          <span className="iconfont">&#xe79b;</span>
+          <p> repository</p>
+        </button>
       </div>
     </div>
   );
