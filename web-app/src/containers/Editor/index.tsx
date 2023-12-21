@@ -97,6 +97,21 @@ const Editor = () => {
     setEdges(graphicalModel.edges);
   }, [graphicalModel]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+        event.preventDefault();
+        handleSave();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [nodes, edges]);
+
   const handleLinkSelection = (linkType: LinksPropsType) => {
     setSelectedLink(linkType);
   };
