@@ -172,6 +172,33 @@
     background-color: white;
     border-radius: 0.1rem;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+
+    &__guide {
+      width: 100%;
+      color: $header-text-color;
+      width: 100%;
+      height: 0.6rem;
+
+      &__top {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        font-size: 1.5em;
+        font-weight: 700;
+
+        .iconfont {
+          margin: 0 0.2rem;
+          font-size: 1.9em;
+          animation: swing 0.8s ease-in-out infinite;
+        }
+      }
+
+      &__bottom {
+        margin-left: 1.35rem;
+        text-align: left;
+      }
+    }
   }
 }
 
@@ -366,5 +393,17 @@
         color: $primary-button-text-color;
       }
     }
+  }
+}
+
+@keyframes swing {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }

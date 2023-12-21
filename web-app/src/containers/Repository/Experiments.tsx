@@ -36,6 +36,7 @@ const Experiments = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isSpecification = location.pathname.includes("/specifications");
+  const isExperimentsEmpty = experiments.length === 0;
 
   const filteredExperiments = useMemo(() => {
     return experiments.filter((experiment) => {
@@ -267,77 +268,90 @@ const Experiments = () => {
           </div>
         </div>
         <div className="experiments__experiment">
-          {/* <Experiment expID={currentExp.id_experiment} /> */}
           <div className="experiments__experiment__board">
-            <div className="experiments__experiment__header">
-              <div className="experiments__experiment__header__info">
-                <div className="experiments__experiment__header__info__name">
-                  <span
-                    title="edit the name and description"
-                    className="iconfont"
-                    onClick={handleStartEditing}
+            {isExperimentsEmpty ? (
+              <div className="experiments__experiment__board__guide">
+                <div className="experiments__experiment__board__guide__top">
+                  <span className="iconfont">&#xe61a;</span>
+                  <p>Click the button to create a new experiment</p>
+                </div>
+                <div className="experiments__experiment__board__guide__bottom">
+                  <p>(You need to enter the experiment name first)</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="experiments__experiment__header">
+                  <div className="experiments__experiment__header__info">
+                    <div className="experiments__experiment__header__info__name">
+                      <span
+                        title="edit the name and description"
+                        className="iconfont"
+                        onClick={handleStartEditing}
+                      >
+                        &#xe63c;
+                      </span>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={expNameInput}
+                          onChange={(e) => setExpNameInput(e.target.value)}
+                          onKeyUp={handleChangeNameKeyPress}
+                        />
+                      ) : (
+                        <span>{currentExp.name}</span>
+                      )}
+                    </div>
+                    <div className="experiments__experiment__header__info__description">
+                      {isEditing ? (
+                        <textarea
+                          value={descriptionInput}
+                          onChange={(e) => setDescriptionInput(e.target.value)}
+                          onKeyUp={handleChangeDescriptionKeyPress}
+                        />
+                      ) : (
+                        <p>{currentExp.description}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="experiments__experiment__header__info__delete">
+                    <button
+                      title="delete the entire experiment"
+                      onClick={handleOpenPopover}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                <div className="experiments__experiment__links">
+                  <Link
+                    to={`/repository/experiments/${currentExp.id_experiment}/specifications`}
                   >
-                    &#xe63c;
-                  </span>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={expNameInput}
-                      onChange={(e) => setExpNameInput(e.target.value)}
-                      onKeyUp={handleChangeNameKeyPress}
-                    />
-                  ) : (
-                    <span>{currentExp.name}</span>
-                  )}
+                    <div
+                      className={`experiments__experiment__links__link ${
+                        isSpecification ? "selected" : ""
+                      }`}
+                    >
+                      Specifications
+                    </div>
+                  </Link>
+                  <Link
+                    to={`/repository/experiments/${currentExp.id_experiment}/dataset`}
+                  >
+                    <div
+                      className={`experiments__experiment__links__link ${
+                        !isSpecification ? "selected" : ""
+                      }`}
+                    >
+                      Dataset
+                    </div>
+                  </Link>
                 </div>
-                <div className="experiments__experiment__header__info__description">
-                  {isEditing ? (
-                    <textarea
-                      value={descriptionInput}
-                      onChange={(e) => setDescriptionInput(e.target.value)}
-                      onKeyUp={handleChangeDescriptionKeyPress}
-                    />
-                  ) : (
-                    <p>{currentExp.description}</p>
-                  )}
+                <div className="experiments__experiment__content">
+                  <Outlet />
                 </div>
-              </div>
-              <div className="experiments__experiment__header__info__delete">
-                <button
-                  title="delete the entire experiment"
-                  onClick={handleOpenPopover}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-            <div className="experiments__experiment__links">
-              <Link
-                to={`/repository/experiments/${currentExp.id_experiment}/specifications`}
-              >
-                <div
-                  className={`experiments__experiment__links__link ${
-                    isSpecification ? "selected" : ""
-                  }`}
-                >
-                  Specifications
-                </div>
-              </Link>
-              <Link
-                to={`/repository/experiments/${currentExp.id_experiment}/dataset`}
-              >
-                <div
-                  className={`experiments__experiment__links__link ${
-                    !isSpecification ? "selected" : ""
-                  }`}
-                >
-                  Dataset
-                </div>
-              </Link>
-            </div>
-            <div className="experiments__experiment__content">
-              <Outlet />
-            </div>
+              </>
+            )}
           </div>
         </div>
         <Popover show={showPopover} blankClickCallback={closeMask}>
