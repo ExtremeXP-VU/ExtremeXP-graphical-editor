@@ -74,6 +74,18 @@
     }
   }
 
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100% - 0.2rem);
+    color: $header-text-color;
+    font-size: 2.5em;
+    font-weight: bold;
+  }
+
   &__list {
     overflow-y: auto;
     display: flex;

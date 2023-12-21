@@ -25,9 +25,8 @@ export interface SpecificationType {
 
 export const defaultExperiment = {
   id_experiment: "default",
-  name: "create a new experiment",
-  description:
-    "Create your experiment folder by enter the experiment name and press the create button. The name should be less than 30 characters. You can only start editing specification after the experiment folder is created.",
+  name: "",
+  description: "",
   create_at: timeNow(),
   update_at: timeNow(),
 };

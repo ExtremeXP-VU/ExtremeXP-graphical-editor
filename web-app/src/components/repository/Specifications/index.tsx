@@ -29,6 +29,8 @@ const Specifications = () => {
   const [showPopover, setShowPopover] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
+  const isSpecificationEmpty = specifications.length === 0;
+
   // make sure the expID is the same as the one in the url
   const expID = useLocation().pathname.split("/")[3];
 
@@ -211,61 +213,68 @@ const Specifications = () => {
             Update At
           </div>
         </div>
-        <ul className="specification__contents__list">
-          {specifications.map((specification, index) => (
-            <li className="specification__contents__list__item" key={index}>
-              <div className="specification__contents__list__item__title">
-                <span
-                  title="modify the name"
-                  className="iconfont"
-                  onClick={() => handleStartEditingName(index)}
-                >
-                  &#xe63c;
-                </span>
-                {editingIndex === index ? (
-                  <input
-                    type="text"
-                    value={newSpecName}
-                    onChange={(e) => setNewSpecName(e.target.value)}
-                    onKeyUp={handleKeyPress}
-                  />
-                ) : (
-                  <p>{specification.name}</p>
-                )}
-              </div>
-              <div className="specification__contents__list__item__create">
-                {timestampToDate(specification.create_at)}
-              </div>
-              <div className="specification__contents__list__item__update">
-                {timestampToDate(specification.update_at)}
-              </div>
-              <div className="specification__contents__list__item__operations">
-                <span
-                  title="download graphical model"
-                  className="iconfont"
-                  onClick={() => handleDownloadSpecification(index)}
-                >
-                  &#xe627;
-                </span>
-                <span
-                  title="delete this specification"
-                  className="iconfont"
-                  onClick={() => handleOpenPopover(index)}
-                >
-                  &#xe634;
-                </span>
-                <button
-                  title="open specification in the graphical editor"
-                  onClick={() => {
-                    handleOpenSpecification(specification);
-                  }}
-                >
-                  open
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {isSpecificationEmpty ? (
+          <div className="specification__contents__empty">
+            <span className="iconfont">&#xe6a6;</span>
+            <p>Empty Specification</p>
+          </div>
+        ) : (
+          <ul className="specification__contents__list">
+            {specifications.map((specification, index) => (
+              <li className="specification__contents__list__item" key={index}>
+                <div className="specification__contents__list__item__title">
+                  <span
+                    title="modify the name"
+                    className="iconfont"
+                    onClick={() => handleStartEditingName(index)}
+                  >
+                    &#xe63c;
+                  </span>
+                  {editingIndex === index ? (
+                    <input
+                      type="text"
+                      value={newSpecName}
+                      onChange={(e) => setNewSpecName(e.target.value)}
+                      onKeyUp={handleKeyPress}
+                    />
+                  ) : (
+                    <p>{specification.name}</p>
+                  )}
+                </div>
+                <div className="specification__contents__list__item__create">
+                  {timestampToDate(specification.create_at)}
+                </div>
+                <div className="specification__contents__list__item__update">
+                  {timestampToDate(specification.update_at)}
+                </div>
+                <div className="specification__contents__list__item__operations">
+                  <span
+                    title="download graphical model"
+                    className="iconfont"
+                    onClick={() => handleDownloadSpecification(index)}
+                  >
+                    &#xe627;
+                  </span>
+                  <span
+                    title="delete this specification"
+                    className="iconfont"
+                    onClick={() => handleOpenPopover(index)}
+                  >
+                    &#xe634;
+                  </span>
+                  <button
+                    title="open specification in the graphical editor"
+                    onClick={() => {
+                      handleOpenSpecification(specification);
+                    }}
+                  >
+                    open
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__delete">
