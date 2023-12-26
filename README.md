@@ -11,7 +11,16 @@ docker-compose up -d
 
 To access the app: http://localhost:7001/
 
-## Development Progress demo
+## Demo
+
+**Network Deployment:**
+
+![newtwork_structure](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/network_and_authentication.v1.png)
+
+**Repository:**
 
 ![repository](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/repository%20v1.png)
+
+**Editor:**
+
 ![editor](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/editor%20v1.png)
