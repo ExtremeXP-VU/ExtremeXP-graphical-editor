@@ -1,3 +1,8 @@
+export const notationList = {
+  nodes: ["start", "end", "task", "subflow", "data"],
+  edges: ["regular", "conditional", "exceptional", "dataflow"],
+};
+
 export const linkProps = {
   regular: {
     type: "regular",
@@ -45,30 +50,3 @@ export const linkProps = {
 };
 
 export type LinksPropsType = keyof typeof linkProps;
-
-export const notationList = {
-  nodes: [
-    "start",
-    "end",
-    "task",
-    "data",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-    "task",
-  ],
-  edges: ["regular", "conditional", "exceptional", "dataflow"],
-};
