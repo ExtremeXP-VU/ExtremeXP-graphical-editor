@@ -13,5 +13,5 @@ To access the app: http://localhost:7001/
 
 ## Development Progress demo
 
-![repository]()
-![editor]()
+![repository](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/repository%20v1.png)
+![editor](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/editor%20v1.png)
