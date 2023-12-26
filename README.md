@@ -10,3 +10,8 @@ docker-compose up -d
 ```
 
 To access the app: http://localhost:7001/
+
+## Development Progress demo
+
+![repository]()
+![editor]()
