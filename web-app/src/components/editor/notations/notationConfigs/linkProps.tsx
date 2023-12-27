@@ -1,5 +1,15 @@
 export const notationList = {
-  nodes: ["start", "end", "task", "subflow", "data"],
+  nodes: [
+    "start",
+    "end",
+    "task",
+    "subflow",
+    "data",
+    "opParallel",
+    "opExclusive",
+    "opInclusive",
+    "opComplex",
+  ],
   edges: ["regular", "conditional", "exceptional", "dataflow"],
 };
 
@@ -24,6 +34,7 @@ export const linkProps = {
       height: 20,
       color: "#000",
     },
+    zIndex: 1,
   },
   exceptional: {
     type: "exceptional",
@@ -35,6 +46,7 @@ export const linkProps = {
       height: 20,
       color: "#000",
     },
+    zIndex: 2,
   },
   dataflow: {
     type: "dataflow",
