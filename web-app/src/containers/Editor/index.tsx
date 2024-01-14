@@ -249,7 +249,7 @@ const Editor = () => {
     })
       .then((data) => {
         if (data.data.result) {
-          alert(`Output created. The result is: ${data.data.result}`);
+          alert(`The execution result is: ${data.data.result}`);
         }
       })
       .catch((error) => {

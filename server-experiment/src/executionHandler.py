@@ -45,11 +45,17 @@ class ExecutionHandler(object):
         return "Yield"
 
     def getOperation(self, graphical_model):
-        operation_value = graphical_model["nodes"][1]["data"].get("operation", "mean")
-        return operation_value
+        task_node = next(
+            (node for node in graphical_model["nodes"] if node.get("type") == "task"),
+            None,
+        )
+        if task_node:
+            operation_value = task_node["data"].get("operation", "mean")
+            return operation_value
+        return "mean"
 
     def getOutputField(self, graphical_model):
-        return "avg_yield"
+        return "result_yield"
 
     def getOutputFileName(self, graphical_model):
         return "manufacturing-output.csv"
