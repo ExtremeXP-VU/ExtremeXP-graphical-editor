@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 from userAuthHandler import userAuthHandler
 from experimentHandler import experimentHandler
 from specificationHandler import specificationHandler
+from executionHandler import executionHandler
 
 app = Flask(__name__)
 cors = CORS(app)  # cors is added in advance to allow cors requests
@@ -172,3 +173,17 @@ def update_specification_graphical_model(exp_id, spec_id):
         spec_id, exp_id, graphical_model
     )
     return {"message": "specification graphical model updated"}, 200
+
+
+@app.route(
+    "/exp/experiments/<exp_id>/specifications/<spec_id>/execution",
+    methods=["OPTIONS", "POST"],
+)
+@cross_origin()
+def execute_experiment(exp_id, spec_id):
+    graphical_model = request.json["graphical_model"]
+    specificationHandler.update_specification_graphical_model(
+        spec_id, exp_id, graphical_model
+    )
+    result = executionHandler.execute_experiment(graphical_model)
+    return {"message": "experiment executed", "data": {"result": result}}, 200

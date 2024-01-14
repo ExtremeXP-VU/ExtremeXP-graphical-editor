@@ -170,7 +170,7 @@ const Editor = () => {
         id: getId(nodes),
         type,
         position,
-        data: { label: "" },
+        data: {},
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -237,6 +237,28 @@ const Editor = () => {
       });
   }
 
+  // FIXEME: duplicated code
+  function handleExecution() {
+    const graphicalModel = { nodes, edges };
+    updateGraphRequest({
+      url: `/exp/experiments/${expID}/specifications/${specificaitonID}/execution`,
+      method: "POST",
+      data: {
+        graphical_model: graphicalModel,
+      },
+    })
+      .then((data) => {
+        if (data.data.result) {
+          alert(`Output created. The result is: ${data.data.result}`);
+        }
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
+  }
+
   return (
     <div className="editor">
       <div className="editor__top">
@@ -271,7 +293,11 @@ const Editor = () => {
             </ReactFlow>
           </div>
           <div className="editor__bottom__right">
-            <SideBar onSave={handleSave} onSaveAs={handleShowPopover} />
+            <SideBar
+              onExecution={handleExecution}
+              onSave={handleSave}
+              onSaveAs={handleShowPopover}
+            />
           </div>
         </div>
       </ReactFlowProvider>

@@ -1,25 +1,22 @@
 import React from "react";
 
-import { message } from "../../../utils/message";
-
 import "./style.scss";
 
 interface SideBarProps {
+  onExecution: () => void;
   onSave: () => void;
   onSaveAs: () => void;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ onSave, onSaveAs }) => {
-  function handleExecution() {
-    message("Execution is not implemented yet");
-  }
-
+const SideBar: React.FC<SideBarProps> = ({ onExecution, onSave, onSaveAs }) => {
   return (
     <div className="sidebar">
       <div className="sidebar__execution">
         <button
           className="sidebar__execution__button"
-          onClick={handleExecution}
+          onClick={() => {
+            onExecution();
+          }}
         >
           Execution
         </button>

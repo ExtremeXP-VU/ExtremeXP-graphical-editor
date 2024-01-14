@@ -1,3 +1,4 @@
+import "./style.scss";
 import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
@@ -9,50 +10,40 @@ const Data = ({
 }: NodeProps) => {
   return (
     <>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        version="1.1"
-        width="51px"
-        height="41px"
-        viewBox="-0.5 -0.5 51 41"
-      >
-        <defs />
-        <g>
-          <path
-            d="M 0 0 L 38 0 L 50 12 L 50 40 L 0 40 L 0 0 Z"
-            fill="none"
-            stroke="rgb(0, 0, 0)"
-            strokeMiterlimit="10"
-            pointerEvents="all"
+      <div className="node-data">
+        <label className="node-data__name">
+          <p className="node-data__title">Name</p>
+          <input
+            className="node-data__input nodrag"
+            type="text"
+            value={data.name}
+            onChange={(e) => {
+              data.name = e.target.value;
+            }}
           />
-          <path
-            d="M 38 0 L 38 12 L 50 12 Z"
-            fillOpacity="0.05"
-            fill="#000000"
-            stroke="none"
-            pointerEvents="all"
+        </label>
+        <label className="node-data__field">
+          <p className="node-data__title">Field</p>
+          <input
+            className="node-data__input nodrag"
+            type="text"
+            value={data.field}
+            onChange={(e) => {
+              data.field = e.target.value;
+            }}
           />
-          <path
-            d="M 38 0 L 38 12 L 50 12"
-            fill="none"
-            stroke="rgb(0, 0, 0)"
-            strokeMiterlimit="10"
-            pointerEvents="all"
-          />
-        </g>
-      </svg>
-      {data?.label}
-      <Handle
-        type="source"
-        position={sourcePosition}
-        isConnectable={isConnectable}
-      />
-      <Handle
-        type="target"
-        position={targetPosition}
-        isConnectable={isConnectable}
-      />
+        </label>
+        <Handle
+          type="source"
+          position={sourcePosition}
+          isConnectable={isConnectable}
+        />
+        <Handle
+          type="target"
+          position={targetPosition}
+          isConnectable={isConnectable}
+        />
+      </div>
     </>
   );
 };

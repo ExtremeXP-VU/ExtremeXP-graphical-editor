@@ -1,4 +1,5 @@
-FROM python:3.9-alpine
+# alpine has issue with pandas
+FROM python:3.9-slim
 
 COPY . /server-experiment
 WORKDIR /server-experiment
