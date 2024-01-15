@@ -253,7 +253,10 @@ const Editor = () => {
         }
       })
       .catch((error) => {
-        if (error.message) {
+        console.log(error);
+        if (error.response.data.message) {
+          message(error.response.data.message);
+        } else if (error.message) {
           message(error.message);
         }
       });

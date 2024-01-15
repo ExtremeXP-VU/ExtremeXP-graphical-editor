@@ -186,4 +186,9 @@ def execute_experiment(exp_id, spec_id):
         spec_id, exp_id, graphical_model
     )
     result = executionHandler.execute_experiment(graphical_model)
-    return {"message": "experiment executed", "data": {"result": result}}, 200
+    if result["verified"]:
+        return {
+            "message": "experiment executed",
+            "data": {"result": result["result"]},
+        }, 200
+    return {"error": "execution failed", "message": result["error"]}, 401

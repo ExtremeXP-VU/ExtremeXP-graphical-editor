@@ -25,6 +25,8 @@ const Task = ({
           >
             <option value="mean">mean</option>
             <option value="sum">sum</option>
+            <option value="min">min</option>
+            <option value="max">max</option>
           </select>
         </label>
         <Handle
