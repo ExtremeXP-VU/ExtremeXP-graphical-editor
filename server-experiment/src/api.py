@@ -185,10 +185,10 @@ def execute_experiment(exp_id, spec_id):
     specificationHandler.update_specification_graphical_model(
         spec_id, exp_id, graphical_model
     )
-    result = executionHandler.execute_experiment(graphical_model)
-    if result["verified"]:
+    response = executionHandler.execute_experiment(graphical_model)
+    if response["verified"]:
         return {
             "message": "experiment executed",
-            "data": {"result": result["result"]},
+            "data": {"file": response["filename"], "result": response["result"]},
         }, 200
-    return {"error": "execution failed", "message": result["error"]}, 401
+    return {"error": "execution failed", "message": response["error"]}, 401

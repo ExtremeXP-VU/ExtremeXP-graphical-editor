@@ -58,7 +58,7 @@ class ExecutionHandler(object):
 
         json_data = df_output.to_json(orient="records")
 
-        return {"verified": True, "result": json_data}
+        return {"verified": True, "result": json_data, "filename": output_file_name}
 
     def get_input_file_name(self, graphical_model):
         # from the first data node get "name"
