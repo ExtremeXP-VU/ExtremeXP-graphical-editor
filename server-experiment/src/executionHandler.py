@@ -1,6 +1,8 @@
-# import requests
-# import pymongo
-import json
+"""
+The implementation of the execution handler is for demo purposes only.
+It is not the final implementation of the execution handler as the result of the thesis.
+"""
+
 import os
 import pandas as pd
 from dbClient import mongo_client

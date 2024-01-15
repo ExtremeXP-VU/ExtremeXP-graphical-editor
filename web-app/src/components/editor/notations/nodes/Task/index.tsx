@@ -1,5 +1,5 @@
 import "./style.scss";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const Task = ({
@@ -8,6 +8,8 @@ const Task = ({
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
+  const [operation, setOperation] = useState(data.operation);
+
   return (
     <>
       <div className="node-task">
@@ -15,8 +17,9 @@ const Task = ({
         <label className="node-task__label">
           <select
             className="node-task__label__selector nodrag"
-            value={data.operation}
+            value={operation}
             onChange={(e) => {
+              setOperation(e.target.value);
               data.operation = e.target.value;
             }}
           >

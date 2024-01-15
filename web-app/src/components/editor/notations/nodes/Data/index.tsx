@@ -1,5 +1,5 @@
 import "./style.scss";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
 const Data = ({
@@ -8,6 +8,9 @@ const Data = ({
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
+  const [name, setName] = useState(data.name);
+  const [field, setField] = useState(data.field);
+
   return (
     <>
       <div className="node-data">
@@ -16,8 +19,9 @@ const Data = ({
           <input
             className="node-data__input nodrag"
             type="text"
-            value={data.name}
+            value={name}
             onChange={(e) => {
+              setName(e.target.value);
               data.name = e.target.value;
             }}
           />
@@ -27,8 +31,9 @@ const Data = ({
           <input
             className="node-data__input nodrag"
             type="text"
-            value={data.field}
+            value={field}
             onChange={(e) => {
+              setField(e.target.value);
               data.field = e.target.value;
             }}
           />
