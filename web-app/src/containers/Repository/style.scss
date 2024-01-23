@@ -11,7 +11,7 @@
   align-items: center;
   width: 2rem;
   height: 100%;
-  background-color: darken($color: $primary-theme-color, $amount: 10);
+  background-color: $primary-theme-color;
 }
 
 .repository__panel__header {
@@ -23,7 +23,7 @@
   box-sizing: border-box;
   padding: 0rem 0.2rem;
   border-bottom: 1px solid $primary-theme-color;
-  background-color: $primary-theme-color;
+  background-color: darken($color: $primary-theme-color, $amount: 10);
   color: $primary-button-text-color;
   font-size: 1.4em;
   font-weight: bold;

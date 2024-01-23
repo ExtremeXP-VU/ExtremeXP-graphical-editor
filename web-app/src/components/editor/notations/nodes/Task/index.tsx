@@ -13,7 +13,7 @@ const Task = ({
   return (
     <>
       <div className="node-task">
-        <p className="node-task__title">Operation</p>
+        <p className="node-task__title">Compute</p>
         <label className="node-task__label">
           <select
             className="node-task__label__selector nodrag"
