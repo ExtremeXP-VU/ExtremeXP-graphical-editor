@@ -2,6 +2,8 @@ import { useState, useRef, useCallback } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import { useNavigate } from "react-router-dom";
 
+import { useAccountStore, logout } from "../stores/accountStore";
+
 // Get the token from localStorage and add it to the request headers
 
 const defaultRequestConfig: AxiosRequestConfig = {
@@ -28,7 +30,7 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
       setError(null);
       setLoaded(false);
 
-      const loginToken = localStorage.getItem("token");
+      const loginToken = useAccountStore.getState().token;
       const params = loginToken ? { token: loginToken } : {};
 
       return axios
@@ -46,8 +48,7 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
         })
         .catch((error) => {
           if (error?.response?.status === 403) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("username");
+            logout();
             navigate("/account/login");
           }
           setError(error);

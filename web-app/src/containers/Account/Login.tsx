@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { login } from "../../stores/accountStore";
 import useRequest from "../../hooks/useRequest";
 import { LoginResponseType } from "../../types/requests";
 import { message } from "../../utils/message";
@@ -24,9 +25,9 @@ const Login = () => {
       },
     })
       .then((response) => {
-        if (response.data.jwt) {
-          localStorage.setItem("token", response.data.jwt);
-          localStorage.setItem("username", username);
+        const token = response.data.jwt;
+        if (token) {
+          login(username, token);
           navigate("/repository/experiments");
         }
       })

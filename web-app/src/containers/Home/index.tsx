@@ -1,13 +1,16 @@
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 
+import { useAccountStore } from "../../stores/accountStore";
+
 import logo from "../../assets/extremeXP_logo.png";
 
 const Home = () => {
   const navigate = useNavigate();
+  const isLogin = useAccountStore((state) => state.isLogin);
 
   const handleStart = () => {
-    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+    if (isLogin) {
       navigate("/repository/experiments");
     } else {
       navigate("/account/login");

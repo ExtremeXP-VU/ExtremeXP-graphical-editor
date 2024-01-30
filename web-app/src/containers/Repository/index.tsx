@@ -1,6 +1,7 @@
 import "./style.scss";
 
 import { Link, useNavigate, Outlet, useLocation } from "react-router-dom";
+import { logout } from "../../stores/accountStore";
 
 const Repository = () => {
   const location = useLocation();
@@ -11,8 +12,7 @@ const Repository = () => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
+    logout();
     navigate("/account/login");
   };
 
