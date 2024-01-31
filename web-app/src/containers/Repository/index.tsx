@@ -20,7 +20,7 @@ const Repository = () => {
     <div className="page repository">
       <div className="repository__panel">
         <div className="repository__panel__header">
-          <span>Design Repository</span>
+          <span>Dashboard</span>
         </div>
         <div className="repository__panel__items">
           <Link to={"/repository/experiments"}>

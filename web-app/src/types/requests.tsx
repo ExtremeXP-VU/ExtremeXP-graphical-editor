@@ -65,3 +65,12 @@ export type UpdateGraphicalModelResponseType = {
 export type DeleteSpecificationResponseType = {
   message: string;
 };
+
+// FIXME: Temporary Execution Demo
+export type ExecutionResponseType = {
+  message: string;
+  data: {
+    file: string;
+    result: string;
+  };
+};
