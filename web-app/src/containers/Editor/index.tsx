@@ -1,21 +1,22 @@
 import "reactflow/dist/style.css";
 import "./style.scss";
 
+import React, { useState, useEffect, useCallback } from "react";
+
 import ReactFlow, {
   ReactFlowProvider,
   ReactFlowInstance,
-  Node,
-  Edge,
-  Connection,
-  addEdge,
-  useNodesState,
-  useEdgesState,
   Controls,
   Background,
   MiniMap,
 } from "reactflow";
 
-import React, { useState, useEffect, useCallback } from "react";
+import { shallow } from "zustand/shallow";
+import {
+  useReactFlowInstanceStore,
+  RFState,
+} from "../../stores/reactFlowInstanceStore";
+
 import { useNavigate, useLocation } from "react-router-dom";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
@@ -34,14 +35,25 @@ import {
   SpecificationResponseType,
   UpdateGraphicalModelResponseType,
   CreateSpecificationResponseType,
+  ExecutionResponseType,
 } from "../../types/requests";
 
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
-import {
-  linkProps,
-  LinksPropsType,
-} from "../../components/editor/notations/notationConfigs/linkProps";
+
+const selector = (state: RFState) => ({
+  selectedLink: state.selectedLink,
+  nodes: state.nodes,
+  edges: state.edges,
+  setSelectedLink: state.setSelectedLink,
+  setNodes: state.setNodes,
+  setEdges: state.setEdges,
+  addNode: state.addNode,
+  onConnect: state.onConnect,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onDragOver: state.onDragOver,
+});
 
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
@@ -54,6 +66,23 @@ const Editor = () => {
   const { request: createSpecRequest } =
     useRequest<CreateSpecificationResponseType>();
 
+  // FIXME: Temporary Execution Demo
+  const { request: executionRequest } = useRequest<ExecutionResponseType>();
+
+  const {
+    selectedLink,
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    setSelectedLink,
+    setNodes,
+    setEdges,
+    addNode,
+    onConnect,
+    onDragOver,
+  } = useReactFlowInstanceStore(selector, shallow);
+
   const navigate = useNavigate();
 
   const [specification, setSpecification] = useState(defaultSpecification);
@@ -62,12 +91,9 @@ const Editor = () => {
   const expID = useLocation().pathname.split("/")[2];
   const specificaitonID = useLocation().pathname.split("/")[3];
 
-  const [selectedLink, setSelectedLink] = useState<LinksPropsType>("regular");
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(graphicalModel.nodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(graphicalModel.edges);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
+  // const {screenToFlowPosition} = useReactFlow();
 
   const [showPopover, setShowPopover] = useState(false);
   const [newSpecName, setNewSpecName] = useState("");
@@ -113,67 +139,20 @@ const Editor = () => {
     };
   }, [nodes, edges]);
 
-  const handleLinkSelection = (linkType: LinksPropsType) => {
-    setSelectedLink(linkType);
-  };
-
-  const getId = (nodes: Node[]) => {
-    if (nodes.length === 0) {
-      return `0`;
-    }
-    const maxId = Math.max(...nodes.map((node) => parseInt(node.id)));
-    return `${maxId + 1}`;
-  };
-
-  const getLinkProps = useCallback(() => {
-    const props = linkProps[selectedLink];
-    return props;
-  }, [selectedLink]);
-
-  const onConnect = useCallback(
-    (params: Edge | Connection) => {
-      setEdges((eds) =>
-        addEdge(
-          {
-            ...params,
-            ...(getLinkProps() as Edge),
-          },
-          eds
-        )
-      );
-    },
-    [setEdges, getLinkProps]
-  );
-
-  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  }, []);
-
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
       const type = event.dataTransfer.getData("application/reactflow");
-
       // check if the dropped element is valid
       if (typeof type === "undefined" || !type) {
         return;
       }
-
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
-
-      const newNode = {
-        id: getId(nodes),
-        type,
-        position,
-        data: {},
-      };
-
-      setNodes((nds) => nds.concat(newNode));
+      addNode(type, position);
     },
     [reactFlowInstance, nodes]
   );
@@ -240,7 +219,7 @@ const Editor = () => {
   // FIXEME: duplicated code
   function handleExecution() {
     const graphicalModel = { nodes, edges };
-    updateGraphRequest({
+    executionRequest({
       url: `/exp/experiments/${expID}/specifications/${specificaitonID}/execution`,
       method: "POST",
       data: {
@@ -272,7 +251,7 @@ const Editor = () => {
           <div className="editor__bottom__left">
             <Panel
               selectedLink={selectedLink}
-              onLinkSelection={handleLinkSelection}
+              onLinkSelection={setSelectedLink}
             />
           </div>
           <div className="editor__bottom__middle">

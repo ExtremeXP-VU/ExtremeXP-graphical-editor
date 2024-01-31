@@ -4,6 +4,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { useAccountStore } from "../../../stores/accountStore";
 import { nodeImageSrc } from "../../../assets/nodes";
 import {
   LinksPropsType,
@@ -20,13 +21,14 @@ const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
+  const isLogin = useAccountStore((state) => state.isLogin);
 
   const navigate = useNavigate();
   const expID = useLocation().pathname.split("/")[2];
   const specificationID = useLocation().pathname.split("/")[3];
 
   const handleGoBack = () => {
-    if (localStorage.getItem("token") && localStorage.getItem("username")) {
+    if (isLogin) {
       if (specificationID && expID) {
         navigate(`/repository/experiments/${expID}/specifications`);
       } else {
