@@ -8,7 +8,7 @@ import ReactFlow, {
   ReactFlowInstance,
   Controls,
   Background,
-  MiniMap,
+  // MiniMap,
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
@@ -244,7 +244,11 @@ const Editor = () => {
   return (
     <div className="editor">
       <div className="editor__top">
-        <Header specName={specification.name} />
+        <Header
+          onExecution={handleExecution}
+          onSave={handleSave}
+          onSaveAs={handleShowPopover}
+        />
       </div>
       <ReactFlowProvider>
         <div className="editor__bottom">
@@ -270,17 +274,15 @@ const Editor = () => {
               fitView
             >
               <Controls />
-              <MiniMap />
+              {/* <MiniMap /> */}
               <Background />
             </ReactFlow>
           </div>
-          <div className="editor__bottom__right">
+          {/* <div className="editor__bottom__right">
             <SideBar
-              onExecution={handleExecution}
-              onSave={handleSave}
-              onSaveAs={handleShowPopover}
+              
             />
-          </div>
+          </div> */}
         </div>
       </ReactFlowProvider>
       <Popover show={showPopover} blankClickCallback={closeMask}>

@@ -2,10 +2,9 @@ import "./style.scss";
 
 import React from "react";
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
-import { useAccountStore } from "../../../stores/accountStore";
 import { nodeImageSrc } from "../../../assets/nodes";
+import { linkImageSrc } from "../../../assets/links";
 import {
   LinksPropsType,
   notationList,
@@ -21,23 +20,6 @@ const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
-  const isLogin = useAccountStore((state) => state.isLogin);
-
-  const navigate = useNavigate();
-  const expID = useLocation().pathname.split("/")[2];
-  const specificationID = useLocation().pathname.split("/")[3];
-
-  const handleGoBack = () => {
-    if (isLogin) {
-      if (specificationID && expID) {
-        navigate(`/repository/experiments/${expID}/specifications`);
-      } else {
-        navigate("/repository/experiments");
-      }
-    } else {
-      navigate("/account/login");
-    }
-  };
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
@@ -69,9 +51,9 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
       </div>
       <div className="panel__nodes">
         <div className="panel__nodes__title">
-          <p className="panel__nodes__title__name">Nodes</p>
+          <p className="panel__nodes__title__name">nodes</p>
           <p className="panel__nodes__title__tutorial">
-            Click to show the node description or drag the node onto the board
+            Click to check the node description or drag the node onto the board
             on the right.
           </p>
         </div>
@@ -95,10 +77,10 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
       </div>
       <div className="panel__links">
         <div className="panel__links__title">
-          <p className="panel__links__title__name">Links</p>
-          <p className="panel__links__title__tutorial">
-            Click to select the link type to connect between nodes.
-          </p>
+          <p className="panel__links__title__name">{`${selectedLink} link`}</p>
+        </div>
+        <div className="panel__links__window">
+          <img src={linkImageSrc(selectedLink)} alt={selectedLink} />
         </div>
         <div className="panel__links__content">
           {edgesList.map((edgeType, index) => {
@@ -112,17 +94,26 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
                   handleLinkSelection(edgeType as LinksPropsType);
                 }}
               >
-                {edgeType}
+                {edgeType.toUpperCase().charAt(0)}
               </div>
             );
           })}
         </div>
       </div>
-      <div className="panel__back">
-        <button className="panel__back__button" onClick={handleGoBack}>
-          <span className="iconfont">&#xe79b;</span>
-          <p> repository</p>
-        </button>
+      <div className="panel__subtasks">
+        <div className="panel__subtasks__title">
+          <p className="panel__subtasks__title__name">sub tasks</p>
+        </div>
+        <div className="panel__subtasks__content">
+          <button className="panel__subtasks__content__button">
+            <span className="iconfont">&#xe626;</span>
+            <p>Generic Task</p>
+          </button>
+          <button className="panel__subtasks__content__button">
+            <span className="iconfont">&#xe626;</span>
+            <p>Predefined Task</p>
+          </button>
+        </div>
       </div>
     </div>
   );
