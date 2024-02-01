@@ -3,7 +3,6 @@ export const notationList = {
     "start",
     "end",
     "task",
-    "subflow",
     "data",
     "opParallel",
     "opExclusive",

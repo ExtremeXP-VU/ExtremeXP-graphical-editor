@@ -19,10 +19,8 @@
 .editor__top {
   width: 100%;
   height: 0.5rem;
-  background-color: $panel-color;
+  background-color: $primary-theme-color;
   box-sizing: border-box;
-  border-bottom: 1px solid darken($color: $panel-color, $amount: 10);
-  color: $primary-text-color;
 }
 
 .editor__bottom {
@@ -34,13 +32,13 @@
 .editor__bottom__left {
   width: 2.2rem;
   height: 100%;
-  background-color: $panel-color;
+  background-color: $primary-lighten-color;
   box-sizing: border-box;
-  border-right: 1px solid darken($color: $panel-color, $amount: 10);
+  border-right: 1px solid $primary-lighten-color;
 }
 
 .editor__bottom__middle {
-  width: calc(100% - 3.7rem);
+  width: calc(100% - 2.2rem);
   height: 100%;
   background-color: $board-color;
 }
@@ -63,7 +61,7 @@
     align-items: center;
     width: 3rem;
     height: 0.55rem;
-    color: darken($color: $primary-theme-color, $amount: 40);
+    color: $primary-theme-color;
     font-size: 1.2em;
   }
 
@@ -110,15 +108,15 @@
       height: 100%;
       border-radius: 0 0 0.05rem 0;
       color: $primary-button-text-color;
-      background-color: $alert-background-color;
+      background-color: $secondary-theme-color;
 
       &:hover {
         cursor: pointer;
-        background-color: darken($alert-background-color, 20);
+        background-color: darken($secondary-theme-color, 20);
       }
 
       &:active {
-        background-color: lighten($color: $alert-background-color, $amount: 30);
+        background-color: lighten($color: $secondary-theme-color, $amount: 30);
         color: $primary-button-text-color;
       }
     }
