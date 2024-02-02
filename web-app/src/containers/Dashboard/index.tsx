@@ -23,7 +23,7 @@ const Repository = () => {
           <span>Dashboard</span>
         </div>
         <div className="repository__panel__items">
-          <Link to={"/repository/experiments"}>
+          <Link to={"/dashboard/projects"}>
             <div
               className={`repository__panel__items__item ${experimentSelectedClass}`}
             >
@@ -31,7 +31,7 @@ const Repository = () => {
               <p>Experiments</p>
             </div>
           </Link>
-          <Link to={"/repository/user"}>
+          <Link to={"/dashboard/user"}>
             <div
               className={`repository__panel__items__item ${userSelectedClass}`}
             >
