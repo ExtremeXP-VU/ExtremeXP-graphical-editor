@@ -28,7 +28,7 @@ const Login = () => {
         const token = response.data.jwt;
         if (token) {
           login(username, token);
-          navigate("/repository/experiments");
+          navigate("/dashboard/projects");
         }
       })
       .catch((error) => {

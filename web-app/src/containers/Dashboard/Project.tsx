@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
-import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { defaultProject } from "../../types/experiment";
 import Popover from "../../components/general/Popover";
 import {
@@ -35,7 +35,6 @@ const Experiments = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const isExperiment = location.pathname.includes("/specifications");
   const isProjectsEmpty = projects.length === 0;
 
   const filteredProjects = useMemo(() => {
@@ -321,30 +320,7 @@ const Experiments = () => {
                     </button>
                   </div>
                 </div>
-                <div className="experiments__experiment__links">
-                  <Link
-                    to={`/repository/experiments/${currentProj.id_project}/specifications`}
-                  >
-                    <div
-                      className={`experiments__experiment__links__link ${
-                        isExperiment ? "selected" : ""
-                      }`}
-                    >
-                      Specifications
-                    </div>
-                  </Link>
-                  <Link
-                    to={`/repository/experiments/${currentProj.id_project}/dataset`}
-                  >
-                    <div
-                      className={`experiments__experiment__links__link ${
-                        !isExperiment ? "selected" : ""
-                      }`}
-                    >
-                      Dataset
-                    </div>
-                  </Link>
-                </div>
+
                 <div className="experiments__experiment__content">
                   <Outlet />
                 </div>

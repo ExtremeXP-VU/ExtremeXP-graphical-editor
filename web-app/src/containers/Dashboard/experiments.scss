@@ -302,30 +302,6 @@
   }
 }
 
-.experiments__experiment__links {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 0.4rem;
-  padding-left: 0.2rem;
-
-  &__link {
-    margin-right: 0.4rem;
-    font-size: 1.4em;
-    color: $primary-text-color;
-
-    &:hover {
-      cursor: pointer;
-      color: $primary-theme-color;
-    }
-  }
-
-  .selected {
-    color: $primary-theme-color;
-    border-bottom: 3px solid $primary-theme-color;
-  }
-}
-
 .experiments__experiment__content {
   display: flex;
   justify-content: center;
