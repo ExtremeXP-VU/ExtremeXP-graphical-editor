@@ -1,21 +1,74 @@
 import "./style.scss";
 import React from "react";
-import logo from "../../../assets/extremeXP_logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAccountStore } from "../../../stores/accountStore";
 
 interface HeaderProps {
-  specName: string;
+  onExecution: () => void;
+  onSave: () => void;
+  onSaveAs: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ specName }) => {
+const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
+  const isLogin = useAccountStore((state) => state.isLogin);
+
+  const navigate = useNavigate();
+  const projID = useLocation().pathname.split("/")[2];
+  const experimentID = useLocation().pathname.split("/")[3];
+
+  const handleGoBack = () => {
+    if (isLogin) {
+      if (experimentID && projID) {
+        navigate(`/dashboard/projects/${projID}/experiments`);
+      } else {
+        navigate("/dashboard/projects");
+      }
+    } else {
+      navigate("/account/login");
+    }
+  };
+
   return (
     <div className="header">
       <div className="header__left">
-        <div className="header__left__logo">
-          <img src={logo} alt="logo" />
-        </div>
-        <div className="header__left__name">{`${specName}`}</div>
+        <button className="header__left__back" onClick={handleGoBack}>
+          <div className="header__left__back__arrow">
+            <span className="iconfont">&#xe79b;</span>
+          </div>
+          <p>dashboard</p>
+        </button>
       </div>
-      <div className="header__right"></div>
+      <div className="header__middle"></div>
+      <div className="header__right">
+        <div className="header__right__files">
+          <button
+            className="header__right__files__button__save"
+            onClick={() => {
+              onSave();
+            }}
+          >
+            Save
+          </button>
+          <button
+            className="header__right__files__button__saveAs"
+            onClick={() => {
+              onSaveAs();
+            }}
+          >
+            Save as
+          </button>
+        </div>
+        <div className="header__right__execution">
+          <button
+            className="header__right__execution__button"
+            onClick={() => {
+              onExecution();
+            }}
+          >
+            <span className="iconfont">&#xe606;</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -5,11 +5,10 @@ import Home from "./containers/Home";
 import Account from "./containers/Account";
 import Login from "./containers/Account/Login";
 import Register from "./containers/Account/Register";
-import Repository from "./containers/Repository";
-import Experiments from "./containers/Repository/Experiments";
-import Specifications from "./components/repository/Specifications";
-import Dataset from "./components/repository/Dataset";
-import User from "./containers/Repository/User";
+import Dashboard from "./containers/Dashboard";
+import Project from "./containers/Dashboard/Project";
+import Experiment from "./components/dashboard/Experiment";
+import User from "./containers/Dashboard/User";
 import Editor from "./containers/Editor";
 
 const router = createBrowserRouter([
@@ -32,31 +31,27 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/repository/",
-    element: <Repository />,
+    path: "/dashboard/",
+    element: <Dashboard />,
     children: [
       {
-        path: "/repository/experiments",
-        element: <Experiments />,
+        path: "/dashboard/projects",
+        element: <Project />,
         children: [
           {
-            path: "/repository/experiments/:expID/specifications",
-            element: <Specifications />,
-          },
-          {
-            path: "/repository/experiments/:expID/dataset",
-            element: <Dataset />,
+            path: "/dashboard/projects/:projID/experiments",
+            element: <Experiment />,
           },
         ],
       },
       {
-        path: "/repository/user",
+        path: "/dashboard/user",
         element: <User />,
       },
     ],
   },
   {
-    path: "/editor/:expID/:specificationID",
+    path: "/editor/:projID/:experimentID",
     element: <Editor />,
   },
 ]);

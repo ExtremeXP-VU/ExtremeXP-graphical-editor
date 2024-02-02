@@ -1,8 +1,8 @@
 from flask import Flask, request, g
 from flask_cors import CORS, cross_origin
 from userAuthHandler import userAuthHandler
+from projectHandler import projectHandler
 from experimentHandler import experimentHandler
-from specificationHandler import specificationHandler
 from executionHandler import executionHandler
 
 app = Flask(__name__)
@@ -45,145 +45,143 @@ def index():
     return "experiment service connected"
 
 
-@app.route("/exp/experiments", methods=["GET"])
+@app.route("/exp/projects", methods=["GET"])
 @cross_origin()
-def get_experiments():
-    experiments = experimentHandler.get_experiments(g.username)
+def get_projects():
+    projects = projectHandler.get_projects(g.username)
+    return {
+        "message": "projects retrieved",
+        "data": {"projects": projects},
+    }, 200
+
+
+@app.route("/exp/projects/create", methods=["OPTIONS", "POST"])
+@cross_origin()
+def create_project():
+    proj_name = request.json["name"]
+    if projectHandler.detect_duplicate(g.username, proj_name):
+        return {
+            "error": ERROR_DUPLICATE,
+            "message": "Project name already exists",
+        }, 409
+
+    res = projectHandler.create_project(g.username, proj_name)
+    return {"message": "Project created.", "data": {"id_project": res}}, 201
+
+
+@app.route("/exp/projects/<proj_id>/update", methods=["OPTIONS", "PUT"])
+@cross_origin()
+def update_project_info(proj_id):
+    proj_name = request.json["name"]
+    get_proj = projectHandler.get_project(proj_id)
+    if get_proj["name"] != proj_name:
+        if projectHandler.detect_duplicate(g.username, proj_name):
+            return {
+                "error": ERROR_DUPLICATE,
+                "message": "Project name already exists",
+            }, 409
+    description = request.json["description"]  # can be empty
+    projectHandler.update_project_info(proj_id, proj_name, description)
+    return {"message": "project info updated"}, 200
+
+
+@app.route("/exp/projects/<proj_id>/delete", methods=["OPTIONS", "DELETE"])
+@cross_origin()
+# TODO: if data involves, data also need to be deleted.
+def delete_project(proj_id):
+    if not projectHandler.project_exists(proj_id):
+        return {"message": "project does not exist"}, 404
+    projectHandler.delete_project(proj_id)
+    experimentHandler.delete_experiments(proj_id)
+    return {"message": "project deleted"}, 204
+
+
+@app.route("/exp/projects/<proj_id>/experiments", methods=["GET"])
+@cross_origin()
+def get_experiments(proj_id):
+    experiments = experimentHandler.get_experiments(proj_id)
     return {
         "message": "experiments retrieved",
         "data": {"experiments": experiments},
     }, 200
 
 
-@app.route("/exp/experiments/create", methods=["OPTIONS", "POST"])
+@app.route("/exp/projects/experiments/<exp_id>", methods=["GET"])
 @cross_origin()
-def create_experiment():
+def get_experiment(exp_id):
+    experiment = experimentHandler.get_experiment(exp_id)
+    return {
+        "message": "experiment retrieved",
+        "data": {"experiment": experiment},
+    }, 200
+
+
+@app.route("/exp/projects/<proj_id>/experiments/create", methods=["OPTIONS", "POST"])
+@cross_origin()
+def create_experiment(proj_id):
     exp_name = request.json["exp_name"]
-    if experimentHandler.detect_duplicate(g.username, exp_name):
+    graphical_model = request.json["graphical_model"]
+    if experimentHandler.detect_duplicate(proj_id, exp_name):
         return {
             "error": ERROR_DUPLICATE,
             "message": "Experiment name already exists",
         }, 409
-
-    res = experimentHandler.create_experiment(g.username, exp_name)
-    return {"message": "Experiment created.", "data": {"id_experiment": res}}, 201
-
-
-@app.route("/exp/experiments/<exp_id>/update", methods=["OPTIONS", "PUT"])
-@cross_origin()
-def update_experiment_info(exp_id):
-    exp_name = request.json["exp_name"]
-    get_exp = experimentHandler.get_experiment(exp_id)
-    if get_exp["name"] != exp_name:
-        if experimentHandler.detect_duplicate(g.username, exp_name):
-            return {
-                "error": ERROR_DUPLICATE,
-                "message": "Experiment name already exists",
-            }, 409
-    description = request.json["description"]  # can be empty
-    experimentHandler.update_experiment_info(exp_id, exp_name, description)
-    return {"message": "experiment info updated"}, 200
-
-
-@app.route("/exp/experiments/<exp_id>/delete", methods=["OPTIONS", "DELETE"])
-@cross_origin()
-# TODO: if data involves, data also need to be deleted.
-def delete_experiment(exp_id):
-    if not experimentHandler.experiment_exists(exp_id):
-        return {"message": "experiment does not exist"}, 404
-    experimentHandler.delete_experiment(exp_id)
-    specificationHandler.delete_specifications(exp_id)
-    return {"message": "experiment deleted"}, 204
-
-
-@app.route("/exp/experiments/<exp_id>/specifications", methods=["GET"])
-@cross_origin()
-def get_specifications(exp_id):
-    specifications = specificationHandler.get_specifications(exp_id)
-    return {
-        "message": "specifications retrieved",
-        "data": {"specifications": specifications},
-    }, 200
-
-
-@app.route("/exp/experiments/specifications/<spec_id>", methods=["GET"])
-@cross_origin()
-def get_specification(spec_id):
-    specification = specificationHandler.get_specification(spec_id)
-    return {
-        "message": "specification retrieved",
-        "data": {"specification": specification},
-    }, 200
-
-
-@app.route(
-    "/exp/experiments/<exp_id>/specifications/create", methods=["OPTIONS", "POST"]
-)
-@cross_origin()
-def create_specification(exp_id):
-    spec_name = request.json["spec_name"]
-    graphical_model = request.json["graphical_model"]
-    if specificationHandler.detect_duplicate(exp_id, spec_name):
-        return {
-            "error": ERROR_DUPLICATE,
-            "message": "Specification name already exists",
-        }, 409
-    res = specificationHandler.create_specification(
-        g.username, exp_id, spec_name, graphical_model
+    res = experimentHandler.create_experiment(
+        g.username, proj_id, exp_name, graphical_model
     )
-    return {"message": "Specification created", "data": {"id_specification": res}}, 201
+    return {"message": "Experiment created", "data": {"id_experiment": res}}, 201
 
 
 @app.route(
-    "/exp/experiments/<exp_id>/specifications/<spec_id>/delete",
+    "/exp/projects/<proj_id>/experiments/<exp_id>/delete",
     methods=["OPTIONS", "DELETE"],
 )
 @cross_origin()
-def delete_specification(exp_id, spec_id):
-    if not specificationHandler.specification_exists(spec_id):
-        return {"message": "specification does not exist"}, 404
-    specificationHandler.delete_specification(spec_id, exp_id)
-    return {"message": "specification deleted"}, 204
+def delete_experiment(proj_id, exp_id):
+    if not experimentHandler.experiment_exists(exp_id):
+        return {"message": "this experiment does not exist"}, 404
+    experimentHandler.delete_experiment(exp_id, proj_id)
+    return {"message": "experiment deleted"}, 204
 
 
 @app.route(
-    "/exp/experiments/<exp_id>/specifications/<spec_id>/update/name",
+    "/exp/projects/<proj_id>/experiments/<exp_id>/update/name",
     methods=["OPTIONS", "PUT"],
 )
 @cross_origin()
-def update_specification_name(exp_id, spec_id):
-    spec_name = request.json["spec_name"]
-    if specificationHandler.detect_duplicate(exp_id, spec_name):
+def update_experiment_name(proj_id, exp_id):
+    exp_name = request.json["exp_name"]
+    if experimentHandler.detect_duplicate(proj_id, exp_name):
         return {
             "error": ERROR_DUPLICATE,
-            "message": "Specification name already exists",
+            "message": "Experiment name already exists",
         }, 409
-    specificationHandler.update_specification_name(spec_id, exp_id, spec_name)
-    return {"message": "specification name updated"}, 200
+    experimentHandler.update_experiment_name(exp_id, proj_id, exp_name)
+    return {"message": "experiment name updated"}, 200
 
 
 @app.route(
-    "/exp/experiments/<exp_id>/specifications/<spec_id>/update/graphical_model",
+    "/exp/projects/<proj_id>/experiments/<exp_id>/update/graphical_model",
     methods=["OPTIONS", "PUT"],
 )
 @cross_origin()
-def update_specification_graphical_model(exp_id, spec_id):
+def update_experiment_graphical_model(proj_id, exp_id):
     graphical_model = request.json["graphical_model"]
-    specificationHandler.update_specification_graphical_model(
-        spec_id, exp_id, graphical_model
+    experimentHandler.update_experiment_graphical_model(
+        exp_id, proj_id, graphical_model
     )
-    return {"message": "specification graphical model updated"}, 200
+    return {"message": "experiment graphical model updated"}, 200
 
 
 @app.route(
-    "/exp/experiments/<exp_id>/specifications/<spec_id>/execution",
+    "/exp/projects/<proj_id>/experiments/<exp_id>/execution",
     methods=["OPTIONS", "POST"],
 )
 @cross_origin()
-def execute_experiment(exp_id, spec_id):
+def execute_experiment(proj_id, exp_id):
     graphical_model = request.json["graphical_model"]
-    specificationHandler.update_specification_graphical_model(
-        spec_id, exp_id, graphical_model
+    experimentHandler.update_experiment_graphical_model(
+        exp_id, proj_id, graphical_model
     )
     response = executionHandler.execute_experiment(graphical_model)
     if response["verified"]:

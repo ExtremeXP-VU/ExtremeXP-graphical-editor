@@ -1,8 +1,8 @@
 import { timeNow } from "../utils/timeToDate";
 import { Node, Edge } from "reactflow";
 
-export interface Experiment {
-  id_experiment: string;
+export interface Project {
+  id_project: string;
   name: string;
   description: string;
   create_at: number;
@@ -14,17 +14,17 @@ export interface GraphicalModelType {
   edges: Array<Edge>;
 }
 
-export interface SpecificationType {
-  id_specification: string;
-  experiment_id: string;
+export interface ExperimentType {
+  id_experiment: string;
+  project_id: string;
   name: string;
   create_at: number;
   update_at: number;
   graphical_model: GraphicalModelType;
 }
 
-export const defaultExperiment = {
-  id_experiment: "default",
+export const defaultProject = {
+  id_project: "default",
   name: "",
   description: "",
   create_at: timeNow(),
@@ -39,9 +39,9 @@ export const defaultGraphicalModel = {
   edges: initialEdges,
 };
 
-export const defaultSpecification = {
-  id_specification: "",
-  experiment_id: "",
+export const defaultExperiment = {
+  id_experiment: "",
+  project_id: "",
   name: "",
   create_at: NaN,
   update_at: NaN,
