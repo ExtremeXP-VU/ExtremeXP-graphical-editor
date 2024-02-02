@@ -72,9 +72,7 @@ const Experiments = () => {
   useEffect(() => {
     if (projects.length > 0 && currentProj.id_project === "default") {
       setCurrentProj(projects[0]);
-      navigate(
-        `/repository/experiments/${projects[0].id_project}/specifications`
-      );
+      navigate(`/dashboard/projects/${projects[0].id_project}/experiments`);
     }
   }, [projects, currentProj.id_project]);
 
@@ -124,7 +122,7 @@ const Experiments = () => {
     if (isEditing) return;
     setCurrentProj(filteredProjects[index]);
     navigate(
-      `/repository/experiments/${filteredProjects[index].id_project}/specifications`
+      `/dashboard/projects/${filteredProjects[index].id_project}/experiments`
     );
   };
 

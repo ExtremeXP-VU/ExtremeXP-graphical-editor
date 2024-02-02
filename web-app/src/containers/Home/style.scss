@@ -14,12 +14,12 @@
   padding-bottom: 5vh;
   width: 100%;
   height: 20vh;
-  border-bottom: 2px solid $primary-theme-color;
+  border-bottom: 2px solid $secondary-theme-color;
 
   &__title {
     font-size: 5em;
     font-weight: 700;
-    color: $primary-theme-color;
+    color: $secondary-theme-color;
   }
 }
 

@@ -13,15 +13,15 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
   const isLogin = useAccountStore((state) => state.isLogin);
 
   const navigate = useNavigate();
-  const expID = useLocation().pathname.split("/")[2];
-  const specificationID = useLocation().pathname.split("/")[3];
+  const projID = useLocation().pathname.split("/")[2];
+  const experimentID = useLocation().pathname.split("/")[3];
 
   const handleGoBack = () => {
     if (isLogin) {
-      if (specificationID && expID) {
-        navigate(`/repository/experiments/${expID}/specifications`);
+      if (experimentID && projID) {
+        navigate(`/dashboard/projects/${projID}/experiments`);
       } else {
-        navigate("/repository/experiments");
+        navigate("/dashboard/projects");
       }
     } else {
       navigate("/account/login");

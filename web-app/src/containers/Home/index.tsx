@@ -11,7 +11,7 @@ const Home = () => {
 
   const handleStart = () => {
     if (isLogin) {
-      navigate("/repository/experiments");
+      navigate("/dashboard/projects");
     } else {
       navigate("/account/login");
     }
