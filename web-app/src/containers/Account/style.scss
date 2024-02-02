@@ -99,9 +99,9 @@
 
   &:hover {
     cursor: pointer;
-    background-color: lighten($primary-theme-color, 20%);
+    background-color: darken($secondary-theme-color, 20%);
   }
   &:active {
-    background-color: darken($primary-theme-color, 20%);
+    background-color: lighten($secondary-theme-color, 20%);
   }
 }
