@@ -23,18 +23,17 @@ import { message } from "../../utils/message";
 
 import Header from "../../components/editor/Header";
 import Panel from "../../components/editor/Panel";
-import SideBar from "../../components/editor/SideBar";
 import Popover from "../../components/general/Popover";
 
 import {
   defaultGraphicalModel,
-  defaultSpecification,
+  defaultExperiment,
 } from "../../types/experiment";
 
 import {
-  SpecificationResponseType,
+  ExperimentResponseType,
   UpdateGraphicalModelResponseType,
-  CreateSpecificationResponseType,
+  CreateExperimentResponseType,
   ExecutionResponseType,
 } from "../../types/requests";
 
@@ -57,14 +56,13 @@ const selector = (state: RFState) => ({
 
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
-  const { request: specificationRequest } =
-    useRequest<SpecificationResponseType>();
+  const { request: experimentRequest } = useRequest<ExperimentResponseType>();
 
   const { request: updateGraphRequest } =
     useRequest<UpdateGraphicalModelResponseType>();
 
   const { request: createSpecRequest } =
-    useRequest<CreateSpecificationResponseType>();
+    useRequest<CreateExperimentResponseType>();
 
   // FIXME: Temporary Execution Demo
   const { request: executionRequest } = useRequest<ExecutionResponseType>();
@@ -85,27 +83,27 @@ const Editor = () => {
 
   const navigate = useNavigate();
 
-  const [specification, setSpecification] = useState(defaultSpecification);
+  const [experiment, setExperiment] = useState(defaultExperiment);
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const expID = useLocation().pathname.split("/")[2];
-  const specificaitonID = useLocation().pathname.split("/")[3];
+  const projID = useLocation().pathname.split("/")[2];
+  const experimentID = useLocation().pathname.split("/")[3];
 
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
   // const {screenToFlowPosition} = useReactFlow();
 
   const [showPopover, setShowPopover] = useState(false);
-  const [newSpecName, setNewSpecName] = useState("");
+  const [newExpName, setNewExpName] = useState("");
 
   useEffect(() => {
-    specificationRequest({
-      url: `exp/experiments/specifications/${specificaitonID}`,
+    experimentRequest({
+      url: `exp/projects/experiments/${experimentID}`,
     })
       .then((data) => {
-        if (data.data.specification) {
-          const newSpecification = data.data.specification;
-          setSpecification(newSpecification);
+        if (data.data.experiment) {
+          const newExperiment = data.data.experiment;
+          setExperiment(newExperiment);
         }
       })
       .catch((error) => {
@@ -116,8 +114,8 @@ const Editor = () => {
   }, []);
 
   useEffect(() => {
-    setGraphicalModel(specification.graphical_model);
-  }, [specification]);
+    setGraphicalModel(experiment.graphical_model);
+  }, [experiment]);
 
   useEffect(() => {
     setNodes(graphicalModel.nodes);
@@ -160,7 +158,7 @@ const Editor = () => {
   function updateGraphicalModel() {
     const graphicalModel = { nodes, edges };
     updateGraphRequest({
-      url: `/exp/experiments/${expID}/specifications/${specificaitonID}/update/graphical_model`,
+      url: `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`,
       method: "PUT",
       data: {
         graphical_model: graphicalModel,
@@ -182,7 +180,7 @@ const Editor = () => {
 
   const handleShowPopover = () => {
     setShowPopover(true);
-    setNewSpecName(specification.name);
+    setNewExpName(experiment.name);
   };
 
   function closeMask() {
@@ -197,16 +195,16 @@ const Editor = () => {
     closeMask();
     const graphicalModel = { nodes, edges };
     createSpecRequest({
-      url: `/exp/experiments/${expID}/specifications/create`,
+      url: `/exp/projects/${projID}/experiments/create`,
       method: "POST",
       data: {
-        spec_name: newSpecName,
+        exp_name: newExpName,
         graphical_model: graphicalModel,
       },
     })
       .then((data) => {
-        const specID = data.data.id_specification;
-        navigate(`/editor/${expID}/${specID}`);
+        const expID = data.data.id_experiment;
+        navigate(`/editor/${projID}/${expID}`);
         window.location.reload();
       })
       .catch((error) => {
@@ -220,7 +218,7 @@ const Editor = () => {
   function handleExecution() {
     const graphicalModel = { nodes, edges };
     executionRequest({
-      url: `/exp/experiments/${expID}/specifications/${specificaitonID}/execution`,
+      url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
       method: "POST",
       data: {
         graphical_model: graphicalModel,
@@ -294,8 +292,8 @@ const Editor = () => {
             type="text"
             className="popover__save__input"
             placeholder="specification name"
-            value={newSpecName}
-            onChange={(e) => setNewSpecName(e.target.value)}
+            value={newExpName}
+            onChange={(e) => setNewExpName(e.target.value)}
             onKeyUp={(e) => {
               if (e.key === "Enter") {
                 handleSaveAs();

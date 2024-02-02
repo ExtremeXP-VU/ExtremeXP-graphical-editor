@@ -11,48 +11,47 @@ import {
 import Popover from "../../general/Popover";
 import {
   GraphicalModelType,
-  SpecificationType,
-  defaultSpecification,
+  ExperimentType,
+  defaultExperiment,
 } from "../../../types/experiment";
 import {
-  SpecificationsResponseType,
-  CreateSpecificationResponseType,
-  UpdateSpecificationNameResponseType,
-  DeleteSpecificationResponseType,
+  ExperimentsResponseType,
+  CreateExperimentResponseType,
+  UpdateExperimentNameResponseType,
+  DeleteExperimentResponseType,
 } from "../../../types/requests";
 
 const Specifications = () => {
-  const [specifications, setSpecifications] = useState([defaultSpecification]);
+  const [experiments, setExperiments] = useState([defaultExperiment]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newSpecName, setNewSpecName] = useState("");
+  const [newExpName, setNewExpName] = useState("");
 
   const [showPopover, setShowPopover] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
-  const isSpecificationEmpty = specifications.length === 0;
+  const isExperimentEmpty = experiments.length === 0;
 
   // make sure the expID is the same as the one in the url
-  const expID = useLocation().pathname.split("/")[3];
+  const projID = useLocation().pathname.split("/")[3];
 
-  const { request: specificationsRequest } =
-    useRequest<SpecificationsResponseType>();
-  const { request: createSpecificationRequest } =
-    useRequest<CreateSpecificationResponseType>();
-  const { request: updateSpecNameRequest } =
-    useRequest<UpdateSpecificationNameResponseType>();
-  const { request: deleteSpecificationRequest } =
-    useRequest<DeleteSpecificationResponseType>();
+  const { request: experimentsRequest } = useRequest<ExperimentsResponseType>();
+  const { request: createExperimentRequest } =
+    useRequest<CreateExperimentResponseType>();
+  const { request: updateExpNameRequest } =
+    useRequest<UpdateExperimentNameResponseType>();
+  const { request: deleteExperimentRequest } =
+    useRequest<DeleteExperimentResponseType>();
 
   const navigate = useNavigate();
 
-  const getSpecifications = useCallback(() => {
-    specificationsRequest({
-      url: `exp/experiments/${expID}/specifications`,
+  const getExperiments = useCallback(() => {
+    experimentsRequest({
+      url: `exp/projects/${projID}/experiments`,
     })
       .then((data) => {
-        if (data.data.specifications) {
-          const specifications = data.data.specifications;
-          setSpecifications(specifications);
+        if (data.data.experiments) {
+          const experiments = data.data.experiments;
+          setExperiments(experiments);
         }
       })
       .catch((error) => {
@@ -60,24 +59,24 @@ const Specifications = () => {
           message(error.message);
         }
       });
-  }, [specificationsRequest, expID]);
+  }, [experimentsRequest, projID]);
 
   useEffect(() => {
-    getSpecifications();
-  }, [getSpecifications]);
+    getExperiments();
+  }, [getExperiments]);
 
-  const postNewSpecification = useCallback(
+  const postNewExperiment = useCallback(
     (name: string, graphicalModel: GraphicalModelType) => {
-      createSpecificationRequest({
-        url: `/exp/experiments/${expID}/specifications/create`,
+      createExperimentRequest({
+        url: `/exp/projects/${projID}/experiments/create`,
         method: "POST",
         data: {
-          spec_name: name,
+          exp_name: name,
           graphical_model: graphicalModel,
         },
       })
         .then(() => {
-          getSpecifications();
+          getExperiments();
         })
         .catch((error) => {
           if (error.message) {
@@ -85,18 +84,18 @@ const Specifications = () => {
           }
         });
     },
-    [expID, createSpecificationRequest, getSpecifications]
+    [projID, createExperimentRequest, getExperiments]
   );
 
-  const handleNewSpecification = () => {
-    postNewSpecification(`specification-${timeNow()}`, {
+  const handleNewExperiment = () => {
+    postNewExperiment(`experiment-${timeNow()}`, {
       nodes: [],
       edges: [],
     });
   };
 
   const handleStartEditingName = (index: number) => {
-    setNewSpecName(specifications[index].name);
+    setNewExpName(experiments[index].name);
     if (editingIndex === null) {
       setEditingIndex(index);
     } else {
@@ -107,51 +106,48 @@ const Specifications = () => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (editingIndex === null) return;
-      if (
-        newSpecName === "" ||
-        newSpecName === specifications[editingIndex].name
-      ) {
+      if (newExpName === "" || newExpName === experiments[editingIndex].name) {
         setEditingIndex(null);
         return;
       }
-      renameSpecification();
+      renameExperiment();
       setEditingIndex(null);
     }
   };
 
-  const renameSpecification = () => {
-    if (newSpecName === "" || editingIndex === null) return;
-    if (newSpecName === specifications[editingIndex].name) return;
-    if (newSpecName.length > 35) {
+  const renameExperiment = () => {
+    if (newExpName === "" || editingIndex === null) return;
+    if (newExpName === experiments[editingIndex].name) return;
+    if (newExpName.length > 35) {
       message("The length of the name should be less than 35 characters.");
       return;
     }
-    updateSpecNameRequest({
-      url: `/exp/experiments/${expID}/specifications/${
-        specifications[editingIndex!].id_specification
+    updateExpNameRequest({
+      url: `/exp/projects/${projID}/experiments/${
+        experiments[editingIndex!].id_experiment
       }/update/name`,
       method: "PUT",
       data: {
-        spec_name: newSpecName,
+        exp_name: newExpName,
       },
     })
       .then(() => {
-        getSpecifications();
+        getExperiments();
       })
       .catch((error) => {
         message(error.response.data?.message || error.message);
       });
   };
 
-  const handleDownloadSpecification = (index: number) => {
+  const handleDownloadExperiment = (index: number) => {
     downloadGraphicalModel(
-      specifications[index].graphical_model,
-      specifications[index].name
+      experiments[index].graphical_model,
+      experiments[index].name
     );
   };
 
-  const handleOpenSpecification = (specification: SpecificationType) => {
-    navigate(`/editor/${expID}/${specification.id_specification}`);
+  const handleOpenExperiment = (experiment: ExperimentType) => {
+    navigate(`/editor/${projID}/${experiment.id_experiment}`);
   };
 
   function handleOpenPopover(index: number) {
@@ -168,14 +164,14 @@ const Specifications = () => {
     closeMask();
   }
 
-  const handleDeleteSpecification = () => {
+  const handleDeleteExperiment = () => {
     if (deleteIndex === null) return;
-    deleteSpecificationRequest({
-      url: `/exp/experiments/${expID}/specifications/${specifications[deleteIndex].id_specification}/delete`,
+    deleteExperimentRequest({
+      url: `/exp/projects/${projID}/experiments/${experiments[deleteIndex].id_experiment}/delete`,
       method: "DELETE",
     })
       .then(() => {
-        getSpecifications();
+        getExperiments();
       })
       .catch((error) => {
         message(error.response.data?.message || error.message);
@@ -183,12 +179,12 @@ const Specifications = () => {
     closeMask();
   };
 
-  async function handleImportSpecification() {
+  async function handleImportExperiment() {
     const model = await uploadGraphicalModel();
     if (!model) {
       return;
     }
-    postNewSpecification(`imported-specification-${timeNow()}`, model);
+    postNewExperiment(`imported-experiment-${timeNow()}`, model);
   }
 
   return (
@@ -196,21 +192,21 @@ const Specifications = () => {
       <div className="specification__functions">
         <button
           className="specification__functions__new"
-          onClick={handleNewSpecification}
+          onClick={handleNewExperiment}
         >
-          new specification
+          new experiment
         </button>
         <button
           className="specification__functions__import"
-          onClick={handleImportSpecification}
+          onClick={handleImportExperiment}
         >
-          import specification
+          import experiment
         </button>
       </div>
       <div className="specification__contents">
         <div className="specification__contents__header">
           <div className="specification__contents__header__title">
-            Specification
+            Experiment
           </div>
           <div className="specification__contents__header__create">
             Create At
@@ -219,14 +215,14 @@ const Specifications = () => {
             Update At
           </div>
         </div>
-        {isSpecificationEmpty ? (
+        {isExperimentEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
             <p>Empty Specification</p>
           </div>
         ) : (
           <ul className="specification__contents__list">
-            {specifications.map((specification, index) => (
+            {experiments.map((specification, index) => (
               <li className="specification__contents__list__item" key={index}>
                 <div className="specification__contents__list__item__title">
                   <span
@@ -239,8 +235,8 @@ const Specifications = () => {
                   {editingIndex === index ? (
                     <input
                       type="text"
-                      value={newSpecName}
-                      onChange={(e) => setNewSpecName(e.target.value)}
+                      value={newExpName}
+                      onChange={(e) => setNewExpName(e.target.value)}
                       onKeyUp={handleKeyPress}
                     />
                   ) : (
@@ -257,7 +253,7 @@ const Specifications = () => {
                   <span
                     title="download graphical model"
                     className="iconfont"
-                    onClick={() => handleDownloadSpecification(index)}
+                    onClick={() => handleDownloadExperiment(index)}
                   >
                     &#xe627;
                   </span>
@@ -271,7 +267,7 @@ const Specifications = () => {
                   <button
                     title="open specification in the graphical editor"
                     onClick={() => {
-                      handleOpenSpecification(specification);
+                      handleOpenExperiment(specification);
                     }}
                   >
                     open
@@ -286,9 +282,7 @@ const Specifications = () => {
         <div className="popover__delete">
           <div className="popover__delete__text">
             {`Do you want to delete ${
-              deleteIndex
-                ? specifications[deleteIndex].name
-                : "the specification"
+              deleteIndex ? experiments[deleteIndex].name : "the specification"
             }?`}
           </div>
           <div className="popover__delete__buttons">
@@ -300,7 +294,7 @@ const Specifications = () => {
             </button>
             <button
               className="popover__delete__buttons__confirm"
-              onClick={handleDeleteSpecification}
+              onClick={handleDeleteExperiment}
             >
               confirm
             </button>

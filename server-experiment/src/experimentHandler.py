@@ -30,7 +30,7 @@ class ExperimentHandler(object):
         return False
 
     def get_experiment(self, exp_id):
-        query = {"id_exp": exp_id}
+        query = {"id_experiment": exp_id}
         documents = self.collection_experiment.find(query)
         return json.loads(json.dumps(documents[0], default=str))
 

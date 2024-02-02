@@ -28,7 +28,7 @@ class ProjectHandler(object):
         query = {"id_project": proj_id}
         documents = self.collection_project.find(query)
         for doc in documents:
-            if doc["id_proj"] == proj_id:
+            if doc["id_project"] == proj_id:
                 return True
         return False
 

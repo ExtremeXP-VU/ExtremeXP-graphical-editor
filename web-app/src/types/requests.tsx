@@ -1,4 +1,4 @@
-import { SpecificationType } from "./experiment";
+import { ExperimentType } from "./experiment";
 
 export type LoginResponseType = {
   message: string;
@@ -11,10 +11,39 @@ export type RegisterResponseType = {
   message: string;
 };
 
+export type ProjectsResponseType = {
+  message: string;
+  data: {
+    projects: [];
+  };
+};
+
+export type CreateProjectResponseType = {
+  message: string;
+  data: {
+    id_project: string;
+  };
+};
+
+export type UpdateProjectResponseType = {
+  message: string;
+};
+
+export type DeleteProjectResponseType = {
+  message: string;
+};
+
+export type ExperimentResponseType = {
+  message: string;
+  data: {
+    experiment: ExperimentType;
+  };
+};
+
 export type ExperimentsResponseType = {
   message: string;
   data: {
-    experiments: [];
+    experiments: Array<ExperimentType>;
   };
 };
 
@@ -25,36 +54,7 @@ export type CreateExperimentResponseType = {
   };
 };
 
-export type UpdateExperimentResponseType = {
-  message: string;
-};
-
-export type DeleteExperimentResponseType = {
-  message: string;
-};
-
-export type SpecificationResponseType = {
-  message: string;
-  data: {
-    specification: SpecificationType;
-  };
-};
-
-export type SpecificationsResponseType = {
-  message: string;
-  data: {
-    specifications: Array<SpecificationType>;
-  };
-};
-
-export type CreateSpecificationResponseType = {
-  message: string;
-  data: {
-    id_specification: string;
-  };
-};
-
-export type UpdateSpecificationNameResponseType = {
+export type UpdateExperimentNameResponseType = {
   message: string;
 };
 
@@ -62,7 +62,7 @@ export type UpdateGraphicalModelResponseType = {
   message: string;
 };
 
-export type DeleteSpecificationResponseType = {
+export type DeleteExperimentResponseType = {
   message: string;
 };
 
