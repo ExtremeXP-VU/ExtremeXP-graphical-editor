@@ -218,7 +218,7 @@ const Specifications = () => {
         {isExperimentEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
-            <p>Empty Specification</p>
+            <p>Empty Experiments</p>
           </div>
         ) : (
           <ul className="specification__contents__list">

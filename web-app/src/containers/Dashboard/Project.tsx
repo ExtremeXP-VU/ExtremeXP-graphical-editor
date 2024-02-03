@@ -1,4 +1,4 @@
-import "./experiments.scss";
+import "./project.scss";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
@@ -270,10 +270,10 @@ const Experiments = () => {
               <div className="experiments__experiment__board__guide">
                 <div className="experiments__experiment__board__guide__top">
                   <span className="iconfont">&#xe61a;</span>
-                  <p>Click the button to create a new experiment</p>
+                  <p>Click the button to create a new project</p>
                 </div>
                 <div className="experiments__experiment__board__guide__bottom">
-                  <p>(You need to enter the experiment name first)</p>
+                  <p>(You need to enter the project name first)</p>
                 </div>
               </div>
             ) : (

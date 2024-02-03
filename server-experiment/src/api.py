@@ -4,6 +4,7 @@ from userAuthHandler import userAuthHandler
 from projectHandler import projectHandler
 from experimentHandler import experimentHandler
 from executionHandler import executionHandler
+from categoryHandler import categoryHandler
 
 app = Flask(__name__)
 cors = CORS(app)  # cors is added in advance to allow cors requests
@@ -87,7 +88,6 @@ def update_project_info(proj_id):
 
 @app.route("/exp/projects/<proj_id>/delete", methods=["OPTIONS", "DELETE"])
 @cross_origin()
-# TODO: if data involves, data also need to be deleted.
 def delete_project(proj_id):
     if not projectHandler.project_exists(proj_id):
         return {"message": "project does not exist"}, 404
@@ -173,6 +173,7 @@ def update_experiment_graphical_model(proj_id, exp_id):
     return {"message": "experiment graphical model updated"}, 200
 
 
+# FIXME: temporary solution
 @app.route(
     "/exp/projects/<proj_id>/experiments/<exp_id>/execution",
     methods=["OPTIONS", "POST"],
@@ -190,3 +191,52 @@ def execute_experiment(proj_id, exp_id):
             "data": {"file": response["filename"], "result": response["result"]},
         }, 200
     return {"error": "execution failed", "message": response["error"]}, 401
+
+
+@app.route("/task/categories", methods=["GET"])
+@cross_origin()
+def get_categories():
+    categories = categoryHandler.get_categories(g.username)
+    return {
+        "message": "categories retrieved",
+        "data": {"categories": categories},
+    }, 200
+
+
+@app.route("/task/categories/create", methods=["OPTIONS", "POST"])
+@cross_origin()
+def create_category():
+    category_name = request.json["name"]
+    if categoryHandler.detect_duplicate(g.username, category_name):
+        return {
+            "error": ERROR_DUPLICATE,
+            "message": "Category name already exists",
+        }, 409
+
+    res = categoryHandler.create_category(g.username, category_name)
+    return {"message": "Category created.", "data": {"id_caregory": res}}, 201
+
+
+@app.route("/task/categories/<category_id>/update", methods=["OPTIONS", "PUT"])
+@cross_origin()
+def update_category_name(category_id):
+    category_name = request.json["name"]
+    get_category = categoryHandler.get_category(category_id)
+    if get_category["name"] != category_name:
+        if categoryHandler.detect_duplicate(g.username, category_name):
+            return {
+                "error": ERROR_DUPLICATE,
+                "message": "Category name already exists",
+            }, 409
+    categoryHandler.update_category_name(category_id, category_name)
+    return {"message": "category name updated"}, 200
+
+
+@app.route("/task/categories/<category_id>/delete", methods=["OPTIONS", "DELETE"])
+@cross_origin()
+def delete_category(category_id):
+    if not categoryHandler.category_exists(category_id):
+        return {"message": "category does not exist"}, 404
+    categoryHandler.delete_category(category_id)
+    # experimentHandler.delete_experiments(proj_id)
+    return {"message": "category deleted"}, 204

@@ -14,15 +14,31 @@ data: {
 }
 ```
 
-| API                                                                 | Method | Payload                                                                 | Description                               | Status Code                            |
-| :------------------------------------------------------------------ | :----: | :---------------------------------------------------------------------- | :---------------------------------------- | :------------------------------------- |
-| /exp/projects                                                       |  GET   | /                                                                       | List existing projects belong to the user | 200: OK, <br> 404: Error               |
-| /exp/projects/create                                                |  POST  | {"name": \<project name>}                                               | Create a new project                      | 201: Created, <br> 409: Duplicated     |
-| /exp/projects/<proj_id>/update                                      |  PUT   | {"name": \<project name>, "description": \<description>}                | Update project name and description       | 200: OK, <br> 409: Duplicate name      |
-| /exp/projects/<proj_id>/delete                                      | DELETE | /                                                                       | Delete project and related experiments    | 204: Deleted <br> 404: Not found       |
-| /exp/projects/<proj_id>/experiments                                 |  GET   | /                                                                       | Get all experiments under an project      | 200: OK                                |
-| /exp/projects/experiments/<exp_id>                                  |  GET   | /                                                                       | Get one experiment via experiment ID      | 200: OK                                |
-| /exp/projects/<proj_id>/experiments/create                          |  POST  | {"exp_name": \<experiment name>, "graphical_model": \<graphical model>} | Create a new experiment                   | 201: Created, <br> 409: Duplicate name |
-| /exp/projects/<proj_id>/experiments/<exp_id>/delete                 | DELETE | /                                                                       | Delete a experiment                       | 204: Deleted, <br> 404: Not found      |
-| /exp/projects/<proj_id>/experiments/<exp_id>/update/name            |  PUT   | {"exp_name": \<new experiment name>}                                    | Update experiment name                    | 200: OK, <br> 409: Duplicate name      |
-| /exp/projects/<proj_id>/experiments/<exp_id>/update/graphical_model |  PUT   | {"graphical_model": \<graphical model>}                                 | Update experiment graphical model         | 200: OK                                |
+### Projects
+
+| API                            | Method | Payload                                                  | Description                               | Status Code                        |
+| :----------------------------- | :----: | :------------------------------------------------------- | :---------------------------------------- | :--------------------------------- |
+| /exp/projects                  |  GET   | /                                                        | List existing projects belong to the user | 200: OK, <br> 404: Error           |
+| /exp/projects/create           |  POST  | {"name": \<project name>}                                | Create a new project                      | 201: Created, <br> 409: Duplicated |
+| /exp/projects/<proj_id>/update |  PUT   | {"name": \<project name>, "description": \<description>} | Update project name and description       | 200: OK, <br> 409: Duplicate name  |
+| /exp/projects/<proj_id>/delete | DELETE | /                                                        | Delete project and related experiments    | 204: Deleted <br> 404: Not found   |
+
+### Experiments
+
+| API                                                                 | Method | Payload                                                                 | Description                          | Status Code                            |
+| :------------------------------------------------------------------ | :----: | :---------------------------------------------------------------------- | :----------------------------------- | :------------------------------------- |
+| /exp/projects/<proj_id>/experiments                                 |  GET   | /                                                                       | Get all experiments under an project | 200: OK                                |
+| /exp/projects/experiments/<exp_id>                                  |  GET   | /                                                                       | Get one experiment via experiment ID | 200: OK                                |
+| /exp/projects/<proj_id>/experiments/create                          |  POST  | {"exp_name": \<experiment name>, "graphical_model": \<graphical model>} | Create a new experiment              | 201: Created, <br> 409: Duplicate name |
+| /exp/projects/<proj_id>/experiments/<exp_id>/delete                 | DELETE | /                                                                       | Delete a experiment                  | 204: Deleted, <br> 404: Not found      |
+| /exp/projects/<proj_id>/experiments/<exp_id>/update/name            |  PUT   | {"exp_name": \<new experiment name>}                                    | Update experiment name               | 200: OK, <br> 409: Duplicate name      |
+| /exp/projects/<proj_id>/experiments/<exp_id>/update/graphical_model |  PUT   | {"graphical_model": \<graphical model>}                                 | Update experiment graphical model    | 200: OK                                |
+
+### Categories
+
+| API                                   | Method | Payload                    | Description                                                      | Status Code                        |
+| :------------------------------------ | :----: | :------------------------- | :--------------------------------------------------------------- | :--------------------------------- |
+| /task/categories                      |  GET   | /                          | List officially provided categories and user defined categories  | 200: OK, <br> 404: Error           |
+| /task/categories/create               |  POST  | {"name": \<category name>} | Create a new category                                            | 201: Created, <br> 409: Duplicated |
+| /task/categories/<category_id>/update |  PUT   | {"name": \<category name>} | Update category name. Only user created category can be updated. | 200: OK, <br> 409: Duplicate name  |
+| /task/categories/<category_id>/delete | DELETE | /                          | Delete a user created category                                   | 204: Deleted <br> 404: Not found   |
