@@ -1,21 +1,26 @@
-import pymongo
+import calendar
 import json
 import time
-import calendar
+import pymongo
 from dbClient import mongo_client
 
 
-class CategoryHandler(object):
+class CategoryHandler:
     def __init__(self):
         self.client = mongo_client
-        self.db = self.client.experiments
+        self.db = self.client.tasks
         self.collection_category = self.db.category
+        if self.collection_category.count_documents({}) == 0:
+            with open("../tasks/official_tasks.json") as f:
+                data = json.load(f)
+                for category in data["category"]:
+                    self.collection_category.insert_one(category)
+                f.close()
 
     def get_official_categories(self):
-        with open("../tasks/official_tasks.json") as f:
-            data = json.load(f)
-            f.close()
-        return data["category"]
+        query = {"is_official": True}
+        documents = self.collection_category.find(query)
+        return json.loads(json.dumps(list(documents), default=str))
 
     def get_categories(self, username):
         query = {"owner": username}

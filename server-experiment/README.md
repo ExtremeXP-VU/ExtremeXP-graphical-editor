@@ -30,7 +30,7 @@ data: {
 | /exp/projects/<proj_id>/experiments                                 |  GET   | /                                                                       | Get all experiments under an project | 200: OK                                |
 | /exp/projects/experiments/<exp_id>                                  |  GET   | /                                                                       | Get one experiment via experiment ID | 200: OK                                |
 | /exp/projects/<proj_id>/experiments/create                          |  POST  | {"exp_name": \<experiment name>, "graphical_model": \<graphical model>} | Create a new experiment              | 201: Created, <br> 409: Duplicate name |
-| /exp/projects/<proj_id>/experiments/<exp_id>/delete                 | DELETE | /                                                                       | Delete a experiment                  | 204: Deleted, <br> 404: Not found      |
+| /exp/projects/<proj_id>/experiments/<exp_id>/delete                 | DELETE | /                                                                       | Delete an experiment                 | 204: Deleted, <br> 404: Not found      |
 | /exp/projects/<proj_id>/experiments/<exp_id>/update/name            |  PUT   | {"exp_name": \<new experiment name>}                                    | Update experiment name               | 200: OK, <br> 409: Duplicate name      |
 | /exp/projects/<proj_id>/experiments/<exp_id>/update/graphical_model |  PUT   | {"graphical_model": \<graphical model>}                                 | Update experiment graphical model    | 200: OK                                |
 
@@ -42,3 +42,14 @@ data: {
 | /task/categories/create               |  POST  | {"name": \<category name>} | Create a new category                                            | 201: Created, <br> 409: Duplicated |
 | /task/categories/<category_id>/update |  PUT   | {"name": \<category name>} | Update category name. Only user created category can be updated. | 200: OK, <br> 409: Duplicate name  |
 | /task/categories/<category_id>/delete | DELETE | /                          | Delete a user created category                                   | 204: Deleted <br> 404: Not found   |
+
+### Tasks
+
+| API                                                        | Method | Payload                                                                                | Description                                                                   | Status Code                            |
+| :--------------------------------------------------------- | :----: | :------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :------------------------------------- |
+| /task/categories/<category_id>/tasks                       |  GET   | /                                                                                      | Get all tasks under a category (both user defined and non-user defined tasks) | 200: OK                                |
+| /task/categories/tasks/<task_id>                           |  GET   | /                                                                                      | Get one task via task ID                                                      | 200: OK                                |
+| /task/categories/<category_id>/tasks/create                |  POST  | {"name": \<task name>, "provider": \<provider>, "graphical_model": \<graphical model>} | Create a new task                                                             | 201: Created, <br> 409: Duplicate name |
+| /task/categories/tasks/<task_id>/delete                    | DELETE | /                                                                                      | Delete a task                                                                 | 204: Deleted, <br> 404: Not found      |
+| /task/categories/<category_id>/tasks/<task_id>/update/info |  PUT   | {"name": \<new task name>, "description" : \<task description>}                        | Update task name and description                                              | 200: OK, <br> 409: Duplicate name      |
+| /task/categories/tasks/<task_id>/update/graphical_model    |  PUT   | {"graphical_model": \<graphical model>}                                                | Update task graphical model                                                   | 200: OK                                |
