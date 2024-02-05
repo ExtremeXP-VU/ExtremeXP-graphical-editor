@@ -58,20 +58,24 @@ const Tasks = () => {
       .then(() => {
         setCurrentCategory(categories[0]);
       })
-      .then(() => {
-        // alert(currentCategory?.id_category);
-        // navigate(`/dashboard/categories/${categories[0].id_category}/tasks`);
-      })
       .catch((error) => {
         if (error.name === "AxiosError") {
           message("Please login first");
         }
       });
-  }, [categoriessRequest]);
+  }, [categoriessRequest, categories]);
 
   useEffect(() => {
     getCategories();
   }, []);
+
+  //   // set the first category as the current category when enter the page
+  useEffect(() => {
+    if (categories.length > 0 && currentCategory.id_category === "default") {
+      setCurrentCategory(categories[0]);
+      // navigate(`/dashboard/categories/${categories[0].id_category}/tasks`);
+    }
+  }, [categories, currentCategory.id_category]);
 
   // FIXME: Add category name validation
   const isCategoryNameValid = (name: string) => {

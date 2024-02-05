@@ -8,7 +8,7 @@ export interface CategoryType {
 }
 
 export const defaultCategory: CategoryType = {
-  id_category: "",
+  id_category: "default",
   name: "",
   is_official: false,
   owner: "",
