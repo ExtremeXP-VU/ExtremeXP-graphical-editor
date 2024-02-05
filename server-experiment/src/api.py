@@ -215,7 +215,7 @@ def create_category():
         }, 409
 
     res = categoryHandler.create_category(g.username, category_name)
-    return {"message": "Category created.", "data": {"id_caregory": res}}, 201
+    return {"message": "Category created.", "data": {"id_category": res}}, 201
 
 
 @app.route("/task/categories/<category_id>/update", methods=["OPTIONS", "PUT"])

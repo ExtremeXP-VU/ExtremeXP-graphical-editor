@@ -74,3 +74,25 @@ export type ExecutionResponseType = {
     result: string;
   };
 };
+
+export type CategoriesResponseType = {
+  message: string;
+  data: {
+    categories: [];
+  };
+};
+
+export type CreateCategoryResponseType = {
+  message: string;
+  data: {
+    id_category: string;
+  };
+};
+
+export type UpdateCategoryResponseType = {
+  message: string;
+};
+
+export type DeleteCategoryResponseType = {
+  message: string;
+};

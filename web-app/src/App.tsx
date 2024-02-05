@@ -6,8 +6,10 @@ import Account from "./containers/Account";
 import Login from "./containers/Account/Login";
 import Register from "./containers/Account/Register";
 import Dashboard from "./containers/Dashboard";
-import Project from "./containers/Dashboard/Project";
-import Experiment from "./components/dashboard/Experiment";
+import Experiments from "./containers/Dashboard/Experiments";
+import Project from "./components/dashboard/Project";
+import Tasks from "./containers/Dashboard/Tasks";
+import Category from "./components/dashboard/Category";
 import User from "./containers/Dashboard/User";
 import Editor from "./containers/Editor";
 
@@ -36,11 +38,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard/projects",
-        element: <Project />,
+        element: <Experiments />,
         children: [
           {
             path: "/dashboard/projects/:projID/experiments",
-            element: <Experiment />,
+            element: <Project />,
+          },
+        ],
+      },
+      {
+        path: "/dashboard/categories",
+        element: <Tasks />,
+        children: [
+          {
+            path: "/dashboard/categories/:categoryID/tasks",
+            element: <Category />,
           },
         ],
       },

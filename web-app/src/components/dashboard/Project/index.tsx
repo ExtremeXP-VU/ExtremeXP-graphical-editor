@@ -21,7 +21,7 @@ import {
   DeleteExperimentResponseType,
 } from "../../../types/requests";
 
-const Specifications = () => {
+const Project = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newExpName, setNewExpName] = useState("");
@@ -305,4 +305,4 @@ const Specifications = () => {
   );
 };
 
-export default Specifications;
+export default Project;
