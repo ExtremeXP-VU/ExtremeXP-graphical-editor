@@ -47,7 +47,7 @@
 
   &__header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 0.2rem;
@@ -67,6 +67,10 @@
 
     &__update {
       width: 15%;
+    }
+
+    &__operations {
+      width: 25%;
     }
   }
 
@@ -108,6 +112,10 @@
         .iconfont {
           margin-right: 0.1rem;
           color: lighten($color: #000000, $amount: 50);
+        }
+
+        .editable {
+          color: $secondary-theme-color;
 
           &:hover {
             cursor: pointer;
@@ -147,10 +155,14 @@
         .iconfont {
           margin-right: 0.2rem;
           color: lighten($color: #000000, $amount: 50);
+        }
+
+        .editable {
+          color: $secondary-theme-color;
 
           &:hover {
             cursor: pointer;
-            color: $primary-theme-color;
+            color: $alert-background-color;
           }
         }
 

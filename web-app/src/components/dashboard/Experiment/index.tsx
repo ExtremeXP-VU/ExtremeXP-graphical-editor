@@ -147,7 +147,7 @@ const Project = () => {
   };
 
   const handleOpenExperiment = (experiment: ExperimentType) => {
-    navigate(`/editor/${projID}/${experiment.id_experiment}`);
+    navigate(`/editor/experiment/${projID}/${experiment.id_experiment}`);
   };
 
   function handleOpenPopover(index: number) {
@@ -214,6 +214,7 @@ const Project = () => {
           <div className="specification__contents__header__update">
             Update At
           </div>
+          <div className="specification__contents__header__operations"></div>
         </div>
         {isExperimentEmpty ? (
           <div className="specification__contents__empty">
@@ -227,7 +228,7 @@ const Project = () => {
                 <div className="specification__contents__list__item__title">
                   <span
                     title="modify the name"
-                    className="iconfont"
+                    className="iconfont editable"
                     onClick={() => handleStartEditingName(index)}
                   >
                     &#xe63c;
@@ -252,14 +253,14 @@ const Project = () => {
                 <div className="specification__contents__list__item__operations">
                   <span
                     title="download graphical model"
-                    className="iconfont"
+                    className="iconfont editable"
                     onClick={() => handleDownloadExperiment(index)}
                   >
                     &#xe627;
                   </span>
                   <span
                     title="delete this specification"
-                    className="iconfont"
+                    className="iconfont editable"
                     onClick={() => handleOpenPopover(index)}
                   >
                     &#xe634;

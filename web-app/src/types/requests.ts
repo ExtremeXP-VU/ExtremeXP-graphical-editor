@@ -1,4 +1,5 @@
 import { ExperimentType } from "./experiment";
+import { TaskType } from "./task";
 
 export type LoginResponseType = {
   message: string;
@@ -94,5 +95,34 @@ export type UpdateCategoryResponseType = {
 };
 
 export type DeleteCategoryResponseType = {
+  message: string;
+};
+
+export type TasksResponseType = {
+  message: string;
+  data: {
+    tasks: Array<TaskType>;
+  };
+};
+
+export type TaskResponseType = {
+  message: string;
+  data: {
+    task: TaskType;
+  };
+};
+
+export type CreateTaskResponseType = {
+  message: string;
+  data: {
+    id_task: string;
+  };
+};
+
+export type UpdateTaskInfoResponseType = {
+  message: string;
+};
+
+export type DeleteTaskResponseType = {
   message: string;
 };

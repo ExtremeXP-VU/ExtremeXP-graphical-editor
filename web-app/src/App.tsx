@@ -63,7 +63,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/editor/:projID/:experimentID",
+    path: "/editor/:type/:projID/:experimentID",
     element: <Editor />,
   },
 ]);

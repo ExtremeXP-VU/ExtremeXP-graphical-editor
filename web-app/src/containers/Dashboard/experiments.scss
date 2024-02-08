@@ -5,7 +5,7 @@
     .iconfont {
       margin-right: 0.05rem;
       font-size: 0.7em;
-      color: lighten($color: #000000, $amount: 35);
+      color: $secondary-theme-color;
 
       &:hover {
         cursor: pointer;

@@ -4,54 +4,47 @@ import useRequest from "../../../hooks/useRequest";
 import { message } from "../../../utils/message";
 import { timestampToDate, timeNow } from "../../../utils/timeToDate";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  downloadGraphicalModel,
-  uploadGraphicalModel,
-} from "../../../utils/fileIO";
+
 import Popover from "../../general/Popover";
+import { TaskType, defaultTask } from "../../../types/task";
+import { GraphicalModelType } from "../../../types/experiment";
 import {
-  GraphicalModelType,
-  ExperimentType,
-  defaultExperiment,
-} from "../../../types/experiment";
-import {
-  ExperimentsResponseType,
-  CreateExperimentResponseType,
-  UpdateExperimentNameResponseType,
-  DeleteExperimentResponseType,
+  TasksResponseType,
+  CreateTaskResponseType,
+  UpdateTaskInfoResponseType,
+  DeleteTaskResponseType,
 } from "../../../types/requests";
+import { useAccountStore } from "../../../stores/accountStore";
 
 const Category = () => {
-  const [experiments, setExperiments] = useState([defaultExperiment]);
+  const username = useAccountStore((state) => state.username);
+  const [tasks, setTasks] = useState([defaultTask]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newExpName, setNewExpName] = useState("");
+  const [newTaskName, setNewTaskName] = useState("");
 
   const [showPopover, setShowPopover] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
-  const isExperimentEmpty = experiments.length === 0;
-
+  const isCategoryEmpty = tasks.length === 0;
   // make sure the expID is the same as the one in the url
-  const projID = useLocation().pathname.split("/")[3];
+  const categoryIdByURL = useLocation().pathname.split("/")[3];
 
-  const { request: experimentsRequest } = useRequest<ExperimentsResponseType>();
-  const { request: createExperimentRequest } =
-    useRequest<CreateExperimentResponseType>();
-  const { request: updateExpNameRequest } =
-    useRequest<UpdateExperimentNameResponseType>();
-  const { request: deleteExperimentRequest } =
-    useRequest<DeleteExperimentResponseType>();
+  const { request: tasksRequest } = useRequest<TasksResponseType>();
+  const { request: createTaskRequest } = useRequest<CreateTaskResponseType>();
+  const { request: updateTaskInfoRequest } =
+    useRequest<UpdateTaskInfoResponseType>();
+  const { request: deleteTaskRequest } = useRequest<DeleteTaskResponseType>();
 
   const navigate = useNavigate();
 
-  const getExperiments = useCallback(() => {
-    experimentsRequest({
-      url: `exp/projects/${projID}/experiments`,
+  const getTasks = useCallback(() => {
+    tasksRequest({
+      url: `task/categories/${categoryIdByURL}/tasks`,
     })
       .then((data) => {
-        if (data.data.experiments) {
-          const experiments = data.data.experiments;
-          setExperiments(experiments);
+        if (data.data.tasks) {
+          const tasks = data.data.tasks;
+          setTasks(tasks);
         }
       })
       .catch((error) => {
@@ -59,24 +52,25 @@ const Category = () => {
           message(error.message);
         }
       });
-  }, [experimentsRequest, projID]);
+  }, [tasksRequest, categoryIdByURL]);
 
   useEffect(() => {
-    getExperiments();
-  }, [getExperiments]);
+    getTasks();
+  }, [getTasks]);
 
-  const postNewExperiment = useCallback(
-    (name: string, graphicalModel: GraphicalModelType) => {
-      createExperimentRequest({
-        url: `/exp/projects/${projID}/experiments/create`,
+  const postNewTask = useCallback(
+    (name: string, provider: string, graphicalModel: GraphicalModelType) => {
+      createTaskRequest({
+        url: `task/categories/${categoryIdByURL}/tasks/create`,
         method: "POST",
         data: {
-          exp_name: name,
+          name: name,
+          provider: provider,
           graphical_model: graphicalModel,
         },
       })
         .then(() => {
-          getExperiments();
+          getTasks();
         })
         .catch((error) => {
           if (error.message) {
@@ -84,18 +78,19 @@ const Category = () => {
           }
         });
     },
-    [projID, createExperimentRequest, getExperiments]
+    [categoryIdByURL, createTaskRequest, getTasks]
   );
 
-  const handleNewExperiment = () => {
-    postNewExperiment(`experiment-${timeNow()}`, {
+  const handleNewTask = () => {
+    postNewTask(`task-${timeNow()}`, username, {
       nodes: [],
       edges: [],
     });
   };
 
   const handleStartEditingName = (index: number) => {
-    setNewExpName(experiments[index].name);
+    if (!tasks[index].is_user_defined) return;
+    setNewTaskName(tasks[index].name);
     if (editingIndex === null) {
       setEditingIndex(index);
     } else {
@@ -106,51 +101,54 @@ const Category = () => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (editingIndex === null) return;
-      if (newExpName === "" || newExpName === experiments[editingIndex].name) {
+      if (newTaskName === "" || newTaskName === tasks[editingIndex].name) {
         setEditingIndex(null);
         return;
       }
-      renameExperiment();
+      renameTask();
       setEditingIndex(null);
     }
   };
 
-  const renameExperiment = () => {
-    if (newExpName === "" || editingIndex === null) return;
-    if (newExpName === experiments[editingIndex].name) return;
-    if (newExpName.length > 35) {
+  const renameTask = () => {
+    if (newTaskName === "" || editingIndex === null) return;
+    if (newTaskName === tasks[editingIndex].name) return;
+    if (newTaskName.length > 35) {
       message("The length of the name should be less than 35 characters.");
       return;
     }
-    updateExpNameRequest({
-      url: `/exp/projects/${projID}/experiments/${
-        experiments[editingIndex!].id_experiment
-      }/update/name`,
+    updateTaskInfoRequest({
+      url: `task/categories/${categoryIdByURL}/tasks/${
+        tasks[editingIndex!].id_task
+      }/update/info`,
       method: "PUT",
       data: {
-        exp_name: newExpName,
+        name: newTaskName,
+        description: tasks[editingIndex!].description,
       },
     })
       .then(() => {
-        getExperiments();
+        getTasks();
       })
       .catch((error) => {
         message(error.response.data?.message || error.message);
       });
   };
 
-  const handleDownloadExperiment = (index: number) => {
-    downloadGraphicalModel(
-      experiments[index].graphical_model,
-      experiments[index].name
+  const handleOpenTask = (task: TaskType) => {
+    navigate(`/editor/task/${categoryIdByURL}/${task.id_task}`);
+  };
+
+  const handleCloneTask = (task: TaskType) => {
+    postNewTask(
+      `${task.name}-copy-${timeNow()}`,
+      task.provider,
+      task.graphical_model
     );
   };
 
-  const handleOpenExperiment = (experiment: ExperimentType) => {
-    navigate(`/editor/${projID}/${experiment.id_experiment}`);
-  };
-
   function handleOpenPopover(index: number) {
+    if (!tasks[index].is_user_defined) return;
     setDeleteIndex(index);
     setShowPopover(true);
   }
@@ -164,14 +162,14 @@ const Category = () => {
     closeMask();
   }
 
-  const handleDeleteExperiment = () => {
+  const handleDeleteTask = () => {
     if (deleteIndex === null) return;
-    deleteExperimentRequest({
-      url: `/exp/projects/${projID}/experiments/${experiments[deleteIndex].id_experiment}/delete`,
+    deleteTaskRequest({
+      url: `task/categories/tasks/${tasks[deleteIndex].id_task}/delete`,
       method: "DELETE",
     })
       .then(() => {
-        getExperiments();
+        getTasks();
       })
       .catch((error) => {
         message(error.response.data?.message || error.message);
@@ -179,55 +177,42 @@ const Category = () => {
     closeMask();
   };
 
-  async function handleImportExperiment() {
-    const model = await uploadGraphicalModel();
-    if (!model) {
-      return;
-    }
-    postNewExperiment(`imported-experiment-${timeNow()}`, model);
-  }
-
   return (
     <div className="specification">
-      <div className="specification__functions">
+      <div className="specification__functions task__functions">
         <button
           className="specification__functions__new"
-          onClick={handleNewExperiment}
+          onClick={handleNewTask}
         >
-          new experiment
-        </button>
-        <button
-          className="specification__functions__import"
-          onClick={handleImportExperiment}
-        >
-          import experiment
+          new task
         </button>
       </div>
       <div className="specification__contents">
-        <div className="specification__contents__header">
-          <div className="specification__contents__header__title">
-            Experiment
-          </div>
-          <div className="specification__contents__header__create">
-            Create At
-          </div>
-          <div className="specification__contents__header__update">
-            Update At
-          </div>
+        <div className="specification__contents__header task__header">
+          <div className="task__header__title ">Task</div>
+          <div className="task__header__provider">Provider</div>
+          <div className="task__header__create">Create At</div>
+          <div className="task__header__update">Update At</div>
+          <div className="task__header__operations"></div>
         </div>
-        {isExperimentEmpty ? (
+        {isCategoryEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
-            <p>Empty Experiments</p>
+            <p>Empty Tasks</p>
           </div>
         ) : (
           <ul className="specification__contents__list">
-            {experiments.map((specification, index) => (
-              <li className="specification__contents__list__item" key={index}>
-                <div className="specification__contents__list__item__title">
+            {tasks.map((task, index) => (
+              <li
+                className="specification__contents__list__item task__item"
+                key={index}
+              >
+                <div className="specification__contents__list__item__title task__item__title">
                   <span
                     title="modify the name"
-                    className="iconfont"
+                    className={`iconfont ${
+                      task.is_user_defined ? "editable" : "not-editable"
+                    }`}
                     onClick={() => handleStartEditingName(index)}
                   >
                     &#xe63c;
@@ -235,43 +220,50 @@ const Category = () => {
                   {editingIndex === index ? (
                     <input
                       type="text"
-                      value={newExpName}
-                      onChange={(e) => setNewExpName(e.target.value)}
+                      value={newTaskName}
+                      onChange={(e) => setNewTaskName(e.target.value)}
                       onKeyUp={handleKeyPress}
                     />
                   ) : (
-                    <p>{specification.name}</p>
+                    <p>{task.name}</p>
                   )}
                 </div>
-                <div className="specification__contents__list__item__create">
-                  {timestampToDate(specification.create_at)}
+                <div className="task__item__provider">{task.provider}</div>
+                <div className="specification__contents__list__item__create task__item__create">
+                  {timestampToDate(task.create_at)}
                 </div>
-                <div className="specification__contents__list__item__update">
-                  {timestampToDate(specification.update_at)}
+                <div className="specification__contents__list__item__update task__item__update">
+                  {timestampToDate(task.update_at)}
                 </div>
-                <div className="specification__contents__list__item__operations">
-                  <span
-                    title="download graphical model"
-                    className="iconfont"
-                    onClick={() => handleDownloadExperiment(index)}
-                  >
-                    &#xe627;
-                  </span>
+                <div className="specification__contents__list__item__operations task__item__operations">
                   <span
                     title="delete this specification"
-                    className="iconfont"
+                    className={`iconfont ${
+                      task.is_user_defined ? "editable" : "not-editable"
+                    }`}
                     onClick={() => handleOpenPopover(index)}
                   >
                     &#xe634;
                   </span>
-                  <button
-                    title="open specification in the graphical editor"
-                    onClick={() => {
-                      handleOpenExperiment(specification);
-                    }}
-                  >
-                    open
-                  </button>
+                  {task.is_user_defined ? (
+                    <button
+                      title="open task in the graphical editor"
+                      onClick={() => {
+                        handleOpenTask(task);
+                      }}
+                    >
+                      open
+                    </button>
+                  ) : (
+                    <button
+                      title="clone the task"
+                      onClick={() => {
+                        handleCloneTask(task);
+                      }}
+                    >
+                      clone
+                    </button>
+                  )}
                 </div>
               </li>
             ))}
@@ -282,7 +274,7 @@ const Category = () => {
         <div className="popover__delete">
           <div className="popover__delete__text">
             {`Do you want to delete ${
-              deleteIndex ? experiments[deleteIndex].name : "the specification"
+              deleteIndex ? tasks[deleteIndex].name : "the specification"
             }?`}
           </div>
           <div className="popover__delete__buttons">
@@ -294,7 +286,7 @@ const Category = () => {
             </button>
             <button
               className="popover__delete__buttons__confirm"
-              onClick={handleDeleteExperiment}
+              onClick={handleDeleteTask}
             >
               confirm
             </button>

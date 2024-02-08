@@ -1,0 +1,55 @@
+@import "../../../styles/colors.scss";
+
+.task__functions {
+  width: 1.1rem;
+
+  button {
+    width: 1.1rem;
+    margin: 0;
+  }
+}
+
+.task__header {
+  &__title {
+    width: 30%;
+  }
+
+  &__provider {
+    width: 20%;
+  }
+
+  &__create {
+    width: 15%;
+  }
+
+  &__update {
+    width: 15%;
+  }
+
+  &__operations {
+    width: 20%;
+  }
+}
+
+.task__item {
+  justify-content: space-between;
+
+  &__title {
+    width: 30%;
+  }
+  &__provider {
+    width: 20%;
+  }
+
+  &__create {
+    width: 15%;
+  }
+
+  &__update {
+    width: 15%;
+  }
+
+  &__operations {
+    width: 20%;
+  }
+}
