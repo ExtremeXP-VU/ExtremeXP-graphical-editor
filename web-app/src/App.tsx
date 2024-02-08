@@ -7,9 +7,9 @@ import Login from "./containers/Account/Login";
 import Register from "./containers/Account/Register";
 import Dashboard from "./containers/Dashboard";
 import Experiments from "./containers/Dashboard/Experiments";
-import Project from "./components/dashboard/Project";
+import Project from "./components/dashboard/Experiment";
 import Tasks from "./containers/Dashboard/Tasks";
-import Category from "./components/dashboard/Category";
+import Category from "./components/dashboard/Task";
 import User from "./containers/Dashboard/User";
 import Editor from "./containers/Editor";
 

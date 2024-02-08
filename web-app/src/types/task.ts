@@ -26,3 +26,19 @@ export interface TaskType {
   update_at: number;
   graphical_model: GraphicalModelType;
 }
+
+export const defaultTask: TaskType = {
+  id_task: "default",
+  name: "",
+  category_id: "",
+  is_user_defined: false,
+  owner: "",
+  provider: "",
+  description: "",
+  create_at: 0,
+  update_at: 0,
+  graphical_model: {
+    nodes: [],
+    edges: [],
+  },
+};

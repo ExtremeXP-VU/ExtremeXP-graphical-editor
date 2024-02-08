@@ -55,9 +55,6 @@ const Tasks = () => {
           setCategories(data.data.categories);
         }
       })
-      .then(() => {
-        setCurrentCategory(categories[0]);
-      })
       .catch((error) => {
         if (error.name === "AxiosError") {
           message("Please login first");
@@ -69,13 +66,17 @@ const Tasks = () => {
     getCategories();
   }, []);
 
-  //   // set the first category as the current category when enter the page
+  // set the first category as the current category when enter the page
   useEffect(() => {
     if (categories.length > 0 && currentCategory.id_category === "default") {
       setCurrentCategory(categories[0]);
-      // navigate(`/dashboard/categories/${categories[0].id_category}/tasks`);
+      //   navigate(`/dashboard/categories/${categories[0].id_category}/tasks`);
     }
   }, [categories, currentCategory.id_category]);
+
+  useEffect(() => {
+    navigate(`/dashboard/categories/${currentCategory?.id_category}/tasks`);
+  }, [currentCategory.id_category]);
 
   // FIXME: Add category name validation
   const isCategoryNameValid = (name: string) => {
@@ -114,11 +115,8 @@ const Tasks = () => {
   const handleSelectCategory = (index: number) => {
     if (isEditing) return;
     setCurrentCategory(filteredCategory[index]);
-    //   alert(currentCategory.name);
-    // navigate(
-    //   `/dashboard/categories/${currentCategory?.id_category}/tasks`
-    // );
   };
+
   const handleStartEditing = (name: string) => {
     setCategoryNameInput(name);
     setIsEditing(!isEditing);
