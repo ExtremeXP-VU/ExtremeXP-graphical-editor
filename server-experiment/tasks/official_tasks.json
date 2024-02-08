@@ -1,0 +1,84 @@
+{
+  "category": [
+    {
+      "id_category": "category-official-01",
+      "name": "Input and Output Data",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    },
+    {
+      "id_category": "category-official-02",
+      "name": "Data Preprocessing",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    },
+    {
+      "id_category": "category-official-03",
+      "name": "Features Extraction",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    },
+    {
+      "id_category": "category-official-04",
+      "name": "ML Classification",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    },
+    {
+      "id_category": "category-official-05",
+      "name": "ML Regression",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    },
+    {
+      "id_category": "category-official-06",
+      "name": "Train",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    },
+    {
+      "id_category": "category-official-07",
+      "name": "Predict",
+      "is_official": true,
+      "owner": "ExtremeXP"
+    }
+  ],
+  "task": [
+    {
+      "id_task": "task-official-01",
+      "name": "load csv",
+      "category_id": "category-official-01",
+      "is_user_defined": false,
+      "owner": "ExtremeXP",
+      "provider": "ExtremeXP",
+      "description": "Load a csv file from a URI",
+      "create_at": 1706986320,
+      "update_at": 1706986320,
+      "graphical_model": []
+    },
+    {
+      "id_task": "task-official-02",
+      "name": "drop columns",
+      "category_id": "category-official-02",
+      "is_user_defined": false,
+      "owner": "ExtremeXP",
+      "provider": "ExtremeXP",
+      "description": "Drop columns from a dataframe",
+      "create_at": 1706986320,
+      "update_at": 1706986320,
+      "graphical_model": []
+    },
+    {
+      "id_task": "task-official-03",
+      "name": "fill NaNs",
+      "category_id": "category-official-02",
+      "is_user_defined": false,
+      "owner": "ExtremeXP",
+      "provider": "ExtremeXP",
+      "description": "Fill NaNs in a dataframe",
+      "create_at": 1706986320,
+      "update_at": 1706986320,
+      "graphical_model": []
+    }
+  ]
+}

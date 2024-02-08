@@ -28,9 +28,13 @@ import Popover from "../../components/general/Popover";
 import {
   defaultGraphicalModel,
   defaultExperiment,
+  ExperimentType,
 } from "../../types/experiment";
 
+import { TaskType } from "../../types/task";
+
 import {
+  TaskResponseType,
   ExperimentResponseType,
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
@@ -57,6 +61,7 @@ const selector = (state: RFState) => ({
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
   const { request: experimentRequest } = useRequest<ExperimentResponseType>();
+  const { request: taskRequest } = useRequest<TaskResponseType>();
 
   const { request: updateGraphRequest } =
     useRequest<UpdateGraphicalModelResponseType>();
@@ -83,11 +88,14 @@ const Editor = () => {
 
   const navigate = useNavigate();
 
-  const [experiment, setExperiment] = useState(defaultExperiment);
+  const [experiment, setExperiment] = useState<ExperimentType | TaskType>(
+    defaultExperiment
+  );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const projID = useLocation().pathname.split("/")[2];
-  const experimentID = useLocation().pathname.split("/")[3];
+  const experimentType = useLocation().pathname.split("/")[2];
+  const projID = useLocation().pathname.split("/")[3];
+  const experimentID = useLocation().pathname.split("/")[4];
 
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
@@ -97,20 +105,37 @@ const Editor = () => {
   const [newExpName, setNewExpName] = useState("");
 
   useEffect(() => {
-    experimentRequest({
-      url: `exp/projects/experiments/${experimentID}`,
-    })
-      .then((data) => {
-        if (data.data.experiment) {
-          const newExperiment = data.data.experiment;
-          setExperiment(newExperiment);
-        }
+    if (experimentType === "experiment") {
+      experimentRequest({
+        url: `exp/projects/experiments/${experimentID}`,
       })
-      .catch((error) => {
-        if (error.message) {
-          message(error.message);
-        }
-      });
+        .then((data) => {
+          if (data.data.experiment) {
+            const newExperiment = data.data.experiment;
+            setExperiment(newExperiment);
+          }
+        })
+        .catch((error) => {
+          if (error.message) {
+            message(error.message);
+          }
+        });
+    } else {
+      taskRequest({
+        url: `task/categories/tasks/${experimentID}`,
+      })
+        .then((data) => {
+          if (data.data.task) {
+            const newTask = data.data.task;
+            setExperiment(newTask);
+          }
+        })
+        .catch((error) => {
+          if (error.message) {
+            message(error.message);
+          }
+        });
+    }
   }, []);
 
   useEffect(() => {

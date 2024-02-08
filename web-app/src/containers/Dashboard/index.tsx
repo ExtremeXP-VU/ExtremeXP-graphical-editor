@@ -5,9 +5,12 @@ import { logout } from "../../stores/accountStore";
 
 const Repository = () => {
   const location = useLocation();
-  const isExperiment = location.pathname.includes("/experiments");
-  const experimentSelectedClass = isExperiment ? "selected" : "";
-  const userSelectedClass = isExperiment ? "" : "selected";
+  const isExperiments = location.pathname.includes("/projects");
+  const isUser = location.pathname.includes("/user");
+  const isTask = location.pathname.includes("/categories");
+  const experimentSelectedClass = isExperiments ? "selected" : "";
+  const userSelectedClass = isUser ? "selected" : "";
+  const taskSelectedClass = isTask ? "selected" : "";
 
   const navigate = useNavigate();
 
@@ -29,6 +32,14 @@ const Repository = () => {
             >
               <span className="iconfont">&#xe6cf;</span>
               <p>Experiments</p>
+            </div>
+          </Link>
+          <Link to={"/dashboard/categories"}>
+            <div
+              className={`repository__panel__items__item ${taskSelectedClass}`}
+            >
+              <span className="iconfont">&#xe610;</span>
+              <p>Tasks</p>
             </div>
           </Link>
           <Link to={"/dashboard/user"}>

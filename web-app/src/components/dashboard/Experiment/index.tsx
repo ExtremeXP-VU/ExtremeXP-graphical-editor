@@ -21,7 +21,7 @@ import {
   DeleteExperimentResponseType,
 } from "../../../types/requests";
 
-const Specifications = () => {
+const Project = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newExpName, setNewExpName] = useState("");
@@ -147,7 +147,7 @@ const Specifications = () => {
   };
 
   const handleOpenExperiment = (experiment: ExperimentType) => {
-    navigate(`/editor/${projID}/${experiment.id_experiment}`);
+    navigate(`/editor/experiment/${projID}/${experiment.id_experiment}`);
   };
 
   function handleOpenPopover(index: number) {
@@ -214,11 +214,12 @@ const Specifications = () => {
           <div className="specification__contents__header__update">
             Update At
           </div>
+          <div className="specification__contents__header__operations"></div>
         </div>
         {isExperimentEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
-            <p>Empty Specification</p>
+            <p>Empty Experiments</p>
           </div>
         ) : (
           <ul className="specification__contents__list">
@@ -227,7 +228,7 @@ const Specifications = () => {
                 <div className="specification__contents__list__item__title">
                   <span
                     title="modify the name"
-                    className="iconfont"
+                    className="iconfont editable"
                     onClick={() => handleStartEditingName(index)}
                   >
                     &#xe63c;
@@ -252,14 +253,14 @@ const Specifications = () => {
                 <div className="specification__contents__list__item__operations">
                   <span
                     title="download graphical model"
-                    className="iconfont"
+                    className="iconfont editable"
                     onClick={() => handleDownloadExperiment(index)}
                   >
                     &#xe627;
                   </span>
                   <span
                     title="delete this specification"
-                    className="iconfont"
+                    className="iconfont editable"
                     onClick={() => handleOpenPopover(index)}
                   >
                     &#xe634;
@@ -305,4 +306,4 @@ const Specifications = () => {
   );
 };
 
-export default Specifications;
+export default Project;
