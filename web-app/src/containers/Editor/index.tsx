@@ -61,17 +61,16 @@ const selector = (state: RFState) => ({
 
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
-  const { request: experimentRequest } = useRequest<ExperimentResponseType>();
-  const { request: taskRequest } = useRequest<TaskResponseType>();
+  const { request: specificationRequest } = useRequest<
+    ExperimentResponseType | TaskResponseType
+  >();
 
   const { request: updateGraphRequest } =
     useRequest<UpdateGraphicalModelResponseType>();
 
-  const { request: createNewExpRequest } =
-    useRequest<CreateExperimentResponseType>();
-
-  const { request: createNewTaskRequest } =
-    useRequest<CreateTaskResponseType>();
+  const { request: createNewSpecRequest } = useRequest<
+    CreateExperimentResponseType | CreateTaskResponseType
+  >();
 
   // FIXME: Temporary Execution Demo
   const { request: executionRequest } = useRequest<ExecutionResponseType>();
@@ -109,37 +108,32 @@ const Editor = () => {
   const [newExpName, setNewExpName] = useState("");
 
   useEffect(() => {
-    if (specificationType === "experiment") {
-      experimentRequest({
-        url: `exp/projects/experiments/${experimentID}`,
+    let url = "";
+    specificationType === "experiment"
+      ? (url = `exp/projects/experiments/${experimentID}`)
+      : (url = `task/categories/tasks/${experimentID}`);
+
+    specificationRequest({
+      url: url,
+    })
+      .then((data) => {
+        let newExperiment: ExperimentType | TaskType = defaultExperiment;
+        if (specificationType === "experiment") {
+          if ("experiment" in data.data) {
+            newExperiment = data.data.experiment;
+          }
+        } else {
+          if ("task" in data.data) {
+            newExperiment = data.data.task;
+          }
+        }
+        setExperiment(newExperiment);
       })
-        .then((data) => {
-          if (data.data.experiment) {
-            const newExperiment = data.data.experiment;
-            setExperiment(newExperiment);
-          }
-        })
-        .catch((error) => {
-          if (error.message) {
-            message(error.message);
-          }
-        });
-    } else {
-      taskRequest({
-        url: `task/categories/tasks/${experimentID}`,
-      })
-        .then((data) => {
-          if (data.data.task) {
-            const newTask = data.data.task;
-            setExperiment(newTask);
-          }
-        })
-        .catch((error) => {
-          if (error.message) {
-            message(error.message);
-          }
-        });
-    }
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -227,46 +221,45 @@ const Editor = () => {
   function handleSaveAs() {
     closeMask();
     const graphicalModel = { nodes, edges };
+    let url = "";
+    specificationType === "experiment"
+      ? (url = `/exp/projects/${projID}/experiments/create`)
+      : (url = `/task/categories/${projID}/tasks/create`);
+
+    let data = {};
     if (specificationType === "experiment") {
-      createNewExpRequest({
-        url: `/exp/projects/${projID}/experiments/create`,
-        method: "POST",
-        data: {
-          exp_name: newExpName,
-          graphical_model: graphicalModel,
-        },
-      })
-        .then((data) => {
-          const expID = data.data.id_experiment;
-          navigate(`/editor/${specificationType}/${projID}/${expID}`);
-          window.location.reload();
-        })
-        .catch((error) => {
-          if (error.message) {
-            message(error.message);
-          }
-        });
+      data = {
+        exp_name: newExpName,
+        graphical_model: graphicalModel,
+      };
     } else {
-      createNewTaskRequest({
-        url: `/task/categories/${projID}/tasks/create`,
-        method: "POST",
-        data: {
-          name: newExpName,
-          provider: (experiment as TaskType).provider,
-          graphical_model: graphicalModel,
-        },
-      })
-        .then((data) => {
-          const taskID = data.data.id_task;
-          navigate(`/editor/${specificationType}/${projID}/${taskID}`);
-          window.location.reload();
-        })
-        .catch((error) => {
-          if (error.message) {
-            message(error.message);
-          }
-        });
+      data = {
+        name: newExpName,
+        provider: (experiment as TaskType).provider,
+        graphical_model: graphicalModel,
+      };
     }
+
+    createNewSpecRequest({
+      url: url,
+      method: "POST",
+      data: data,
+    })
+      .then((data) => {
+        let specID = "";
+        if ("id_experiment" in data.data) {
+          specID = data.data.id_experiment;
+        } else if ("id_task" in data.data) {
+          specID = data.data.id_task;
+        }
+        navigate(`/editor/${specificationType}/${projID}/${specID}`);
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
   }
 
   // FIXEME: duplicated code

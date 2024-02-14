@@ -70,7 +70,6 @@ const Tasks = () => {
   useEffect(() => {
     if (categories.length > 0 && currentCategory.id_category === "default") {
       setCurrentCategory(categories[0]);
-      //   navigate(`/dashboard/categories/${categories[0].id_category}/tasks`);
     }
   }, [categories, currentCategory.id_category]);
 
