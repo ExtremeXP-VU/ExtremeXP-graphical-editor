@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { defaultProject } from "../../types/experiment";
 import Popover from "../../components/general/Popover";
 import {
@@ -35,7 +35,6 @@ const Experiments = () => {
     useRequest<DeleteProjectResponseType>();
 
   const navigate = useNavigate();
-  const location = useLocation();
   const isProjectsEmpty = projects.length === 0;
 
   const filteredProjects = useMemo(() => {
@@ -43,10 +42,6 @@ const Experiments = () => {
       return project.name.toLowerCase().includes(searchInput.toLowerCase());
     });
   }, [projects, searchInput]);
-
-  const urlProjID = useMemo(() => {
-    return location.pathname.split("/")[3];
-  }, [location.pathname]);
 
   const getProjects = useCallback(() => {
     projectsRequest({
@@ -62,7 +57,7 @@ const Experiments = () => {
           message("Please login first");
         }
       });
-  }, [projectsRequest]);
+  }, [projectsRequest, projects]);
 
   useEffect(() => {
     getProjects();
@@ -72,17 +67,12 @@ const Experiments = () => {
   useEffect(() => {
     if (projects.length > 0 && currentProj.id_project === "default") {
       setCurrentProj(projects[0]);
-      navigate(`/dashboard/projects/${projects[0].id_project}/experiments`);
     }
   }, [projects, currentProj.id_project]);
 
   useEffect(() => {
-    // find the experiment id from the url
-    if (urlProjID && urlProjID !== currentProj.id_project) {
-      const project = projects.find((exp) => exp.id_project === urlProjID);
-      if (project) setCurrentProj(project);
-    }
-  }, [currentProj.id_project, projects, location.pathname, urlProjID]);
+    navigate(`/dashboard/projects/${currentProj?.id_project}/experiments`);
+  }, [currentProj.id_project]);
 
   // FIXME: Add experiment name validation
   const isProjectNameValid = (name: string) => {
@@ -121,9 +111,6 @@ const Experiments = () => {
   const handleSelectProject = (index: number) => {
     if (isEditing) return;
     setCurrentProj(filteredProjects[index]);
-    navigate(
-      `/dashboard/projects/${filteredProjects[index].id_project}/experiments`
-    );
   };
 
   const handleStartEditing = () => {
