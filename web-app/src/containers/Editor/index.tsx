@@ -38,6 +38,7 @@ import {
   ExperimentResponseType,
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
+  CreateTaskResponseType,
   ExecutionResponseType,
 } from "../../types/requests";
 
@@ -66,8 +67,11 @@ const Editor = () => {
   const { request: updateGraphRequest } =
     useRequest<UpdateGraphicalModelResponseType>();
 
-  const { request: createSpecRequest } =
+  const { request: createNewExpRequest } =
     useRequest<CreateExperimentResponseType>();
+
+  const { request: createNewTaskRequest } =
+    useRequest<CreateTaskResponseType>();
 
   // FIXME: Temporary Execution Demo
   const { request: executionRequest } = useRequest<ExecutionResponseType>();
@@ -93,7 +97,7 @@ const Editor = () => {
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const experimentType = useLocation().pathname.split("/")[2];
+  const specificationType = useLocation().pathname.split("/")[2];
   const projID = useLocation().pathname.split("/")[3];
   const experimentID = useLocation().pathname.split("/")[4];
 
@@ -105,7 +109,7 @@ const Editor = () => {
   const [newExpName, setNewExpName] = useState("");
 
   useEffect(() => {
-    if (experimentType === "experiment") {
+    if (specificationType === "experiment") {
       experimentRequest({
         url: `exp/projects/experiments/${experimentID}`,
       })
@@ -182,8 +186,12 @@ const Editor = () => {
 
   function updateGraphicalModel() {
     const graphicalModel = { nodes, edges };
+    let url = "";
+    specificationType === "experiment"
+      ? (url = `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`)
+      : (url = `/task/categories/tasks/${experimentID}/update/graphical_model`);
     updateGraphRequest({
-      url: `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`,
+      url: url,
       method: "PUT",
       data: {
         graphical_model: graphicalModel,
@@ -219,24 +227,46 @@ const Editor = () => {
   function handleSaveAs() {
     closeMask();
     const graphicalModel = { nodes, edges };
-    createSpecRequest({
-      url: `/exp/projects/${projID}/experiments/create`,
-      method: "POST",
-      data: {
-        exp_name: newExpName,
-        graphical_model: graphicalModel,
-      },
-    })
-      .then((data) => {
-        const expID = data.data.id_experiment;
-        navigate(`/editor/${projID}/${expID}`);
-        window.location.reload();
+    if (specificationType === "experiment") {
+      createNewExpRequest({
+        url: `/exp/projects/${projID}/experiments/create`,
+        method: "POST",
+        data: {
+          exp_name: newExpName,
+          graphical_model: graphicalModel,
+        },
       })
-      .catch((error) => {
-        if (error.message) {
-          message(error.message);
-        }
-      });
+        .then((data) => {
+          const expID = data.data.id_experiment;
+          navigate(`/editor/${specificationType}/${projID}/${expID}`);
+          window.location.reload();
+        })
+        .catch((error) => {
+          if (error.message) {
+            message(error.message);
+          }
+        });
+    } else {
+      createNewTaskRequest({
+        url: `/task/categories/${projID}/tasks/create`,
+        method: "POST",
+        data: {
+          name: newExpName,
+          provider: (experiment as TaskType).provider,
+          graphical_model: graphicalModel,
+        },
+      })
+        .then((data) => {
+          const taskID = data.data.id_task;
+          navigate(`/editor/${specificationType}/${projID}/${taskID}`);
+          window.location.reload();
+        })
+        .catch((error) => {
+          if (error.message) {
+            message(error.message);
+          }
+        });
+    }
   }
 
   // FIXEME: duplicated code
@@ -311,7 +341,7 @@ const Editor = () => {
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__save">
           <div className="popover__save__text">
-            Save as a new specification?
+            {` Save the current specification as a new ${specificationType}`}
           </div>
           <input
             type="text"

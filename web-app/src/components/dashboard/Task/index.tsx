@@ -191,8 +191,8 @@ const Category = () => {
         <div className="specification__contents__header task__header">
           <div className="task__header__title ">Task</div>
           <div className="task__header__provider">Provider</div>
-          <div className="task__header__create">Create At</div>
-          <div className="task__header__update">Update At</div>
+          <div className="task__header__create">Created At</div>
+          <div className="task__header__update">Updated At</div>
           <div className="task__header__operations"></div>
         </div>
         {isCategoryEmpty ? (
