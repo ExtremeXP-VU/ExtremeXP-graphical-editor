@@ -163,17 +163,20 @@ const Editor = () => {
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-
-      const type = event.dataTransfer.getData("application/reactflow");
+      console.log(event.dataTransfer.getData("application/reactflow"));
+      const { nodeType, data } = JSON.parse(
+        event.dataTransfer.getData("application/reactflow")
+      );
       // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) {
+      if (typeof nodeType === "undefined" || !nodeType) {
         return;
       }
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
-      addNode(type, position);
+
+      addNode(nodeType, position, data);
     },
     [reactFlowInstance, nodes]
   );

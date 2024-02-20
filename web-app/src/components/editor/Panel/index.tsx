@@ -10,6 +10,11 @@ import {
   notationList,
 } from "../notations/notationConfigs/linkProps";
 
+import { genericTask } from "../../../types/task";
+
+import SubTask from "./SubTask";
+import { useCategoryStore } from "../../../stores/categoryStore";
+
 interface PanelProps {
   selectedLink: string;
   onLinkSelection: (linkType: LinksPropsType) => void;
@@ -20,13 +25,25 @@ const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
+  const categories = useCategoryStore((state) => state.categories);
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string
   ) => {
     setWindowNode(nodeType);
-    event.dataTransfer.setData("application/reactflow", nodeType);
+    let data = {};
+    if (nodeType === "subflow") {
+      data = {
+        name: genericTask.name,
+        graphical_model: genericTask.graphical_model,
+      };
+    }
+    const nodeData = { nodeType: nodeType, data: data };
+    event.dataTransfer.setData(
+      "application/reactflow",
+      JSON.stringify(nodeData)
+    );
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -105,14 +122,19 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           <p className="panel__subtasks__title__name">sub tasks</p>
         </div>
         <div className="panel__subtasks__content">
-          <button className="panel__subtasks__content__button">
-            <span className="iconfont">&#xe626;</span>
+          <div
+            className="panel__subtasks__content__generic__task"
+            onDragStart={(event) => onDragStart(event, "subflow")}
+            draggable
+          >
+            <span className="iconfont">&#xe608;</span>
             <p>Generic Task</p>
-          </button>
-          <button className="panel__subtasks__content__button">
-            <span className="iconfont">&#xe626;</span>
-            <p>Predefined Task</p>
-          </button>
+          </div>
+          <div className="panel__subtasks__content__predefined">
+            {categories.map((category, index) => {
+              return <SubTask key={index} category={category} />;
+            })}
+          </div>
         </div>
       </div>
     </div>
