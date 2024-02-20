@@ -1,7 +1,7 @@
 import "./style.scss";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { nodeImageSrc } from "../../../assets/nodes";
 import { linkImageSrc } from "../../../assets/links";
@@ -9,6 +9,15 @@ import {
   LinksPropsType,
   notationList,
 } from "../notations/notationConfigs/linkProps";
+
+import { genericTask } from "../../../types/task";
+
+import SubTask from "./SubTask";
+import { useCategoryStore, setCategories } from "../../../stores/categoryStore";
+
+import useRequest from "../../../hooks/useRequest";
+import { message } from "../../../utils/message";
+import { CategoriesResponseType } from "../../../types/requests";
 
 interface PanelProps {
   selectedLink: string;
@@ -20,13 +29,46 @@ const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
+  const categories = useCategoryStore((state) => state.categories);
+  const { request: categoriesRequest } = useRequest<CategoriesResponseType>();
+
+  const getCategories = useCallback(() => {
+    categoriesRequest({
+      url: `task/categories`,
+    })
+      .then((data) => {
+        if (data.data.categories) {
+          setCategories(data.data.categories);
+        }
+      })
+      .catch((error) => {
+        if (error.name === "AxiosError") {
+          message("Please login first");
+        }
+      });
+  }, [categoriesRequest, categories]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string
   ) => {
     setWindowNode(nodeType);
-    event.dataTransfer.setData("application/reactflow", nodeType);
+    let data = {};
+    if (nodeType === "subflow") {
+      data = {
+        name: genericTask.name,
+        graphical_model: genericTask.graphical_model,
+      };
+    }
+    const nodeData = { nodeType: nodeType, data: data };
+    event.dataTransfer.setData(
+      "application/reactflow",
+      JSON.stringify(nodeData)
+    );
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -105,14 +147,19 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           <p className="panel__subtasks__title__name">sub tasks</p>
         </div>
         <div className="panel__subtasks__content">
-          <button className="panel__subtasks__content__button">
-            <span className="iconfont">&#xe626;</span>
+          <div
+            className="panel__subtasks__content__generic__task"
+            onDragStart={(event) => onDragStart(event, "subflow")}
+            draggable
+          >
+            <span className="iconfont">&#xe608;</span>
             <p>Generic Task</p>
-          </button>
-          <button className="panel__subtasks__content__button">
-            <span className="iconfont">&#xe626;</span>
-            <p>Predefined Task</p>
-          </button>
+          </div>
+          <div className="panel__subtasks__content__predefined">
+            {categories.map((category, index) => {
+              return <SubTask key={index} category={category} />;
+            })}
+          </div>
         </div>
       </div>
     </div>

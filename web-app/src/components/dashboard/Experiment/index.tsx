@@ -209,10 +209,10 @@ const Project = () => {
             Experiment
           </div>
           <div className="specification__contents__header__create">
-            Create At
+            Created At
           </div>
           <div className="specification__contents__header__update">
-            Update At
+            Updated At
           </div>
           <div className="specification__contents__header__operations"></div>
         </div>

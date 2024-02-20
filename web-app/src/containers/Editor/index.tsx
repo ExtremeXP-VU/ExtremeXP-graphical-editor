@@ -38,6 +38,7 @@ import {
   ExperimentResponseType,
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
+  CreateTaskResponseType,
   ExecutionResponseType,
 } from "../../types/requests";
 
@@ -60,14 +61,16 @@ const selector = (state: RFState) => ({
 
 const Editor = () => {
   // const reactFlowWrapper = useRef(null);
-  const { request: experimentRequest } = useRequest<ExperimentResponseType>();
-  const { request: taskRequest } = useRequest<TaskResponseType>();
+  const { request: specificationRequest } = useRequest<
+    ExperimentResponseType | TaskResponseType
+  >();
 
   const { request: updateGraphRequest } =
     useRequest<UpdateGraphicalModelResponseType>();
 
-  const { request: createSpecRequest } =
-    useRequest<CreateExperimentResponseType>();
+  const { request: createNewSpecRequest } = useRequest<
+    CreateExperimentResponseType | CreateTaskResponseType
+  >();
 
   // FIXME: Temporary Execution Demo
   const { request: executionRequest } = useRequest<ExecutionResponseType>();
@@ -93,7 +96,7 @@ const Editor = () => {
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const experimentType = useLocation().pathname.split("/")[2];
+  const specificationType = useLocation().pathname.split("/")[2];
   const projID = useLocation().pathname.split("/")[3];
   const experimentID = useLocation().pathname.split("/")[4];
 
@@ -105,37 +108,32 @@ const Editor = () => {
   const [newExpName, setNewExpName] = useState("");
 
   useEffect(() => {
-    if (experimentType === "experiment") {
-      experimentRequest({
-        url: `exp/projects/experiments/${experimentID}`,
+    let url = "";
+    specificationType === "experiment"
+      ? (url = `exp/projects/experiments/${experimentID}`)
+      : (url = `task/categories/tasks/${experimentID}`);
+
+    specificationRequest({
+      url: url,
+    })
+      .then((data) => {
+        let newExperiment: ExperimentType | TaskType = defaultExperiment;
+        if (specificationType === "experiment") {
+          if ("experiment" in data.data) {
+            newExperiment = data.data.experiment;
+          }
+        } else {
+          if ("task" in data.data) {
+            newExperiment = data.data.task;
+          }
+        }
+        setExperiment(newExperiment);
       })
-        .then((data) => {
-          if (data.data.experiment) {
-            const newExperiment = data.data.experiment;
-            setExperiment(newExperiment);
-          }
-        })
-        .catch((error) => {
-          if (error.message) {
-            message(error.message);
-          }
-        });
-    } else {
-      taskRequest({
-        url: `task/categories/tasks/${experimentID}`,
-      })
-        .then((data) => {
-          if (data.data.task) {
-            const newTask = data.data.task;
-            setExperiment(newTask);
-          }
-        })
-        .catch((error) => {
-          if (error.message) {
-            message(error.message);
-          }
-        });
-    }
+      .catch((error) => {
+        if (error.message) {
+          message(error.message);
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -165,25 +163,31 @@ const Editor = () => {
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-
-      const type = event.dataTransfer.getData("application/reactflow");
+      const { nodeType, data } = JSON.parse(
+        event.dataTransfer.getData("application/reactflow")
+      );
       // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) {
+      if (typeof nodeType === "undefined" || !nodeType) {
         return;
       }
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
-      addNode(type, position);
+
+      addNode(nodeType, position, data);
     },
     [reactFlowInstance, nodes]
   );
 
   function updateGraphicalModel() {
     const graphicalModel = { nodes, edges };
+    let url = "";
+    specificationType === "experiment"
+      ? (url = `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`)
+      : (url = `/task/categories/tasks/${experimentID}/update/graphical_model`);
     updateGraphRequest({
-      url: `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`,
+      url: url,
       method: "PUT",
       data: {
         graphical_model: graphicalModel,
@@ -219,17 +223,38 @@ const Editor = () => {
   function handleSaveAs() {
     closeMask();
     const graphicalModel = { nodes, edges };
-    createSpecRequest({
-      url: `/exp/projects/${projID}/experiments/create`,
-      method: "POST",
-      data: {
+    let url = "";
+    specificationType === "experiment"
+      ? (url = `/exp/projects/${projID}/experiments/create`)
+      : (url = `/task/categories/${projID}/tasks/create`);
+
+    let data = {};
+    if (specificationType === "experiment") {
+      data = {
         exp_name: newExpName,
         graphical_model: graphicalModel,
-      },
+      };
+    } else {
+      data = {
+        name: newExpName,
+        provider: (experiment as TaskType).provider,
+        graphical_model: graphicalModel,
+      };
+    }
+
+    createNewSpecRequest({
+      url: url,
+      method: "POST",
+      data: data,
     })
       .then((data) => {
-        const expID = data.data.id_experiment;
-        navigate(`/editor/${projID}/${expID}`);
+        let specID = "";
+        if ("id_experiment" in data.data) {
+          specID = data.data.id_experiment;
+        } else if ("id_task" in data.data) {
+          specID = data.data.id_task;
+        }
+        navigate(`/editor/${specificationType}/${projID}/${specID}`);
         window.location.reload();
       })
       .catch((error) => {
@@ -255,7 +280,6 @@ const Editor = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
         if (error.response.data.message) {
           message(error.response.data.message);
         } else if (error.message) {
@@ -311,7 +335,7 @@ const Editor = () => {
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__save">
           <div className="popover__save__text">
-            Save as a new specification?
+            {` Save the current specification as a new ${specificationType}`}
           </div>
           <input
             type="text"

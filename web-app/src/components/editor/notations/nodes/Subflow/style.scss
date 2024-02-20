@@ -1,0 +1,42 @@
+.node-subflow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 1rem;
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #333;
+
+  &__name {
+    border-bottom: 1px solid #000;
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 0.15rem;
+  }
+
+  &__icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.01rem;
+    width: 100%;
+    height: 0.15rem;
+
+    &__wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 0.15rem;
+      height: 0.15rem;
+      border: 1px solid #000;
+    }
+
+    .iconfont {
+      color: #000;
+      font-size: 1em;
+    }
+  }
+}
