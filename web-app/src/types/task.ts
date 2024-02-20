@@ -1,4 +1,5 @@
 import { GraphicalModelType } from "./experiment";
+import { MarkerType } from "reactflow";
 
 export interface CategoryType {
   id_category: string;
@@ -113,7 +114,7 @@ export const genericTask: TaskType = {
         markerEnd: {
           color: "#000",
           height: 20,
-          type: "arrow",
+          type: "arrow" as MarkerType,
           width: 20,
         },
         source: "lpwvojP4061Ui5QQWeLma",
@@ -131,7 +132,7 @@ export const genericTask: TaskType = {
         markerEnd: {
           color: "#000",
           height: 20,
-          type: "arrow",
+          type: "arrow" as MarkerType,
           width: 20,
         },
         source: "D6VSy5It5_bdeeZ2ngZcN",
