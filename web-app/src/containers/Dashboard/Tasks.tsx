@@ -30,7 +30,7 @@ const Tasks = () => {
 
   const [showPopover, setShowPopover] = useState(false);
 
-  const { request: categoriessRequest } = useRequest<CategoriesResponseType>();
+  const { request: categoriesRequest } = useRequest<CategoriesResponseType>();
   const { request: createCategoryRequest } =
     useRequest<CreateCategoryResponseType>();
   const { request: updateCategoryRequest } =
@@ -47,7 +47,7 @@ const Tasks = () => {
   }, [categories, searchInput]);
 
   const getCategories = useCallback(() => {
-    categoriessRequest({
+    categoriesRequest({
       url: `task/categories`,
     })
       .then((data) => {
@@ -60,7 +60,7 @@ const Tasks = () => {
           message("Please login first");
         }
       });
-  }, [categoriessRequest, categories]);
+  }, [categoriesRequest, categories]);
 
   useEffect(() => {
     getCategories();

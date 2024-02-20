@@ -33,6 +33,22 @@ const SubTask = ({ category }: SubTaskProps) => {
     getTasks();
   }, [getTasks]);
 
+  const onDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    task: typeof defaultTask
+  ) => {
+    const data = {
+      name: task.name,
+      graphical_model: task.graphical_model,
+    };
+    const nodeData = { nodeType: "subflow", data: data };
+    event.dataTransfer.setData(
+      "application/reactflow",
+      JSON.stringify(nodeData)
+    );
+    event.dataTransfer.effectAllowed = "move";
+  };
+
   return (
     <div className="panel__subtasks__content__categories">
       <div className="panel__subtasks__content__categories__category">
@@ -45,6 +61,8 @@ const SubTask = ({ category }: SubTaskProps) => {
               <div
                 key={index}
                 className="panel__subtasks__content__categories__category__tasks__task"
+                draggable
+                onDragStart={(e) => onDragStart(e, task)}
               >
                 <span className="iconfont">&#xe608;</span>
                 <p>{task.name}</p>

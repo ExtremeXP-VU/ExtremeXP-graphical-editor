@@ -1,7 +1,7 @@
 import "./style.scss";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { nodeImageSrc } from "../../../assets/nodes";
 import { linkImageSrc } from "../../../assets/links";
@@ -13,7 +13,11 @@ import {
 import { genericTask } from "../../../types/task";
 
 import SubTask from "./SubTask";
-import { useCategoryStore } from "../../../stores/categoryStore";
+import { useCategoryStore, setCategories } from "../../../stores/categoryStore";
+
+import useRequest from "../../../hooks/useRequest";
+import { message } from "../../../utils/message";
+import { CategoriesResponseType } from "../../../types/requests";
 
 interface PanelProps {
   selectedLink: string;
@@ -26,6 +30,27 @@ const edgesList = notationList.edges;
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState("start");
   const categories = useCategoryStore((state) => state.categories);
+  const { request: categoriesRequest } = useRequest<CategoriesResponseType>();
+
+  const getCategories = useCallback(() => {
+    categoriesRequest({
+      url: `task/categories`,
+    })
+      .then((data) => {
+        if (data.data.categories) {
+          setCategories(data.data.categories);
+        }
+      })
+      .catch((error) => {
+        if (error.name === "AxiosError") {
+          message("Please login first");
+        }
+      });
+  }, [categoriesRequest, categories]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,

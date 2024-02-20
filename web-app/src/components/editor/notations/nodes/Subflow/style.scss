@@ -3,8 +3,8 @@
   flex-direction: column;
   justify-content: space-between;
 
-  width: 100px;
-  height: 50px;
+  width: 1rem;
+  height: 100%;
   background-color: #fff;
   border: 1px solid #000;
   border-radius: 8px;
@@ -15,6 +15,7 @@
     border-bottom: 1px solid #000;
     font-size: 1em;
     font-weight: bold;
+    margin-bottom: 0.15rem;
   }
 
   &__icon {
@@ -35,7 +36,7 @@
 
     .iconfont {
       color: #000;
-      font-size: 1.1em;
+      font-size: 1em;
     }
   }
 }

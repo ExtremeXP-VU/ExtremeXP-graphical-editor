@@ -163,7 +163,6 @@ const Editor = () => {
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      console.log(event.dataTransfer.getData("application/reactflow"));
       const { nodeType, data } = JSON.parse(
         event.dataTransfer.getData("application/reactflow")
       );
@@ -281,7 +280,6 @@ const Editor = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
         if (error.response.data.message) {
           message(error.response.data.message);
         } else if (error.message) {
