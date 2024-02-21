@@ -38,9 +38,48 @@
 }
 
 .editor__bottom__middle {
+  position: relative;
   width: calc(100% - 2.2rem);
   height: 100%;
   background-color: $board-color;
+
+  &__nav {
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    justify-content: start;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0.25rem;
+
+    box-sizing: border-box;
+
+    &__tab {
+      overflow: hidden;
+      width: 0.8rem;
+      height: 0.25rem;
+
+      margin-right: 0.02rem;
+      padding: 0 0.02rem;
+      background-color: $primary-theme-color;
+      border-radius: 0 0 0.08rem 0.08rem;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+
+      color: $primary-button-text-color;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+  }
+
+  &__board {
+    width: 100%;
+    height: 100%;
+    &__main {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 .editor__bottom__right {

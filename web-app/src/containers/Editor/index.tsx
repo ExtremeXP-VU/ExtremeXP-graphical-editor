@@ -45,6 +45,8 @@ import {
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
 
+import { TabType, getTabs, removeTab } from "../../stores/tabStore";
+
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
   nodes: state.nodes,
@@ -106,6 +108,8 @@ const Editor = () => {
 
   const [showPopover, setShowPopover] = useState(false);
   const [newExpName, setNewExpName] = useState("");
+
+  const tabs = getTabs();
 
   useEffect(() => {
     let url = "";
@@ -306,24 +310,35 @@ const Editor = () => {
             />
           </div>
           <div className="editor__bottom__middle">
-            <Markers />
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
-              onInit={setReactFlowInstance}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              fitView
-            >
-              <Controls />
-              {/* <MiniMap /> */}
-              <Background />
-            </ReactFlow>
+            <div className="editor__bottom__middle__nav">
+              {tabs.map((tab) => (
+                <div key={tab.id} className="editor__bottom__middle__nav__tab">
+                  {tab.name}
+                </div>
+              ))}
+            </div>
+            <div className="editor__bottom__middle__board">
+              <div className="editor__bottom__middle__board__main">
+                <Markers />
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  nodeTypes={nodeTypes}
+                  edgeTypes={edgeTypes}
+                  onInit={setReactFlowInstance}
+                  onDrop={onDrop}
+                  onDragOver={onDragOver}
+                  fitView
+                >
+                  <Controls />
+                  {/* <MiniMap /> */}
+                  <Background />
+                </ReactFlow>
+              </div>
+            </div>
           </div>
           {/* <div className="editor__bottom__right">
             <SideBar

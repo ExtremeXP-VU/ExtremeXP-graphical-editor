@@ -54,7 +54,10 @@
       "description": "Load a csv file from a URI",
       "create_at": 1706986320,
       "update_at": 1706986320,
-      "graphical_model": []
+      "graphical_model": {
+        "nodes": [],
+        "edges": []
+      }
     },
     {
       "id_task": "task-official-02",
@@ -66,7 +69,10 @@
       "description": "Drop columns from a dataframe",
       "create_at": 1706986320,
       "update_at": 1706986320,
-      "graphical_model": []
+      "graphical_model": {
+        "nodes": [],
+        "edges": []
+      }
     },
     {
       "id_task": "task-official-03",
@@ -78,7 +84,10 @@
       "description": "Fill NaNs in a dataframe",
       "create_at": 1706986320,
       "update_at": 1706986320,
-      "graphical_model": []
+      "graphical_model": {
+        "nodes": [],
+        "edges": []
+      }
     }
   ]
 }

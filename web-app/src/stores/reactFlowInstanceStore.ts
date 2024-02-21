@@ -74,6 +74,14 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
       position,
       data: data,
     };
+
+    if (type === "subflow") {
+      newNode.data = {
+        ...newNode.data,
+        id: newNode.id,
+      };
+    }
+
     set({
       nodes: [...get().nodes, newNode],
     });

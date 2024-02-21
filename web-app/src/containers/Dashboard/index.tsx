@@ -3,6 +3,9 @@ import "./style.scss";
 import { Link, useNavigate, Outlet, useLocation } from "react-router-dom";
 import { logout } from "../../stores/accountStore";
 
+import { clearTabs } from "../../stores/tabStore";
+import { useEffect } from "react";
+
 const Repository = () => {
   const location = useLocation();
   const isExperiments = location.pathname.includes("/projects");
@@ -18,6 +21,10 @@ const Repository = () => {
     logout();
     navigate("/account/login");
   };
+
+  useEffect(() => {
+    clearTabs();
+  }, []);
 
   return (
     <div className="page repository">
