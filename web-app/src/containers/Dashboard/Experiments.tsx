@@ -1,9 +1,10 @@
+import "./common.scss";
 import "./experiments.scss";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import useRequest from "../../hooks/useRequest";
 import { message } from "../../utils/message";
 import { timestampToDate } from "../../utils/timeToDate";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { defaultProject } from "../../types/experiment";
 import Popover from "../../components/general/Popover";
 import {
@@ -34,7 +35,6 @@ const Experiments = () => {
     useRequest<DeleteProjectResponseType>();
 
   const navigate = useNavigate();
-  const location = useLocation();
   const isProjectsEmpty = projects.length === 0;
 
   const filteredProjects = useMemo(() => {
@@ -42,10 +42,6 @@ const Experiments = () => {
       return project.name.toLowerCase().includes(searchInput.toLowerCase());
     });
   }, [projects, searchInput]);
-
-  const urlProjID = useMemo(() => {
-    return location.pathname.split("/")[3];
-  }, [location.pathname]);
 
   const getProjects = useCallback(() => {
     projectsRequest({
@@ -61,7 +57,7 @@ const Experiments = () => {
           message("Please login first");
         }
       });
-  }, [projectsRequest]);
+  }, [projectsRequest, projects]);
 
   useEffect(() => {
     getProjects();
@@ -71,17 +67,12 @@ const Experiments = () => {
   useEffect(() => {
     if (projects.length > 0 && currentProj.id_project === "default") {
       setCurrentProj(projects[0]);
-      navigate(`/dashboard/projects/${projects[0].id_project}/experiments`);
     }
   }, [projects, currentProj.id_project]);
 
   useEffect(() => {
-    // find the experiment id from the url
-    if (urlProjID && urlProjID !== currentProj.id_project) {
-      const project = projects.find((exp) => exp.id_project === urlProjID);
-      if (project) setCurrentProj(project);
-    }
-  }, [currentProj.id_project, projects, location.pathname, urlProjID]);
+    navigate(`/dashboard/projects/${currentProj?.id_project}/experiments`);
+  }, [currentProj.id_project]);
 
   // FIXME: Add experiment name validation
   const isProjectNameValid = (name: string) => {
@@ -120,9 +111,6 @@ const Experiments = () => {
   const handleSelectProject = (index: number) => {
     if (isEditing) return;
     setCurrentProj(filteredProjects[index]);
-    navigate(
-      `/dashboard/projects/${filteredProjects[index].id_project}/experiments`
-    );
   };
 
   const handleStartEditing = () => {
@@ -207,24 +195,24 @@ const Experiments = () => {
 
   return (
     <>
-      <div className="page experiments">
-        <div className="experiments__panel">
-          <div className="experiments__panel__new">
+      <div className="page dashboard__page">
+        <div className="dashboard__common__panel">
+          <div className="dashboard__common__panel__new">
             <input
               type="text"
               placeholder="enter your new project name"
-              className="experiments__panel__new__input"
+              className="dashboard__common__panel__new__input"
               value={createprojName}
               onChange={(e) => setCreateProjName(e.target.value)}
             />
             <button
-              className="experiments__panel__new__button"
+              className="dashboard__common__panel__new__button"
               onClick={handleCreateProject}
             >
               create
             </button>
           </div>
-          <div className="experiments__panel__search">
+          <div className="dashboard__common__panel__search">
             <span className="iconfont">&#xe60a;</span>
             <input
               type="text"
@@ -233,21 +221,21 @@ const Experiments = () => {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          <div className="experiments__panel__folders">
-            <div className="experiments__panel__folders__header">
+          <div className="dashboard__common__panel__folders">
+            <div className="dashboard__common__panel__folders__header">
               <span>Project name</span>
               <span>Last update</span>
             </div>
-            <ul className="experiments__panel__folders__list">
+            <ul className="dashboard__common__panel__folders__list">
               {filteredProjects.map((project, index) => (
                 <li
-                  className={`experiments__panel__folders__list__item ${
+                  className={`dashboard__common__panel__folders__list__item ${
                     currentProj.name === project.name ? "selected" : ""
                   }`}
                   key={project.id_project}
                   onClick={() => handleSelectProject(index)}
                 >
-                  <div className="experiments__panel__folders__list__item__name">
+                  <div className="dashboard__common__panel__folders__list__item__name">
                     {currentProj.name !== project.name && (
                       <span className="iconfont closed-folder">&#xeabf;</span>
                     )}
@@ -256,7 +244,7 @@ const Experiments = () => {
                     )}
                     <span>{project.name}</span>
                   </div>
-                  <div className="experiments__panel__folders__list__item__date">
+                  <div className="dashboard__common__panel__folders__list__item__date">
                     {timestampToDate(project.update_at)}
                   </div>
                 </li>
@@ -264,23 +252,23 @@ const Experiments = () => {
             </ul>
           </div>
         </div>
-        <div className="experiments__experiment">
-          <div className="experiments__experiment__board">
+        <div className="dashboard__common__right">
+          <div className="dashboard__common__right__board">
             {isProjectsEmpty ? (
-              <div className="experiments__experiment__board__guide">
-                <div className="experiments__experiment__board__guide__top">
+              <div className="dashboard__common__right__board__guide">
+                <div className="dashboard__common__right__board__guide__top">
                   <span className="iconfont">&#xe61a;</span>
-                  <p>Click the button to create a new experiment</p>
+                  <p>Click the button to create a new project</p>
                 </div>
-                <div className="experiments__experiment__board__guide__bottom">
-                  <p>(You need to enter the experiment name first)</p>
+                <div className="dashboard__common__right__board__guide__bottom">
+                  <p>(You need to enter the project name first)</p>
                 </div>
               </div>
             ) : (
               <>
-                <div className="experiments__experiment__header">
-                  <div className="experiments__experiment__header__info">
-                    <div className="experiments__experiment__header__info__name">
+                <div className="dashboard__common__right__header experiments__header">
+                  <div className="dashboard__common__right__header__info">
+                    <div className="dashboard__common__right__header__info__name">
                       <span
                         title="edit the name and description"
                         className="iconfont"
@@ -299,7 +287,7 @@ const Experiments = () => {
                         <span>{currentProj.name}</span>
                       )}
                     </div>
-                    <div className="experiments__experiment__header__info__description">
+                    <div className="dashboard__common__right__header__info__description">
                       {isEditing ? (
                         <textarea
                           value={descriptionInput}
@@ -311,7 +299,7 @@ const Experiments = () => {
                       )}
                     </div>
                   </div>
-                  <div className="experiments__experiment__header__info__delete">
+                  <div className="dashboard__common__right__header__info__delete">
                     <button
                       title="delete the entire experiment"
                       onClick={handleOpenPopover}
@@ -321,7 +309,7 @@ const Experiments = () => {
                   </div>
                 </div>
 
-                <div className="experiments__experiment__content">
+                <div className="dashboard__common__right__content project__content">
                   <Outlet />
                 </div>
               </>

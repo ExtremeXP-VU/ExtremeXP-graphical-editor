@@ -13,15 +13,19 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
   const isLogin = useAccountStore((state) => state.isLogin);
 
   const navigate = useNavigate();
-  const projID = useLocation().pathname.split("/")[2];
-  const experimentID = useLocation().pathname.split("/")[3];
+  const specificationType = useLocation().pathname.split("/")[2];
+  const projID = useLocation().pathname.split("/")[3];
 
   const handleGoBack = () => {
     if (isLogin) {
-      if (experimentID && projID) {
-        navigate(`/dashboard/projects/${projID}/experiments`);
+      let url = "";
+      specificationType === "experiment"
+        ? (url = `/dashboard/projects/${projID}/experiments`)
+        : (url = `/dashboard/categories/${projID}/tasks`);
+      if (projID) {
+        navigate(url);
       } else {
-        navigate("/dashboard/projects");
+        navigate(`/dashboard/projects`);
       }
     } else {
       navigate("/account/login");
