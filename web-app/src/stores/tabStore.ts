@@ -8,17 +8,24 @@ export type TabType = {
 
 const initialTabsState = {
   tabs: [{ name: "main", id: "main" }],
+  selectedTab: "main",
 };
 
 export const useTabStore = create<typeof initialTabsState>()(
   persist(() => initialTabsState, { name: "tabs-store" })
 );
 
-export const getTabs = () => useTabStore.getState().tabs;
+export const setSelectedTab = (id: string) => {
+  useTabStore.setState({ selectedTab: id });
+};
 
 export const addTab = (tab: TabType) => {
+  if (useTabStore.getState().tabs.some((t) => t.id === tab.id)) {
+    setSelectedTab(tab.id);
+    return;
+  }
   useTabStore.setState({ tabs: [...useTabStore.getState().tabs, tab] });
-  console.log(useTabStore.getState().tabs);
+  //   console.log(useTabStore.getState().tabs);
 };
 
 export const removeTab = (id: string) => {

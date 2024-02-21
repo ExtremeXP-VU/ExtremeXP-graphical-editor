@@ -45,7 +45,7 @@ import {
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
 
-import { TabType, getTabs, removeTab } from "../../stores/tabStore";
+import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -109,7 +109,8 @@ const Editor = () => {
   const [showPopover, setShowPopover] = useState(false);
   const [newExpName, setNewExpName] = useState("");
 
-  const tabs = getTabs();
+  const tabs = useTabStore((state) => state.tabs);
+  const selectedTab = useTabStore((state) => state.selectedTab);
 
   useEffect(() => {
     let url = "";
@@ -292,6 +293,12 @@ const Editor = () => {
       });
   }
 
+  useEffect(() => {
+    if (!tabs.some((tab) => tab.id === selectedTab)) {
+      setSelectedTab("main");
+    }
+  }, [selectedTab, tabs]);
+
   return (
     <div className="editor">
       <div className="editor__top">
@@ -312,8 +319,28 @@ const Editor = () => {
           <div className="editor__bottom__middle">
             <div className="editor__bottom__middle__nav">
               {tabs.map((tab) => (
-                <div key={tab.id} className="editor__bottom__middle__nav__tab">
-                  {tab.name}
+                <div
+                  key={tab.id}
+                  className={`editor__bottom__middle__nav__tab ${
+                    selectedTab === tab.id ? "selected" : ""
+                  }`}
+                >
+                  {tab.id !== "main" && (
+                    <div
+                      className="editor__bottom__middle__nav__tab__close"
+                      onClick={() => {
+                        removeTab(tab.id);
+                      }}
+                    >
+                      <span className="iconfont">&#xe600;</span>
+                    </div>
+                  )}
+                  <p
+                    className="editor__bottom__middle__nav__tab__name"
+                    onClick={() => setSelectedTab(tab.id)}
+                  >
+                    {tab.name}
+                  </p>
                 </div>
               ))}
             </div>
