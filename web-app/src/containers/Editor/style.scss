@@ -38,15 +38,15 @@
 }
 
 .editor__bottom__middle {
-  width: calc(100% - 2.2rem);
+  width: calc(100% - 2.2rem - 4rem);
   height: 100%;
   background-color: $board-color;
 }
 
 .editor__bottom__right {
-  width: 1.5rem;
+  width: 4rem;
   height: 100%;
-  background-color: $panel-color;
+  background-color: $board-color;
   box-sizing: border-box;
   border-left: 1px solid darken($color: $panel-color, $amount: 10);
 }
