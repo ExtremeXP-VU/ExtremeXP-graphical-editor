@@ -2,9 +2,10 @@ import React from "react";
 import "./style.scss";
 import DropDwon from "./DropDown";
 import RadioButton from "./RadioButton";
-import RangeSelector from "./RangeSelector";
+// import RangeSelector from "./RangeSelector";
 import StaticTable from "./StaticTable";
 import DropDownPlus from "./DropDownPlus";
+import CustomButton from "./CustomButton";
 
 interface SideBarProps {}
 
@@ -28,9 +29,9 @@ const SideBar: React.FC<SideBarProps> = () => {
         implementation: "<URI>",
       group: <DropDownPlus options={['group 1', 'group 2', 'group 3']} defaultValue="group 1" className="normal__dropdown" />,
       type: <DropDwon options={['type 1', 'type 2', 'type 3']} defaultValue="type 1" className="normal__dropdown" />,
-      range: <RangeSelector />, 
       
     }}  />
+     <CustomButton buttonText="add parameter" />
 
   </div>
   )
