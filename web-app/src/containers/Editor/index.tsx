@@ -1,7 +1,7 @@
-import "reactflow/dist/style.css";
-import "./style.scss";
+import 'reactflow/dist/style.css';
+import './style.scss';
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 
 import ReactFlow, {
   ReactFlowProvider,
@@ -9,29 +9,29 @@ import ReactFlow, {
   Controls,
   Background,
   // MiniMap,
-} from "reactflow";
+} from 'reactflow';
 
-import { shallow } from "zustand/shallow";
+import { shallow } from 'zustand/shallow';
 import {
   useReactFlowInstanceStore,
   RFState,
-} from "../../stores/reactFlowInstanceStore";
+} from '../../stores/reactFlowInstanceStore';
 
-import { useNavigate, useLocation } from "react-router-dom";
-import useRequest from "../../hooks/useRequest";
-import { message } from "../../utils/message";
+import { useNavigate, useLocation } from 'react-router-dom';
+import useRequest from '../../hooks/useRequest';
+import { message } from '../../utils/message';
 
-import Header from "../../components/editor/Header";
-import Panel from "../../components/editor/Panel";
-import Popover from "../../components/general/Popover";
+import Header from '../../components/editor/Header';
+import Panel from '../../components/editor/Panel';
+import Popover from '../../components/general/Popover';
 
 import {
   defaultGraphicalModel,
   defaultExperiment,
   ExperimentType,
-} from "../../types/experiment";
+} from '../../types/experiment';
 
-import { TaskType } from "../../types/task";
+import { TaskType } from '../../types/task';
 
 import {
   TaskResponseType,
@@ -39,11 +39,11 @@ import {
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
   ExecutionResponseType,
-} from "../../types/requests";
+} from '../../types/requests';
 
-import Markers from "../../components/editor/notations/edges/Markers";
-import { nodeTypes, edgeTypes } from "./notationTypes";
-import SideBar from "../../components/editor/SideBar";
+import Markers from '../../components/editor/notations/edges/Markers';
+import { nodeTypes, edgeTypes } from './notationTypes';
+import SideBar from '../../components/editor/SideBar';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -94,19 +94,19 @@ const Editor = () => {
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const experimentType = useLocation().pathname.split("/")[2];
-  const projID = useLocation().pathname.split("/")[3];
-  const experimentID = useLocation().pathname.split("/")[4];
+  const experimentType = useLocation().pathname.split('/')[2];
+  const projID = useLocation().pathname.split('/')[3];
+  const experimentID = useLocation().pathname.split('/')[4];
 
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
   // const {screenToFlowPosition} = useReactFlow();
 
   const [showPopover, setShowPopover] = useState(false);
-  const [newExpName, setNewExpName] = useState("");
+  const [newExpName, setNewExpName] = useState('');
 
   useEffect(() => {
-    if (experimentType === "experiment") {
+    if (experimentType === 'experiment') {
       experimentRequest({
         url: `exp/projects/experiments/${experimentID}`,
       })
@@ -150,16 +150,16 @@ const Editor = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault();
         handleSave();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [nodes, edges]);
 
@@ -167,9 +167,9 @@ const Editor = () => {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      const type = event.dataTransfer.getData("application/reactflow");
+      const type = event.dataTransfer.getData('application/reactflow');
       // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) {
+      if (typeof type === 'undefined' || !type) {
         return;
       }
       const position = reactFlowInstance.screenToFlowPosition({
@@ -185,13 +185,13 @@ const Editor = () => {
     const graphicalModel = { nodes, edges };
     updateGraphRequest({
       url: `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`,
-      method: "PUT",
+      method: 'PUT',
       data: {
         graphical_model: graphicalModel,
       },
     })
       .then(() => {
-        message("Saved");
+        message('Saved');
       })
       .catch((error) => {
         if (error.message) {
@@ -222,7 +222,7 @@ const Editor = () => {
     const graphicalModel = { nodes, edges };
     createSpecRequest({
       url: `/exp/projects/${projID}/experiments/create`,
-      method: "POST",
+      method: 'POST',
       data: {
         exp_name: newExpName,
         graphical_model: graphicalModel,
@@ -245,7 +245,7 @@ const Editor = () => {
     const graphicalModel = { nodes, edges };
     executionRequest({
       url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: "POST",
+      method: 'POST',
       data: {
         graphical_model: graphicalModel,
       },
@@ -303,7 +303,7 @@ const Editor = () => {
             </ReactFlow>
           </div>
           <div className="editor__bottom__right">
-            <SideBar/>
+            <SideBar />
           </div>
         </div>
       </ReactFlowProvider>
@@ -319,7 +319,7 @@ const Editor = () => {
             value={newExpName}
             onChange={(e) => setNewExpName(e.target.value)}
             onKeyUp={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 handleSaveAs();
               }
             }}

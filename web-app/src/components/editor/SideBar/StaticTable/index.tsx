@@ -1,37 +1,39 @@
-import React, { FC } from 'react';
+import React from 'react';
 import './style.scss';
-// TODO finish the static TABLE and dynamic ones for different types.
 
 type TableProps = {
   properties: {
     name: string;
     description: string;
     abstract?: JSX.Element; // For the radio buttons
-    implementation?: JSX.Element; // For any custom element, like a link
+    implementation?: string; // For custom element, like a link
     group?: JSX.Element; // For dropdown
     type?: JSX.Element; // For dropdown
+
+
+    range?: JSX.Element; // For the range input
   };
 };
 
-const StaticTable: FC<TableProps> = ({ properties }) => {
+const StaticTable: React.FC<TableProps> = ({ properties }) => {
   const entries = Object.entries(properties); // Convert the properties object to an array of entries
 
   return (
     <div className="table-component">
       <div className="header-text">Generic Properties</div>
       {/* Header Row */}
-      <table className="row odd header-row">
+      <table className="row header-row">
         <tr className="cell">
-          <td className='property'>Property</td>
+          <td className='property'>property</td>
         </tr>
         <tr className="cell">
-          <td className='value'>Value</td>
+          <td className='value'>value</td>
         </tr>
       </table>
 
       {/* Data row */}
-      {entries.map(([key, value], index) => (
-        <table className={`row ${index % 2 === 0 ? 'even' : 'odd'}`} key={key}>
+      {entries.map(([key, value]) => (
+        <table className={`row `} key={key}>
           <tr className="cell">
           <td className='property'> {key}</td>
           </tr>

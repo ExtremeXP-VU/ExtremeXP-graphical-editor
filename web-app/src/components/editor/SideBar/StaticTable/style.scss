@@ -6,31 +6,32 @@
   width: 90%;
   top: 0.5rem;
   .header-text{
-    color: $header-text-color;
+    color: $primary-theme-color;
     font-weight: bold;
     text-align: left;
     font-size: 12px;
+    padding-bottom: 0.13rem;
+    
   }
   .header-row {
     font-weight: bold;
-    font-size: 12px;
 }
     .row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 12px;
-        // padding: 0.3rem 0.5rem;
         
-      &:nth-child(odd) { // targeting odd rows
+      &:nth-child(even) { // targeting odd rows
         background-color: $panel-color; // light gray for odd rows
       }
-      &:nth-child(even) { // targeting even rows
+      &:nth-child(odd) { // targeting even rows
         background-color: $board-color; // white for even rows
       }
     }
     .cell{
       padding: 0.05rem 0.05rem;
+      flex:1;
+      font-size: 12px;
     }
   }
   
