@@ -5,6 +5,7 @@ import RadioButton from '../RadioButton';
 import IntegerTable from '../IntegerTable';
 import RealTable from '../RealTable';
 import StringTable from '../StringTable';
+import BooleanTable from '../BooleanTable';
 
 interface DynamicTableProps {
   number: number;
@@ -86,8 +87,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({number}) => {
       {selectedType === 'real' && <RealTable />}
       {selectedType === 'blob' && <StringTable />}
       {selectedType === 'string' && <StringTable />}
-      {selectedType === 'array' && <div>array</div>}
-      {selectedType === 'boolean' && <div>boolean</div>}
+      {selectedType === 'array' && <div>array</div> }
+      {selectedType === 'boolean' && <BooleanTable />}
     </div>
   );
 };
