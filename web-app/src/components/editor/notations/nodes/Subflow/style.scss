@@ -1,3 +1,5 @@
+@import "../../../../../styles/colors.scss";
+
 .node-subflow {
   display: flex;
   flex-direction: column;
@@ -35,7 +37,7 @@
     }
 
     .iconfont {
-      color: #000;
+      color: $secondary-theme-color;
       font-size: 1em;
     }
   }

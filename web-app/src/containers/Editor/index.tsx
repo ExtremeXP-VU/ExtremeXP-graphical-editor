@@ -4,11 +4,12 @@ import "./style.scss";
 import React, { useState, useEffect, useCallback } from "react";
 
 import ReactFlow, {
+  Node,
   ReactFlowProvider,
   ReactFlowInstance,
   Controls,
   Background,
-  // MiniMap,
+  MiniMap,
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
@@ -29,6 +30,7 @@ import {
   defaultGraphicalModel,
   defaultExperiment,
   ExperimentType,
+  GraphicalModelType,
 } from "../../types/experiment";
 
 import { TaskType } from "../../types/task";
@@ -45,11 +47,13 @@ import {
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
 
+import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
+
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
+  setSelectedLink: state.setSelectedLink,
   nodes: state.nodes,
   edges: state.edges,
-  setSelectedLink: state.setSelectedLink,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
   addNode: state.addNode,
@@ -102,10 +106,24 @@ const Editor = () => {
 
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
-  // const {screenToFlowPosition} = useReactFlow();
 
   const [showPopover, setShowPopover] = useState(false);
   const [newExpName, setNewExpName] = useState("");
+
+  const tabs = useTabStore((state) => state.tabs);
+  const selectedTab = useTabStore((state) => state.selectedTab);
+
+  function traverseGraphicalModel(
+    graphicalModel: GraphicalModelType,
+    callback: (node: Node) => void
+  ) {
+    graphicalModel.nodes.forEach((node) => {
+      callback(node as unknown as Node);
+      if (node.data.graphical_model) {
+        traverseGraphicalModel(node.data.graphical_model, callback);
+      }
+    });
+  }
 
   useEffect(() => {
     let url = "";
@@ -146,6 +164,28 @@ const Editor = () => {
   }, [graphicalModel]);
 
   useEffect(() => {
+    if (selectedTab === "main") {
+      setNodes(graphicalModel.nodes);
+      setEdges(graphicalModel.edges);
+    } else {
+      let newGraph: GraphicalModelType = defaultGraphicalModel;
+      traverseGraphicalModel(graphicalModel, (node) => {
+        if (node.data.id === selectedTab) {
+          newGraph = node.data.graphical_model;
+          setNodes(newGraph.nodes);
+          setEdges(newGraph.edges);
+        }
+      });
+    }
+  }, [selectedTab]);
+
+  useEffect(() => {
+    if (!tabs.some((tab) => tab.id === selectedTab)) {
+      setSelectedTab("main");
+    }
+  }, [selectedTab, tabs]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
@@ -180,8 +220,23 @@ const Editor = () => {
     [reactFlowInstance, nodes]
   );
 
-  function updateGraphicalModel() {
-    const graphicalModel = { nodes, edges };
+  const onNodesDelete = useCallback(
+    (deleted: Node[]) => {
+      deleted.forEach((node) => {
+        removeTab(node.id);
+      });
+      traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
+        tabs.forEach((tab) => {
+          if (tab.id === node.id) {
+            removeTab(node.id);
+          }
+        });
+      });
+    },
+    [nodes, edges]
+  );
+
+  const updateGraphicalModel = (graph: GraphicalModelType) => {
     let url = "";
     specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`)
@@ -190,7 +245,7 @@ const Editor = () => {
       url: url,
       method: "PUT",
       data: {
-        graphical_model: graphicalModel,
+        graphical_model: graph,
       },
     })
       .then(() => {
@@ -201,10 +256,26 @@ const Editor = () => {
           message(error.message);
         }
       });
-  }
+  };
 
+  function getCurrentGraphOnBoard() {
+    let newGraph: GraphicalModelType = defaultGraphicalModel;
+    if (selectedTab === "main") {
+      newGraph = { nodes, edges };
+    } else {
+      traverseGraphicalModel(graphicalModel, (node) => {
+        if (node.data.id === selectedTab) {
+          node.data.graphical_model = { nodes, edges };
+          newGraph = graphicalModel;
+        }
+      });
+    }
+    return newGraph;
+  }
   const handleSave = () => {
-    updateGraphicalModel();
+    const graph = getCurrentGraphOnBoard();
+    setGraphicalModel(graph);
+    updateGraphicalModel(graph);
   };
 
   const handleShowPopover = () => {
@@ -222,7 +293,7 @@ const Editor = () => {
 
   function handleSaveAs() {
     closeMask();
-    const graphicalModel = { nodes, edges };
+    const graphicalModel = getCurrentGraphOnBoard();
     let url = "";
     specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/create`)
@@ -288,6 +359,11 @@ const Editor = () => {
       });
   }
 
+  const handleSelectTab = (id: string) => {
+    handleSave();
+    setSelectedTab(id);
+  };
+
   return (
     <div className="editor">
       <div className="editor__top">
@@ -306,24 +382,56 @@ const Editor = () => {
             />
           </div>
           <div className="editor__bottom__middle">
-            <Markers />
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
-              onInit={setReactFlowInstance}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              fitView
-            >
-              <Controls />
-              {/* <MiniMap /> */}
-              <Background />
-            </ReactFlow>
+            <div className="editor__bottom__middle__nav">
+              {tabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  className={`editor__bottom__middle__nav__tab ${
+                    selectedTab === tab.id ? "selected" : ""
+                  }`}
+                >
+                  {tab.id !== "main" && (
+                    <div
+                      className="editor__bottom__middle__nav__tab__close"
+                      onClick={() => {
+                        removeTab(tab.id);
+                      }}
+                    >
+                      <span className="iconfont">&#xe600;</span>
+                    </div>
+                  )}
+                  <p
+                    className="editor__bottom__middle__nav__tab__name"
+                    onClick={() => handleSelectTab(tab.id)}
+                  >
+                    {tab.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="editor__bottom__middle__board">
+              <div className="editor__bottom__middle__board__main">
+                <Markers />
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  nodeTypes={nodeTypes}
+                  edgeTypes={edgeTypes}
+                  onInit={setReactFlowInstance}
+                  onDrop={onDrop}
+                  onDragOver={onDragOver}
+                  onNodesDelete={onNodesDelete}
+                  fitView
+                >
+                  <Controls />
+                  <Background />
+                  <MiniMap nodeColor={"#4fa3bb"} />
+                </ReactFlow>
+              </div>
+            </div>
           </div>
           {/* <div className="editor__bottom__right">
             <SideBar
