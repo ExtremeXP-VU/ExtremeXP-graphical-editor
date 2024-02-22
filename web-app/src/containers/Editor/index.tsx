@@ -168,7 +168,7 @@ const Editor = () => {
       setEdges(graphicalModel.edges);
     } else {
       let newGraph: GraphicalModelType = defaultGraphicalModel;
-      traverseGraphicalModel({ nodes, edges }, (node) => {
+      traverseGraphicalModel(graphicalModel, (node) => {
         if (node.data.id === selectedTab) {
           newGraph = node.data.graphical_model;
           setNodes(newGraph.nodes);
