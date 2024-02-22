@@ -6,6 +6,7 @@ import IntegerTable from '../IntegerTable';
 import RealTable from '../RealTable';
 import StringTable from '../StringTable';
 import BooleanTable from '../BooleanTable';
+import BlobTable from '../BlobTable';
 
 interface DynamicTableProps {
   number: number;
@@ -85,7 +86,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({number}) => {
       </table>
       {selectedType === 'integer' && <IntegerTable />}
       {selectedType === 'real' && <RealTable />}
-      {selectedType === 'blob' && <StringTable />}
+      {selectedType === 'blob' && <BlobTable />}
       {selectedType === 'string' && <StringTable />}
       {selectedType === 'array' && <div>array</div> }
       {selectedType === 'boolean' && <BooleanTable />}

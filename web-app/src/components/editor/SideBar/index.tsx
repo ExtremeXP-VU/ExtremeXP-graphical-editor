@@ -24,8 +24,8 @@ const SideBar: React.FC<SideBarProps> = () => {
       />
       <StaticTable
         properties={{
-          name: 'name',
-          description: 'Lorem ipsum dolor sit amet consectetur.',
+          name: ( <input type="text" className="transparent-input" defaultValue={`name`} />),
+          description:  (<textarea className="transparent-input" style={{ fontFamily: 'inherit', resize: 'none',  width: '3rem', height: '0.5rem'}} defaultValue={`Lorem ipsum dolor sit amet consectetur.`} />),
           abstract: (
             <RadioButton
               choices={[
