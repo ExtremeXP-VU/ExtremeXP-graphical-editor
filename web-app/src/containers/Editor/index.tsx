@@ -428,7 +428,7 @@ const Editor = () => {
                 >
                   <Controls />
                   <Background />
-                  <MiniMap />
+                  <MiniMap nodeColor={"#4fa3bb"} />
                 </ReactFlow>
               </div>
             </div>
