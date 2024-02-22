@@ -225,7 +225,13 @@ const Editor = () => {
       deleted.forEach((node) => {
         removeTab(node.id);
       });
-      console.log(deleted);
+      traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
+        tabs.forEach((tab) => {
+          if (tab.id === node.id) {
+            removeTab(node.id);
+          }
+        });
+      });
     },
     [nodes, edges]
   );
@@ -235,7 +241,6 @@ const Editor = () => {
     specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`)
       : (url = `/task/categories/tasks/${experimentID}/update/graphical_model`);
-    console.log("model: ", graphicalModel);
     updateGraphRequest({
       url: url,
       method: "PUT",
@@ -253,27 +258,24 @@ const Editor = () => {
       });
   };
 
-  // useEffect(() => {
-  //   updateGraphicalModel();
-  // }, [graphicalModel]);
-
-  const handleSave = () => {
+  function getCurrentGraphOnBoard() {
+    let newGraph: GraphicalModelType = defaultGraphicalModel;
     if (selectedTab === "main") {
-      setGraphicalModel({ nodes, edges });
-      updateGraphicalModel({ nodes, edges });
+      newGraph = { nodes, edges };
     } else {
-      // find the node with the selectedTab id from graphicalModel and replace its graphical model with the current nodes and edges
-      // set the new graphical model to the graphicalModel
-      let newGraph: GraphicalModelType = defaultGraphicalModel;
       traverseGraphicalModel(graphicalModel, (node) => {
         if (node.data.id === selectedTab) {
           node.data.graphical_model = { nodes, edges };
           newGraph = graphicalModel;
         }
       });
-      setGraphicalModel(newGraph);
-      updateGraphicalModel(newGraph);
     }
+    return newGraph;
+  }
+  const handleSave = () => {
+    const graph = getCurrentGraphOnBoard();
+    setGraphicalModel(graph);
+    updateGraphicalModel(graph);
   };
 
   const handleShowPopover = () => {
@@ -291,7 +293,7 @@ const Editor = () => {
 
   function handleSaveAs() {
     closeMask();
-    const graphicalModel = { nodes, edges };
+    const graphicalModel = getCurrentGraphOnBoard();
     let url = "";
     specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/create`)

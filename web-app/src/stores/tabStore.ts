@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export type TabType = {
   name: string;
@@ -12,7 +11,7 @@ const initialTabsState = {
 };
 
 export const useTabStore = create<typeof initialTabsState>()(
-  persist(() => initialTabsState, { name: "tabs-store" })
+  () => initialTabsState
 );
 
 export const setSelectedTab = (id: string) => {
@@ -25,16 +24,10 @@ export const addTab = (tab: TabType) => {
     return;
   }
   useTabStore.setState({ tabs: [...useTabStore.getState().tabs, tab] });
-  //   console.log(useTabStore.getState().tabs);
 };
 
 export const removeTab = (id: string) => {
   useTabStore.setState({
     tabs: useTabStore.getState().tabs.filter((tab) => tab.id !== id),
   });
-};
-
-export const clearTabs = () => {
-  useTabStore.setState(initialTabsState);
-  useTabStore.persist.clearStorage();
 };
