@@ -4,6 +4,7 @@ import "./style.scss";
 import React, { useState, useEffect, useCallback } from "react";
 
 import ReactFlow, {
+  Node,
   ReactFlowProvider,
   ReactFlowInstance,
   Controls,
@@ -219,6 +220,16 @@ const Editor = () => {
     [reactFlowInstance, nodes]
   );
 
+  const onNodesDelete = useCallback(
+    (deleted: Node[]) => {
+      deleted.forEach((node) => {
+        removeTab(node.id);
+      });
+      console.log(deleted);
+    },
+    [nodes, edges]
+  );
+
   const updateGraphicalModel = (graph: GraphicalModelType) => {
     let url = "";
     specificationType === "experiment"
@@ -410,6 +421,7 @@ const Editor = () => {
                   onInit={setReactFlowInstance}
                   onDrop={onDrop}
                   onDragOver={onDragOver}
+                  onNodesDelete={onNodesDelete}
                   fitView
                 >
                   <Controls />
