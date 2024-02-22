@@ -8,7 +8,7 @@ import ReactFlow, {
   ReactFlowInstance,
   Controls,
   Background,
-  // MiniMap,
+  MiniMap,
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
@@ -29,6 +29,7 @@ import {
   defaultGraphicalModel,
   defaultExperiment,
   ExperimentType,
+  GraphicalModelType,
 } from "../../types/experiment";
 
 import { TaskType } from "../../types/task";
@@ -49,9 +50,9 @@ import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
+  setSelectedLink: state.setSelectedLink,
   nodes: state.nodes,
   edges: state.edges,
-  setSelectedLink: state.setSelectedLink,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
   addNode: state.addNode,
@@ -104,13 +105,24 @@ const Editor = () => {
 
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
-  // const {screenToFlowPosition} = useReactFlow();
 
   const [showPopover, setShowPopover] = useState(false);
   const [newExpName, setNewExpName] = useState("");
 
   const tabs = useTabStore((state) => state.tabs);
   const selectedTab = useTabStore((state) => state.selectedTab);
+
+  function traverseGraphicalModel(
+    graphicalModel: GraphicalModelType,
+    callback: (node: Node) => void
+  ) {
+    graphicalModel.nodes.forEach((node) => {
+      callback(node as unknown as Node);
+      if (node.data.graphical_model) {
+        traverseGraphicalModel(node.data.graphical_model, callback);
+      }
+    });
+  }
 
   useEffect(() => {
     let url = "";
@@ -151,6 +163,28 @@ const Editor = () => {
   }, [graphicalModel]);
 
   useEffect(() => {
+    if (selectedTab === "main") {
+      setNodes(graphicalModel.nodes);
+      setEdges(graphicalModel.edges);
+    } else {
+      let newGraph: GraphicalModelType = defaultGraphicalModel;
+      traverseGraphicalModel({ nodes, edges }, (node) => {
+        if (node.data.id === selectedTab) {
+          newGraph = node.data.graphical_model;
+          setNodes(newGraph.nodes);
+          setEdges(newGraph.edges);
+        }
+      });
+    }
+  }, [selectedTab]);
+
+  useEffect(() => {
+    if (!tabs.some((tab) => tab.id === selectedTab)) {
+      setSelectedTab("main");
+    }
+  }, [selectedTab, tabs]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
@@ -185,17 +219,17 @@ const Editor = () => {
     [reactFlowInstance, nodes]
   );
 
-  function updateGraphicalModel() {
-    const graphicalModel = { nodes, edges };
+  const updateGraphicalModel = (graph: GraphicalModelType) => {
     let url = "";
     specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`)
       : (url = `/task/categories/tasks/${experimentID}/update/graphical_model`);
+    console.log("model: ", graphicalModel);
     updateGraphRequest({
       url: url,
       method: "PUT",
       data: {
-        graphical_model: graphicalModel,
+        graphical_model: graph,
       },
     })
       .then(() => {
@@ -206,10 +240,29 @@ const Editor = () => {
           message(error.message);
         }
       });
-  }
+  };
+
+  // useEffect(() => {
+  //   updateGraphicalModel();
+  // }, [graphicalModel]);
 
   const handleSave = () => {
-    updateGraphicalModel();
+    if (selectedTab === "main") {
+      setGraphicalModel({ nodes, edges });
+      updateGraphicalModel({ nodes, edges });
+    } else {
+      // find the node with the selectedTab id from graphicalModel and replace its graphical model with the current nodes and edges
+      // set the new graphical model to the graphicalModel
+      let newGraph: GraphicalModelType = defaultGraphicalModel;
+      traverseGraphicalModel(graphicalModel, (node) => {
+        if (node.data.id === selectedTab) {
+          node.data.graphical_model = { nodes, edges };
+          newGraph = graphicalModel;
+        }
+      });
+      setGraphicalModel(newGraph);
+      updateGraphicalModel(newGraph);
+    }
   };
 
   const handleShowPopover = () => {
@@ -293,11 +346,10 @@ const Editor = () => {
       });
   }
 
-  useEffect(() => {
-    if (!tabs.some((tab) => tab.id === selectedTab)) {
-      setSelectedTab("main");
-    }
-  }, [selectedTab, tabs]);
+  const handleSelectTab = (id: string) => {
+    handleSave();
+    setSelectedTab(id);
+  };
 
   return (
     <div className="editor">
@@ -337,7 +389,7 @@ const Editor = () => {
                   )}
                   <p
                     className="editor__bottom__middle__nav__tab__name"
-                    onClick={() => setSelectedTab(tab.id)}
+                    onClick={() => handleSelectTab(tab.id)}
                   >
                     {tab.name}
                   </p>
@@ -361,8 +413,8 @@ const Editor = () => {
                   fitView
                 >
                   <Controls />
-                  {/* <MiniMap /> */}
                   <Background />
+                  <MiniMap />
                 </ReactFlow>
               </div>
             </div>
