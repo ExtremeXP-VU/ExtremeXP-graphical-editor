@@ -8,6 +8,7 @@
   width: 100%;
   height: 100%;
   border-left: 4px solid $primary-theme-color;
+  overflow-y: auto;
 }
 
 @mixin select-style($color, $background, $border-color) {

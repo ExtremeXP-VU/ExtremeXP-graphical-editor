@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './style.scss';
 
-const RangeSelector: React.FC = () => {
+interface RangeSelectorProps {
+  number?: number;
+}
+
+const RangeSelector: React.FC<RangeSelectorProps> = () => {
   const [fromValue, setFromValue] = useState(0);
   const [toValue, setToValue] = useState(10);
   const [stepValue, setStepValue] = useState(1);
