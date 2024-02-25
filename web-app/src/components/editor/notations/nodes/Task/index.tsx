@@ -1,6 +1,8 @@
 import "./style.scss";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
+import { TabType, addTab } from "../../../../../stores/tabStore";
+import { TaskDataType, defaultTaskData } from "../../../../../types/task";
 
 const Task = ({
   data,
@@ -8,14 +10,34 @@ const Task = ({
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
-  const [operation, setOperation] = useState(data.operation);
+  const [currentTask, setCurrentTask] = useState<TaskDataType>(defaultTaskData);
+  // const [operation, setOperation] = useState(data.operation);
+
+  useEffect(() => {
+    setCurrentTask(getCurrentTaskData());
+  }, [data.currentVariant]);
+
+  const handleDoubleClick = () => {
+    const tab: TabType = {
+      name: data.name,
+      id: data.id,
+    };
+    addTab(tab);
+  };
+
+  const getCurrentTaskData = () => {
+    const id = data.currentVariant;
+    const task = data.variants.find((t: TaskDataType) => t.id_task === id);
+    return task;
+  };
 
   return (
     <>
       <div className="node-task">
-        <p className="node-task__title">Compute</p>
-        <label className="node-task__label">
-          <select
+        <div className="node-task__name">{currentTask.name}</div>
+        <div className="node-task__properties">
+          property placeholder
+          {/* <select
             className="node-task__label__selector nodrag"
             value={operation}
             onChange={(e) => {
@@ -27,8 +49,18 @@ const Task = ({
             <option value="sum">sum</option>
             <option value="min">min</option>
             <option value="max">max</option>
-          </select>
-        </label>
+          </select> */}
+        </div>
+        {currentTask.is_composite && (
+          <div className="node-task__icon">
+            <div
+              className="node-task__icon__wrapper"
+              onDoubleClick={handleDoubleClick}
+            >
+              <span className="iconfont">&#xe601;</span>
+            </div>
+          </div>
+        )}
         <Handle
           type="source"
           position={sourcePosition}

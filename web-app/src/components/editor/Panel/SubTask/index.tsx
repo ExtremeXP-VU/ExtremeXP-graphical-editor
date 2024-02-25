@@ -3,6 +3,7 @@ import { CategoryType, defaultTask } from "../../../../types/task";
 import { TasksResponseType } from "../../../../types/requests";
 import useRequest from "../../../../hooks/useRequest";
 import { message } from "../../../../utils/message";
+import { nanoid } from "nanoid";
 
 interface SubTaskProps {
   category: CategoryType;
@@ -37,11 +38,19 @@ const SubTask = ({ category }: SubTaskProps) => {
     event: React.DragEvent<HTMLDivElement>,
     task: typeof defaultTask
   ) => {
+    const id = nanoid() + "-variant-1";
     const data = {
-      name: task.name,
-      graphical_model: task.graphical_model,
+      currentVariant: id,
+      variants: [
+        {
+          id_task: id,
+          name: task.name,
+          is_composite: true,
+          graphical_model: task.graphical_model,
+        },
+      ],
     };
-    const nodeData = { nodeType: "subflow", data: data };
+    const nodeData = { nodeType: "task", data: data };
     event.dataTransfer.setData(
       "application/reactflow",
       JSON.stringify(nodeData)

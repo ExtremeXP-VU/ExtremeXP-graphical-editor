@@ -148,3 +148,31 @@ export const genericTask: TaskType = {
     ],
   },
 };
+
+export interface TaskDataType {
+  id_task: string;
+  name: string;
+  variant: number;
+  is_composite: boolean;
+  graphical_model: GraphicalModelType;
+}
+
+export const defaultTaskData: TaskDataType = {
+  id_task: "default",
+  name: "task",
+  variant: 0,
+  is_composite: false,
+  graphical_model: {
+    nodes: [],
+    edges: [],
+  },
+};
+
+export interface TaskNodeType {
+  id: string;
+  type: "task";
+  data: {
+    currentVariant: string; // <id_task>
+    variants: TaskType[];
+  };
+}
