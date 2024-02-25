@@ -19,8 +19,8 @@ const Task = ({
 
   const handleDoubleClick = () => {
     const tab: TabType = {
-      name: data.name,
-      id: data.id,
+      name: currentTask.name,
+      id: currentTask.id_task,
     };
     addTab(tab);
   };

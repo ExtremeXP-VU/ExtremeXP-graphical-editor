@@ -168,7 +168,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
       </div>
       <div className="panel__subtasks">
         <div className="panel__subtasks__title">
-          <p className="panel__subtasks__title__name">sub tasks</p>
+          <p className="panel__subtasks__title__name">composite tasks</p>
         </div>
         <div className="panel__subtasks__content">
           <div

@@ -33,7 +33,7 @@ import {
   GraphicalModelType,
 } from "../../types/experiment";
 
-import { TaskType } from "../../types/task";
+import { TaskType, TaskDataType } from "../../types/task";
 
 import {
   TaskResponseType,
@@ -119,8 +119,13 @@ const Editor = () => {
   ) {
     graphicalModel.nodes.forEach((node) => {
       callback(node as unknown as Node);
-      if (node.data.graphical_model) {
-        traverseGraphicalModel(node.data.graphical_model, callback);
+      if (node.type === "task") {
+        const task = node.data.variants.find(
+          (t: TaskDataType) => t.id_task === node.data.currentVariant
+        );
+        if (task.is_composite && task.graphical_model) {
+          traverseGraphicalModel(task.graphical_model, callback);
+        }
       }
     });
   }
@@ -170,10 +175,16 @@ const Editor = () => {
     } else {
       let newGraph: GraphicalModelType = defaultGraphicalModel;
       traverseGraphicalModel(graphicalModel, (node) => {
-        if (node.data.id === selectedTab) {
-          newGraph = node.data.graphical_model;
-          setNodes(newGraph.nodes);
-          setEdges(newGraph.edges);
+        if (node.type === "task") {
+          console.log(node.data);
+          const task = node.data.variants.find(
+            (t: TaskDataType) => t.id_task === node.data.currentVariant
+          );
+          if (task.id_task === selectedTab) {
+            newGraph = task.graphical_model;
+            setNodes(newGraph.nodes);
+            setEdges(newGraph.edges);
+          }
         }
       });
     }
@@ -226,11 +237,16 @@ const Editor = () => {
         removeTab(node.id);
       });
       traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
-        tabs.forEach((tab) => {
-          if (tab.id === node.id) {
-            removeTab(node.id);
-          }
-        });
+        if (node.type === "task") {
+          const task = node.data.variants.find(
+            (t: TaskDataType) => t.id_task === node.data.currentVariant
+          );
+          tabs.forEach((tab) => {
+            if (tab.id === task.id_task) {
+              removeTab(task.id_task);
+            }
+          });
+        }
       });
     },
     [nodes, edges]
@@ -264,9 +280,14 @@ const Editor = () => {
       newGraph = { nodes, edges };
     } else {
       traverseGraphicalModel(graphicalModel, (node) => {
-        if (node.data.id === selectedTab) {
-          node.data.graphical_model = { nodes, edges };
-          newGraph = graphicalModel;
+        if (node.type === "task") {
+          const task = node.data.variants.find(
+            (t: TaskDataType) => t.id_task === node.data.currentVariant
+          );
+          if (task.id_task === selectedTab) {
+            task.graphical_model = { nodes, edges };
+            newGraph = graphicalModel;
+          }
         }
       });
     }
