@@ -25,6 +25,7 @@
 
 .editor__bottom {
   display: flex;
+  position: relative;
   width: 100%;
   height: calc(100% - 0.5rem);
 }
@@ -133,9 +134,13 @@
 }
 
 .editor__bottom__right {
-  width: 1.5rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6.8rem;
   height: 100%;
-  background-color: $panel-color;
+  z-index: 2;
+  background-color: $board-color;
   box-sizing: border-box;
   border-left: 1px solid darken($color: $panel-color, $amount: 10);
 }

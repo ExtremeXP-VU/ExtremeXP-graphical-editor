@@ -1,0 +1,22 @@
+.range-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  label {
+    display: flex;
+    align-items: center;
+    margin: 0 0.1rem;
+
+    input[type='number'] {
+      margin: 0 0.05rem;
+      width: 5em; // Adjusted to fit 4-5 numbers
+    }
+
+    input[type='checkbox'] {
+      accent-color: black;
+      margin: 0 0.05rem;
+    }
+  }
+}

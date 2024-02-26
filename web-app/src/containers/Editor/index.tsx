@@ -1,7 +1,7 @@
-import "reactflow/dist/style.css";
-import "./style.scss";
+import 'reactflow/dist/style.css';
+import './style.scss';
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 
 import ReactFlow, {
   Node,
@@ -12,19 +12,19 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 
-import { shallow } from "zustand/shallow";
+import { shallow } from 'zustand/shallow';
 import {
   useReactFlowInstanceStore,
   RFState,
-} from "../../stores/reactFlowInstanceStore";
+} from '../../stores/reactFlowInstanceStore';
 
-import { useNavigate, useLocation } from "react-router-dom";
-import useRequest from "../../hooks/useRequest";
-import { message } from "../../utils/message";
+import { useNavigate, useLocation } from 'react-router-dom';
+import useRequest from '../../hooks/useRequest';
+import { message } from '../../utils/message';
 
-import Header from "../../components/editor/Header";
-import Panel from "../../components/editor/Panel";
-import Popover from "../../components/general/Popover";
+import Header from '../../components/editor/Header';
+import Panel from '../../components/editor/Panel';
+import Popover from '../../components/general/Popover';
 
 import {
   defaultGraphicalModel,
@@ -42,12 +42,13 @@ import {
   CreateExperimentResponseType,
   CreateTaskResponseType,
   ExecutionResponseType,
-} from "../../types/requests";
+} from '../../types/requests';
 
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
 
 import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
+import SideBar from '../../components/editor/SideBar';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -198,16 +199,16 @@ const Editor = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault();
         handleSave();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [nodes, edges]);
 
@@ -265,7 +266,7 @@ const Editor = () => {
       },
     })
       .then(() => {
-        message("Saved");
+        message('Saved');
       })
       .catch((error) => {
         if (error.message) {
@@ -361,7 +362,7 @@ const Editor = () => {
     const graphicalModel = { nodes, edges };
     executionRequest({
       url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: "POST",
+      method: 'POST',
       data: {
         graphical_model: graphicalModel,
       },
@@ -454,11 +455,9 @@ const Editor = () => {
               </div>
             </div>
           </div>
-          {/* <div className="editor__bottom__right">
-            <SideBar
-              
-            />
-          </div> */}
+          <div className="editor__bottom__right">
+            <SideBar />
+          </div>
         </div>
       </ReactFlowProvider>
       <Popover show={showPopover} blankClickCallback={closeMask}>
@@ -473,7 +472,7 @@ const Editor = () => {
             value={newExpName}
             onChange={(e) => setNewExpName(e.target.value)}
             onKeyUp={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 handleSaveAs();
               }
             }}
