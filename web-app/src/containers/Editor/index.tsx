@@ -48,6 +48,7 @@ import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
 
 import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
+import SideBar from '../../components/editor/SideBar';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -433,11 +434,9 @@ const Editor = () => {
               </div>
             </div>
           </div>
-          {/* <div className="editor__bottom__right">
-            <SideBar
-              
-            />
-          </div> */}
+          <div className="editor__bottom__right">
+            <SideBar />
+          </div>
         </div>
       </ReactFlowProvider>
       <Popover show={showPopover} blankClickCallback={closeMask}>
