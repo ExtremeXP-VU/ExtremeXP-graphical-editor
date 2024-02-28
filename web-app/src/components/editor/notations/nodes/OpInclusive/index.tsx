@@ -1,6 +1,27 @@
 import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
+const handleLeftSourceStyle = {
+  bottom: "-4px",
+  left: "-7px",
+  background: "#c3c3c3",
+};
+const handleLeftTargetStyle = {
+  top: "15px",
+  left: "-7px",
+  background: "#c3c3c3",
+};
+const handleRightSourceStyle = {
+  bottom: "-4px",
+  right: "-7px",
+  background: "#c3c3c3",
+};
+const handleRightTargetStyle = {
+  top: "15px",
+  right: "-7px",
+  background: "#c3c3c3",
+};
+
 const OpInclusive = ({
   data,
   isConnectable,
@@ -43,11 +64,43 @@ const OpInclusive = ({
         type="source"
         position={sourcePosition}
         isConnectable={isConnectable}
+        id="s-bottom"
       />
+
+      <Handle
+        type="source"
+        position={Position.Right}
+        isConnectable={isConnectable}
+        style={handleRightSourceStyle}
+        id="s-right"
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        isConnectable={isConnectable}
+        style={handleLeftSourceStyle}
+        id="s-left"
+      />
+
       <Handle
         type="target"
         position={targetPosition}
         isConnectable={isConnectable}
+        id="t-top"
+      />
+      <Handle
+        type="target"
+        position={Position.Right}
+        isConnectable={isConnectable}
+        style={handleRightTargetStyle}
+        id="t-right"
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        isConnectable={isConnectable}
+        style={handleLeftTargetStyle}
+        id="t-left"
       />
     </>
   );
