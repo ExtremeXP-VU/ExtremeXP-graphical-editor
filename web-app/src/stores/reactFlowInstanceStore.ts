@@ -90,6 +90,7 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
     const data = { ...params, ...(props as Edge) };
     const edge = {
       ...data,
+      data: {},
       id: nanoid(),
     };
     set({

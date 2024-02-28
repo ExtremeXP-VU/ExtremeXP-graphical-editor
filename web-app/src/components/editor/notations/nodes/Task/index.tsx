@@ -55,7 +55,7 @@ const Task = ({
           <div className="node-task__icon">
             <div
               className="node-task__icon__wrapper"
-              onDoubleClick={handleDoubleClick}
+              onClick={handleDoubleClick}
             >
               <span className="iconfont">&#xe601;</span>
             </div>
