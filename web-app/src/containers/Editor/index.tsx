@@ -448,9 +448,9 @@ const Editor = () => {
                   onNodesDelete={onNodesDelete}
                   fitView
                 >
-                  <Controls />
+                  <Controls position="top-left" />
                   <Background />
-                  <MiniMap nodeColor={"#4fa3bb"} />
+                  <MiniMap nodeColor={"#4fa3bb"} position="bottom-left" />
                 </ReactFlow>
               </div>
             </div>
