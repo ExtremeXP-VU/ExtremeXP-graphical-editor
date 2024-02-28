@@ -245,7 +245,7 @@
       color: $primary-button-text-color;
     }
     &__predefined {
-      height: calc(100vh - 6.4rem);
+      max-height: calc(100vh - 6.4rem);
     }
   }
 }
