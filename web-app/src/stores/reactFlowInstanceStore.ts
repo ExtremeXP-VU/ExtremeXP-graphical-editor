@@ -75,10 +75,9 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
       data: data,
     };
 
-    if (type === "subflow") {
+    if (type === "task") {
       newNode.data = {
         ...newNode.data,
-        id: newNode.id,
       };
     }
 
@@ -91,6 +90,7 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
     const data = { ...params, ...(props as Edge) };
     const edge = {
       ...data,
+      data: {},
       id: nanoid(),
     };
     set({

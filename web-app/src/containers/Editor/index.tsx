@@ -1,7 +1,7 @@
-import 'reactflow/dist/style.css';
-import './style.scss';
+import "reactflow/dist/style.css";
+import "./style.scss";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 
 import ReactFlow, {
   Node,
@@ -12,19 +12,19 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 
-import { shallow } from 'zustand/shallow';
+import { shallow } from "zustand/shallow";
 import {
   useReactFlowInstanceStore,
   RFState,
-} from '../../stores/reactFlowInstanceStore';
+} from "../../stores/reactFlowInstanceStore";
 
-import { useNavigate, useLocation } from 'react-router-dom';
-import useRequest from '../../hooks/useRequest';
-import { message } from '../../utils/message';
+import { useNavigate, useLocation } from "react-router-dom";
+import useRequest from "../../hooks/useRequest";
+import { message } from "../../utils/message";
 
-import Header from '../../components/editor/Header';
-import Panel from '../../components/editor/Panel';
-import Popover from '../../components/general/Popover';
+import Header from "../../components/editor/Header";
+import Panel from "../../components/editor/Panel";
+import Popover from "../../components/general/Popover";
 
 import {
   defaultGraphicalModel,
@@ -33,7 +33,7 @@ import {
   GraphicalModelType,
 } from "../../types/experiment";
 
-import { TaskType } from '../../types/task';
+import { TaskType, TaskDataType } from "../../types/task";
 
 import {
   TaskResponseType,
@@ -42,12 +42,13 @@ import {
   CreateExperimentResponseType,
   CreateTaskResponseType,
   ExecutionResponseType,
-} from '../../types/requests';
+} from "../../types/requests";
 
 import Markers from "../../components/editor/notations/edges/Markers";
 import { nodeTypes, edgeTypes } from "./notationTypes";
 
 import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
+// import SideBar from "../../components/editor/SideBar";
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -119,8 +120,13 @@ const Editor = () => {
   ) {
     graphicalModel.nodes.forEach((node) => {
       callback(node as unknown as Node);
-      if (node.data.graphical_model) {
-        traverseGraphicalModel(node.data.graphical_model, callback);
+      if (node.type === "task") {
+        const task = node.data.variants.find(
+          (t: TaskDataType) => t.id_task === node.data.currentVariant
+        );
+        if (task.is_composite && task.graphical_model) {
+          traverseGraphicalModel(task.graphical_model, callback);
+        }
       }
     });
   }
@@ -170,10 +176,16 @@ const Editor = () => {
     } else {
       let newGraph: GraphicalModelType = defaultGraphicalModel;
       traverseGraphicalModel(graphicalModel, (node) => {
-        if (node.data.id === selectedTab) {
-          newGraph = node.data.graphical_model;
-          setNodes(newGraph.nodes);
-          setEdges(newGraph.edges);
+        if (node.type === "task") {
+          console.log(node.data);
+          const task = node.data.variants.find(
+            (t: TaskDataType) => t.id_task === node.data.currentVariant
+          );
+          if (task.id_task === selectedTab) {
+            newGraph = task.graphical_model;
+            setNodes(newGraph.nodes);
+            setEdges(newGraph.edges);
+          }
         }
       });
     }
@@ -187,16 +199,16 @@ const Editor = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
         handleSave();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [nodes, edges]);
 
@@ -226,11 +238,16 @@ const Editor = () => {
         removeTab(node.id);
       });
       traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
-        tabs.forEach((tab) => {
-          if (tab.id === node.id) {
-            removeTab(node.id);
-          }
-        });
+        if (node.type === "task") {
+          const task = node.data.variants.find(
+            (t: TaskDataType) => t.id_task === node.data.currentVariant
+          );
+          tabs.forEach((tab) => {
+            if (tab.id === task.id_task) {
+              removeTab(task.id_task);
+            }
+          });
+        }
       });
     },
     [nodes, edges]
@@ -249,7 +266,7 @@ const Editor = () => {
       },
     })
       .then(() => {
-        message('Saved');
+        message("Saved");
       })
       .catch((error) => {
         if (error.message) {
@@ -264,9 +281,14 @@ const Editor = () => {
       newGraph = { nodes, edges };
     } else {
       traverseGraphicalModel(graphicalModel, (node) => {
-        if (node.data.id === selectedTab) {
-          node.data.graphical_model = { nodes, edges };
-          newGraph = graphicalModel;
+        if (node.type === "task") {
+          const task = node.data.variants.find(
+            (t: TaskDataType) => t.id_task === node.data.currentVariant
+          );
+          if (task.id_task === selectedTab) {
+            task.graphical_model = { nodes, edges };
+            newGraph = graphicalModel;
+          }
         }
       });
     }
@@ -340,7 +362,7 @@ const Editor = () => {
     const graphicalModel = { nodes, edges };
     executionRequest({
       url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: 'POST',
+      method: "POST",
       data: {
         graphical_model: graphicalModel,
       },
@@ -433,11 +455,7 @@ const Editor = () => {
               </div>
             </div>
           </div>
-          {/* <div className="editor__bottom__right">
-            <SideBar
-              
-            />
-          </div> */}
+          {/* <div className="editor__bottom__right"><SideBar /></div> */}
         </div>
       </ReactFlowProvider>
       <Popover show={showPopover} blankClickCallback={closeMask}>
@@ -452,7 +470,7 @@ const Editor = () => {
             value={newExpName}
             onChange={(e) => setNewExpName(e.target.value)}
             onKeyUp={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 handleSaveAs();
               }
             }}

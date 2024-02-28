@@ -1,7 +1,6 @@
 import EventStart from "../../components/editor/notations/nodes/EventStart";
 import EventEnd from "../../components/editor/notations/nodes/EventEnd";
 import Task from "../../components/editor/notations/nodes/Task";
-import Subflow from "../../components/editor/notations/nodes/Subflow";
 import Data from "../../components/editor/notations/nodes/Data";
 import OperatorParallel from "../../components/editor/notations/nodes/OpParallel";
 import OperatorExclusive from "../../components/editor/notations/nodes/OpExclusive";
@@ -17,7 +16,6 @@ export const nodeTypes = {
   start: EventStart,
   end: EventEnd,
   task: Task,
-  subflow: Subflow,
   data: Data,
   opParallel: OperatorParallel,
   opExclusive: OperatorExclusive,

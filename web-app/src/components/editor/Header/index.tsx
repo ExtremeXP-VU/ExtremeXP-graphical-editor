@@ -2,6 +2,7 @@ import "./style.scss";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAccountStore } from "../../../stores/accountStore";
+import { clearTabs } from "../../../stores/tabStore";
 
 interface HeaderProps {
   onExecution: () => void;
@@ -17,6 +18,7 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
   const projID = useLocation().pathname.split("/")[3];
 
   const handleGoBack = () => {
+    clearTabs();
     if (isLogin) {
       let url = "";
       specificationType === "experiment"

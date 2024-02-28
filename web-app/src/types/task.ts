@@ -55,36 +55,85 @@ export const genericTask: TaskType = {
   create_at: 0,
   update_at: 0,
   graphical_model: {
+    edges: [
+      {
+        data: {},
+        id: "bNIQpYBO_LOCDorWBo04Y",
+        markerEnd: {
+          color: "#000",
+          height: 20,
+          type: "arrow" as MarkerType,
+          width: 20,
+        },
+        source: "LaFsZGftwmpE8ig1SOANO",
+        sourceHandle: null,
+        style: {
+          stroke: "#000",
+          strokeWidth: 1.5,
+        },
+        target: "2Eye5v8E6fwzbGgZEiX0C",
+        targetHandle: "t-top",
+        type: "regular",
+      },
+      {
+        data: {},
+        id: "hlG8PFr5T_PN4WNVh7E10",
+        markerEnd: {
+          color: "#000",
+          height: 20,
+          type: "arrow" as MarkerType,
+          width: 20,
+        },
+        source: "2Eye5v8E6fwzbGgZEiX0C",
+        sourceHandle: "s-bottom",
+        style: {
+          stroke: "#000",
+          strokeWidth: 1.5,
+        },
+        target: "rZPqStJlSCD13cG_E6nfM",
+        targetHandle: null,
+        type: "regular",
+      },
+    ],
     nodes: [
       {
         data: {},
         dragging: false,
         height: 36,
-        id: "lpwvojP4061Ui5QQWeLma",
+        id: "LaFsZGftwmpE8ig1SOANO",
         position: {
-          x: 503,
-          y: 129.25132188380704,
+          x: 383.5841294843202,
+          y: 171.7079352578399,
         },
         positionAbsolute: {
-          x: 503,
-          y: 129.25132188380704,
+          x: 383.5841294843202,
+          y: 171.7079352578399,
         },
         selected: true,
         type: "start",
         width: 31,
       },
       {
-        data: {},
+        data: {
+          currentVariant: "JNxVx_pK_BFW_30VshVeG-variant-1",
+          variants: [
+            {
+              id_task: "JNxVx_pK_BFW_30VshVeG-variant-1",
+              is_composite: false,
+              name: "task",
+            },
+          ],
+        },
         dragging: false,
-        height: 52,
-        id: "D6VSy5It5_bdeeZ2ngZcN",
+        height: 67,
+        id: "2Eye5v8E6fwzbGgZEiX0C",
         position: {
-          x: 467.2645407218773,
-          y: 228.29890970086024,
+          x: 348.95408576305164,
+          y: 289.589833801375,
         },
         positionAbsolute: {
-          x: 467.2645407218773,
-          y: 228.29890970086024,
+          x: 348.95408576305164,
+          y: 289.589833801375,
         },
         selected: false,
         type: "task",
@@ -94,57 +143,47 @@ export const genericTask: TaskType = {
         data: {},
         dragging: false,
         height: 37,
-        id: "wb7K30XMOmUjCRGiD__w-",
+        id: "rZPqStJlSCD13cG_E6nfM",
         position: {
-          x: 502.30155346847437,
-          y: 343.4205230111074,
+          x: 383.83983380137494,
+          y: 439.46934389194934,
         },
         positionAbsolute: {
-          x: 502.30155346847437,
-          y: 343.4205230111074,
+          x: 383.83983380137494,
+          y: 439.46934389194934,
         },
         selected: false,
         type: "end",
         width: 32,
       },
     ],
-    edges: [
-      {
-        id: "aD5v7SSlzu9mkEW_Y_z3c",
-        markerEnd: {
-          color: "#000",
-          height: 20,
-          type: "arrow" as MarkerType,
-          width: 20,
-        },
-        source: "lpwvojP4061Ui5QQWeLma",
-        sourceHandle: null,
-        style: {
-          stroke: "#000",
-          strokeWidth: 1.5,
-        },
-        target: "D6VSy5It5_bdeeZ2ngZcN",
-        targetHandle: null,
-        type: "regular",
-      },
-      {
-        id: "gtW4MNMNHc8P5LW50uNa_",
-        markerEnd: {
-          color: "#000",
-          height: 20,
-          type: "arrow" as MarkerType,
-          width: 20,
-        },
-        source: "D6VSy5It5_bdeeZ2ngZcN",
-        sourceHandle: null,
-        style: {
-          stroke: "#000",
-          strokeWidth: 1.5,
-        },
-        target: "wb7K30XMOmUjCRGiD__w-",
-        targetHandle: null,
-        type: "regular",
-      },
-    ],
   },
 };
+
+export interface TaskDataType {
+  id_task: string;
+  name: string;
+  variant: number;
+  is_composite: boolean;
+  graphical_model: GraphicalModelType;
+}
+
+export const defaultTaskData: TaskDataType = {
+  id_task: "default",
+  name: "task",
+  variant: 0,
+  is_composite: false,
+  graphical_model: {
+    nodes: [],
+    edges: [],
+  },
+};
+
+export interface TaskNodeType {
+  id: string;
+  type: "task";
+  data: {
+    currentVariant: string; // <id_task>
+    variants: TaskType[];
+  };
+}

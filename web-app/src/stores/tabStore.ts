@@ -31,3 +31,7 @@ export const removeTab = (id: string) => {
     tabs: useTabStore.getState().tabs.filter((tab) => tab.id !== id),
   });
 };
+
+export const clearTabs = () => {
+  useTabStore.setState(initialTabsState);
+};

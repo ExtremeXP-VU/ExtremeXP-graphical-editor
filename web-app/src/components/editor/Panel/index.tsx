@@ -2,6 +2,7 @@ import "./style.scss";
 
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
+import { nanoid } from "nanoid";
 
 import { nodeImageSrc } from "../../../assets/nodes";
 import { linkImageSrc } from "../../../assets/links";
@@ -58,12 +59,35 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   ) => {
     setWindowNode(nodeType);
     let data = {};
-    if (nodeType === "subflow") {
+    const id = nanoid() + "-variant-1";
+    if (nodeType === "task") {
       data = {
-        name: genericTask.name,
-        graphical_model: genericTask.graphical_model,
+        currentVariant: id,
+        variants: [
+          {
+            id_task: id,
+            name: "task",
+            is_composite: false,
+          },
+        ],
       };
     }
+
+    if (nodeType === "subflow") {
+      data = {
+        currentVariant: id,
+        variants: [
+          {
+            id_task: id,
+            name: genericTask.name,
+            is_composite: true,
+            graphical_model: genericTask.graphical_model,
+          },
+        ],
+      };
+      nodeType = "task";
+    }
+
     const nodeData = { nodeType: nodeType, data: data };
     event.dataTransfer.setData(
       "application/reactflow",
@@ -144,7 +168,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
       </div>
       <div className="panel__subtasks">
         <div className="panel__subtasks__title">
-          <p className="panel__subtasks__title__name">sub tasks</p>
+          <p className="panel__subtasks__title__name">composite tasks</p>
         </div>
         <div className="panel__subtasks__content">
           <div
