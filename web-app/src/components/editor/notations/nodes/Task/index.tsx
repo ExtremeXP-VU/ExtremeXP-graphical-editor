@@ -13,7 +13,7 @@ const Task = ({
   targetPosition = Position.Top,
 }: NodeProps) => {
   const selectedTaskData = useConfigPanelStore(
-    (state) => state.selectedTaskName
+    (state) => state.selectedTaskData
   );
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
@@ -29,7 +29,7 @@ const Task = ({
       const variant = data.variants.find(
         (variant: TaskDataType) => variant.id_task === selectedVariant
       );
-      variant.name = selectedTaskData;
+      variant.name = selectedTaskData.name;
     }
   }, [selectedNodeId, selectedTaskData]);
 
@@ -47,7 +47,7 @@ const Task = ({
   }, [data.currentVariant, selectedTaskData]);
 
   useEffect(() => {
-    setTaskName(selectedTaskData);
+    setTaskName(selectedTaskData.name);
   }, [selectedTaskData]);
 
   const handleAddTab = () => {

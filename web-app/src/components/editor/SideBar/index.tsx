@@ -11,7 +11,7 @@ import { useConfigPanelStore } from "../../../stores/configPanelStore";
 const SideBar: React.FC = () => {
   const [numParameters, setNumParameters] = useState(0);
   const selectedTaskData = useConfigPanelStore(
-    (state) => state.selectedTaskName
+    (state) => state.selectedTaskData
   );
 
   const addParameter = () => {
@@ -19,8 +19,8 @@ const SideBar: React.FC = () => {
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // const newTaskData =    event.target.value ;
-    useConfigPanelStore.setState({ selectedTaskName: event.target.value });
+    const newTaskData = { ...selectedTaskData, name: event.target.value };
+    useConfigPanelStore.setState({ selectedTaskData: newTaskData });
   };
 
   const handleClosePanel = () => {
@@ -43,7 +43,7 @@ const SideBar: React.FC = () => {
             <input
               type="text"
               className="transparent-input"
-              defaultValue={selectedTaskData}
+              defaultValue={selectedTaskData.name}
               onChange={handleNameChange}
             />
           ),

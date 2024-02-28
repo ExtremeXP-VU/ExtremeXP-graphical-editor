@@ -398,11 +398,11 @@ const Editor = () => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
     useConfigPanelStore.setState({ selectedVariant: currentVariant });
 
-    const variantData: string = node.data.variants.find(
+    const variantData: TaskDataType = node.data.variants.find(
       (t: TaskDataType) => t.id_task === node.data.currentVariant
-    ).name; // Accessing the name of the current variant
+    ); // Accessing the name of the current variant
 
-    useConfigPanelStore.setState({ selectedTaskName: variantData });
+    useConfigPanelStore.setState({ selectedTaskData: variantData });
     useConfigPanelStore.setState({ isOpenConfig: true });
   };
 
