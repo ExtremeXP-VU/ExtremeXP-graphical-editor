@@ -1,7 +1,7 @@
-import 'reactflow/dist/style.css';
-import './style.scss';
+import "reactflow/dist/style.css";
+import "./style.scss";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 
 import ReactFlow, {
   Node,
@@ -10,31 +10,31 @@ import ReactFlow, {
   Controls,
   Background,
   MiniMap,
-} from 'reactflow';
+} from "reactflow";
 
-import { shallow } from 'zustand/shallow';
+import { shallow } from "zustand/shallow";
 import {
   useReactFlowInstanceStore,
   RFState,
-} from '../../stores/reactFlowInstanceStore';
-import { useConfigPanelStore } from '../../stores/configPanelStore';
+} from "../../stores/reactFlowInstanceStore";
+import { useConfigPanelStore } from "../../stores/configPanelStore";
 
-import { useNavigate, useLocation } from 'react-router-dom';
-import useRequest from '../../hooks/useRequest';
-import { message } from '../../utils/message';
+import { useNavigate, useLocation } from "react-router-dom";
+import useRequest from "../../hooks/useRequest";
+import { message } from "../../utils/message";
 
-import Header from '../../components/editor/Header';
-import Panel from '../../components/editor/Panel';
-import Popover from '../../components/general/Popover';
+import Header from "../../components/editor/Header";
+import Panel from "../../components/editor/Panel";
+import Popover from "../../components/general/Popover";
 
 import {
   defaultGraphicalModel,
   defaultExperiment,
   ExperimentType,
   GraphicalModelType,
-} from '../../types/experiment';
+} from "../../types/experiment";
 
-import { TaskType, TaskDataType } from '../../types/task';
+import { TaskType, TaskDataType } from "../../types/task";
 
 import {
   TaskResponseType,
@@ -43,13 +43,13 @@ import {
   CreateExperimentResponseType,
   CreateTaskResponseType,
   ExecutionResponseType,
-} from '../../types/requests';
+} from "../../types/requests";
 
-import Markers from '../../components/editor/notations/edges/Markers';
-import { nodeTypes, edgeTypes } from './notationTypes';
+import Markers from "../../components/editor/notations/edges/Markers";
+import { nodeTypes, edgeTypes } from "./notationTypes";
 
-import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
-import SideBar from '../../components/editor/SideBar';
+import { removeTab, setSelectedTab, useTabStore } from "../../stores/tabStore";
+import SideBar from "../../components/editor/SideBar";
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -102,15 +102,15 @@ const Editor = () => {
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const specificationType = useLocation().pathname.split('/')[2];
-  const projID = useLocation().pathname.split('/')[3];
-  const experimentID = useLocation().pathname.split('/')[4];
+  const specificationType = useLocation().pathname.split("/")[2];
+  const projID = useLocation().pathname.split("/")[3];
+  const experimentID = useLocation().pathname.split("/")[4];
 
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
 
   const [showPopover, setShowPopover] = useState(false);
-  const [newExpName, setNewExpName] = useState('');
+  const [newExpName, setNewExpName] = useState("");
 
   const tabs = useTabStore((state) => state.tabs);
   const selectedTab = useTabStore((state) => state.selectedTab);
@@ -121,7 +121,7 @@ const Editor = () => {
   ) {
     graphicalModel.nodes.forEach((node) => {
       callback(node as unknown as Node);
-      if (node.type === 'task') {
+      if (node.type === "task") {
         const task = node.data.variants.find(
           (t: TaskDataType) => t.id_task === node.data.currentVariant
         );
@@ -133,8 +133,8 @@ const Editor = () => {
   }
 
   useEffect(() => {
-    let url = '';
-    specificationType === 'experiment'
+    let url = "";
+    specificationType === "experiment"
       ? (url = `exp/projects/experiments/${experimentID}`)
       : (url = `task/categories/tasks/${experimentID}`);
 
@@ -143,12 +143,12 @@ const Editor = () => {
     })
       .then((data) => {
         let newExperiment: ExperimentType | TaskType = defaultExperiment;
-        if (specificationType === 'experiment') {
-          if ('experiment' in data.data) {
+        if (specificationType === "experiment") {
+          if ("experiment" in data.data) {
             newExperiment = data.data.experiment;
           }
         } else {
-          if ('task' in data.data) {
+          if ("task" in data.data) {
             newExperiment = data.data.task;
           }
         }
@@ -171,13 +171,13 @@ const Editor = () => {
   }, [graphicalModel]);
 
   useEffect(() => {
-    if (selectedTab === 'main') {
+    if (selectedTab === "main") {
       setNodes(graphicalModel.nodes);
       setEdges(graphicalModel.edges);
     } else {
       let newGraph: GraphicalModelType = defaultGraphicalModel;
       traverseGraphicalModel(graphicalModel, (node) => {
-        if (node.type === 'task') {
+        if (node.type === "task") {
           console.log(node.data);
           const task = node.data.variants.find(
             (t: TaskDataType) => t.id_task === node.data.currentVariant
@@ -194,22 +194,22 @@ const Editor = () => {
 
   useEffect(() => {
     if (!tabs.some((tab) => tab.id === selectedTab)) {
-      setSelectedTab('main');
+      setSelectedTab("main");
     }
   }, [selectedTab, tabs]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
         handleSave();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [nodes, edges]);
 
@@ -217,10 +217,10 @@ const Editor = () => {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       const { nodeType, data } = JSON.parse(
-        event.dataTransfer.getData('application/reactflow')
+        event.dataTransfer.getData("application/reactflow")
       );
       // check if the dropped element is valid
-      if (typeof nodeType === 'undefined' || !nodeType) {
+      if (typeof nodeType === "undefined" || !nodeType) {
         return;
       }
       const position = reactFlowInstance.screenToFlowPosition({
@@ -239,7 +239,7 @@ const Editor = () => {
         removeTab(node.id);
       });
       traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
-        if (node.type === 'task') {
+        if (node.type === "task") {
           const task = node.data.variants.find(
             (t: TaskDataType) => t.id_task === node.data.currentVariant
           );
@@ -255,19 +255,19 @@ const Editor = () => {
   );
 
   const updateGraphicalModel = (graph: GraphicalModelType) => {
-    let url = '';
-    specificationType === 'experiment'
+    let url = "";
+    specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/${experimentID}/update/graphical_model`)
       : (url = `/task/categories/tasks/${experimentID}/update/graphical_model`);
     updateGraphRequest({
       url: url,
-      method: 'PUT',
+      method: "PUT",
       data: {
         graphical_model: graph,
       },
     })
       .then(() => {
-        message('Saved');
+        message("Saved");
       })
       .catch((error) => {
         if (error.message) {
@@ -278,11 +278,11 @@ const Editor = () => {
 
   function getCurrentGraphOnBoard() {
     let newGraph: GraphicalModelType = defaultGraphicalModel;
-    if (selectedTab === 'main') {
+    if (selectedTab === "main") {
       newGraph = { nodes, edges };
     } else {
       traverseGraphicalModel(graphicalModel, (node) => {
-        if (node.type === 'task') {
+        if (node.type === "task") {
           const task = node.data.variants.find(
             (t: TaskDataType) => t.id_task === node.data.currentVariant
           );
@@ -317,13 +317,13 @@ const Editor = () => {
   function handleSaveAs() {
     closeMask();
     const graphicalModel = getCurrentGraphOnBoard();
-    let url = '';
-    specificationType === 'experiment'
+    let url = "";
+    specificationType === "experiment"
       ? (url = `/exp/projects/${projID}/experiments/create`)
       : (url = `/task/categories/${projID}/tasks/create`);
 
     let data = {};
-    if (specificationType === 'experiment') {
+    if (specificationType === "experiment") {
       data = {
         exp_name: newExpName,
         graphical_model: graphicalModel,
@@ -338,14 +338,14 @@ const Editor = () => {
 
     createNewSpecRequest({
       url: url,
-      method: 'POST',
+      method: "POST",
       data: data,
     })
       .then((data) => {
-        let specID = '';
-        if ('id_experiment' in data.data) {
+        let specID = "";
+        if ("id_experiment" in data.data) {
           specID = data.data.id_experiment;
-        } else if ('id_task' in data.data) {
+        } else if ("id_task" in data.data) {
           specID = data.data.id_task;
         }
         navigate(`/editor/${specificationType}/${projID}/${specID}`);
@@ -363,7 +363,7 @@ const Editor = () => {
     const graphicalModel = { nodes, edges };
     executionRequest({
       url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: 'POST',
+      method: "POST",
       data: {
         graphical_model: graphicalModel,
       },
@@ -389,38 +389,22 @@ const Editor = () => {
 
   // Config Panel
 
-  const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
-  const selectedNodeName = useConfigPanelStore(
-    (state) => state.selectedNodeName
-  );
-  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
+  const isConfigPanelOn = useConfigPanelStore((state) => state.isOpenConfig);
 
-  const handleDoubleClick = (event: React.MouseEvent, node: Node) => {
+  const handleInitConfigPanel = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
     useConfigPanelStore.setState({ selectedNodeId: node.id });
 
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
     useConfigPanelStore.setState({ selectedVariant: currentVariant });
 
-    const variantName = node.data.variants.find(
-      (variant: TaskDataType) => variant.id_task === currentVariant
+    const variantData: string = node.data.variants.find(
+      (t: TaskDataType) => t.id_task === node.data.currentVariant
     ).name; // Accessing the name of the current variant
 
-    useConfigPanelStore.setState({ selectedNodeName: variantName });
-
+    useConfigPanelStore.setState({ selectedTaskName: variantData });
     useConfigPanelStore.setState({ isOpenConfig: true });
   };
-
-  useEffect(() => {
-    const node = nodes.find((node) => node.id === selectedNodeId);
-    if (node) {
-      const variant = node.data.variants.find(
-        (variant: TaskDataType) => variant.id_task === selectedVariant
-      );
-      variant.name = selectedNodeName;
-    }
-  }, [nodes, selectedNodeId, selectedNodeName, selectedVariant]);
 
   return (
     <div className="editor">
@@ -445,10 +429,10 @@ const Editor = () => {
                 <div
                   key={tab.id}
                   className={`editor__bottom__middle__nav__tab ${
-                    selectedTab === tab.id ? 'selected' : ''
+                    selectedTab === tab.id ? "selected" : ""
                   }`}
                 >
-                  {tab.id !== 'main' && (
+                  {tab.id !== "main" && (
                     <div
                       className="editor__bottom__middle__nav__tab__close"
                       onClick={() => {
@@ -482,20 +466,17 @@ const Editor = () => {
                   onDrop={onDrop}
                   onDragOver={onDragOver}
                   onNodesDelete={onNodesDelete}
-                  onNodeDoubleClick={handleDoubleClick}
+                  onNodeDoubleClick={handleInitConfigPanel}
                   fitView
                 >
-                  {isOpenConfig && <SideBar />}
+                  {isConfigPanelOn && <SideBar />}
                   <Controls />
                   <Background />
-                  <MiniMap nodeColor={'#4fa3bb'} />
+                  <MiniMap nodeColor={"#4fa3bb"} />
                 </ReactFlow>
               </div>
             </div>
           </div>
-          {/* <div className="editor__bottom__right">
-            <SideBar nodes={nodes} />
-          </div> */}
         </div>
       </ReactFlowProvider>
       <Popover show={showPopover} blankClickCallback={closeMask}>
@@ -510,7 +491,7 @@ const Editor = () => {
             value={newExpName}
             onChange={(e) => setNewExpName(e.target.value)}
             onKeyUp={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 handleSaveAs();
               }
             }}

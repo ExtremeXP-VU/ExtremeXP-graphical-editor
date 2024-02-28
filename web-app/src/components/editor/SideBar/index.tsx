@@ -8,39 +8,42 @@ import CustomButton from "./CustomButton";
 import DynamicTable from "./DynamicTable";
 import { useConfigPanelStore } from "../../../stores/configPanelStore";
 
-
-const SideBar: React.FC = ()  => {
+const SideBar: React.FC = () => {
   const [numParameters, setNumParameters] = useState(0);
-  const selectedNodeName = useConfigPanelStore((state) => state.selectedNodeName);
+  const selectedTaskData = useConfigPanelStore(
+    (state) => state.selectedTaskName
+  );
 
   const addParameter = () => {
     setNumParameters(numParameters + 1);
   };
 
-
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    useConfigPanelStore.setState({ selectedNodeName: event.target.value });
+    // const newTaskData =    event.target.value ;
+    useConfigPanelStore.setState({ selectedTaskName: event.target.value });
   };
 
   const handleClosePanel = () => {
     useConfigPanelStore.setState({ isOpenConfig: false });
-  }
+  };
 
   return (
     <div className="sidebar">
-      <span className="iconfont close-button" onClick={handleClosePanel}>&#xe600;</span>
+      <span className="iconfont close-button" onClick={handleClosePanel}>
+        &#xe600;
+      </span>
       <DropDown
         options={["variant 1", "variant 2", "variant 3"]}
         defaultValue="variant 1"
         className="variant__dropdown"
-      />      
+      />
       <StaticTable
         properties={{
           name: (
             <input
               type="text"
               className="transparent-input"
-              defaultValue={selectedNodeName}
+              defaultValue={selectedTaskData}
               onChange={handleNameChange}
             />
           ),

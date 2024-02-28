@@ -2,22 +2,55 @@ import "./style.scss";
 import { memo, useEffect, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import { TabType, addTab } from "../../../../../stores/tabStore";
-import { TaskDataType, defaultTaskData } from "../../../../../types/task";
+import { useConfigPanelStore } from "../../../../../stores/configPanelStore";
+import { TaskDataType } from "../../../../../types/task";
 
 const Task = ({
+  id,
   data,
   isConnectable,
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
-  const [currentTask, setCurrentTask] = useState<TaskDataType>(defaultTaskData);
-  // const [operation, setOperation] = useState(data.operation);
+  const selectedTaskData = useConfigPanelStore(
+    (state) => state.selectedTaskName
+  );
+  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
+  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
+
+  const [currentTask, setCurrentTask] = useState<TaskDataType>(
+    data.variants[0]
+  );
+
+  const [taskName, setTaskName] = useState<string>(currentTask.name);
 
   useEffect(() => {
-    setCurrentTask(getCurrentTaskData());
-  }, [data.currentVariant]);
+    if (id === selectedNodeId) {
+      const variant = data.variants.find(
+        (variant: TaskDataType) => variant.id_task === selectedVariant
+      );
+      variant.name = selectedTaskData;
+    }
+  }, [selectedNodeId, selectedTaskData]);
 
-  const handleDoubleClick = () => {
+  useEffect(() => {
+    if (id === selectedNodeId && currentTask.id_task !== selectedVariant) {
+      data.currentVariant = selectedVariant;
+    }
+  }, [selectedNodeId, selectedVariant]);
+
+  useEffect(() => {
+    const task = data.variants.find(
+      (t: TaskDataType) => t.id_task === data.currentVariant
+    );
+    setCurrentTask(task);
+  }, [data.currentVariant, selectedTaskData]);
+
+  useEffect(() => {
+    setTaskName(selectedTaskData);
+  }, [selectedTaskData]);
+
+  const handleAddTab = () => {
     const tab: TabType = {
       name: currentTask.name,
       id: currentTask.id_task,
@@ -25,37 +58,16 @@ const Task = ({
     addTab(tab);
   };
 
-  const getCurrentTaskData = () => {
-    const id = data.currentVariant;
-    const task = data.variants.find((t: TaskDataType) => t.id_task === id);
-    return task;
-  };
-
   return (
     <>
       <div className="node-task">
-        <div className="node-task__name">{currentTask.name}</div>
-        <div className="node-task__properties">
-          property placeholder
-          {/* <select
-            className="node-task__label__selector nodrag"
-            value={operation}
-            onChange={(e) => {
-              setOperation(e.target.value);
-              data.operation = e.target.value;
-            }}
-          >
-            <option value="mean">mean</option>
-            <option value="sum">sum</option>
-            <option value="min">min</option>
-            <option value="max">max</option>
-          </select> */}
-        </div>
+        <div className="node-task__name">{taskName}</div>
+        <div className="node-task__properties">property placeholder</div>
         {currentTask.is_composite && (
           <div className="node-task__icon">
             <div
               className="node-task__icon__wrapper"
-              onDoubleClick={handleDoubleClick}
+              onDoubleClick={handleAddTab}
             >
               <span className="iconfont">&#xe601;</span>
             </div>
@@ -75,8 +87,6 @@ const Task = ({
     </>
   );
 };
-
-// Task.displayName = "Task";
 
 export default memo(Task);
 // export default Task;

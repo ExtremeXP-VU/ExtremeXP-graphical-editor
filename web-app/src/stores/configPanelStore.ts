@@ -1,20 +1,22 @@
-import {create} from "zustand";
+import { create } from "zustand";
+// import { TaskDataType, defaultTaskData } from "../types/task";
 
 type ConfigPanelState = {
-    isOpenConfig: boolean;
-    selectedNodeName: string;
-    selectedNodeId: string;
-    selectedVariant: string;
-    setSelectedNodeName: (newName: string) => void;
+  isOpenConfig: boolean;
+  selectedTaskName: string;
+  selectedNodeId: string;
+  selectedVariant: string;
+  setSelectedTaskName: (newName: string) => void;
 };
 
 export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
-    isOpenConfig: false,
-    setIsOpenConfig: (newState: boolean) => set({isOpenConfig: newState}),
-    selectedNodeName: "task",
-    setSelectedNodeName: (newName: string) => set({selectedNodeName: newName}),
-    selectedNodeId: "",
-    setSelectedNodeId: (newId: string) => set({selectedNodeId: newId}),
-    selectedVariant: "",
-    setSelectedVariant: (newVariant: string) => set({selectedVariant: newVariant}),
+  isOpenConfig: false,
+  setIsOpenConfig: (newState: boolean) => set({ isOpenConfig: newState }),
+  selectedTaskName: "task",
+  setSelectedTaskName: (newName: string) => set({ selectedTaskName: newName }),
+  selectedNodeId: "",
+  setSelectedNodeId: (newId: string) => set({ selectedNodeId: newId }),
+  selectedVariant: "",
+  setSelectedVariant: (newVariant: string) =>
+    set({ selectedVariant: newVariant }),
 }));
