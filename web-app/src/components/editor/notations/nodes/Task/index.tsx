@@ -5,8 +5,8 @@ import { TabType, addTab } from "../../../../../stores/tabStore";
 import { useConfigPanelStore } from "../../../../../stores/configPanelStore";
 import { TaskDataType } from "../../../../../types/task";
 
-const handleSourceStyle = { top: 50, background: "#c3c3c3" };
-const handleTargetStyle = { top: 10, background: "#c3c3c3" };
+const handleSourceStyle = { top: 40, background: "#c3c3c3" };
+const handleTargetStyle = { top: 5, background: "#c3c3c3" };
 
 const Task = ({
   id,
@@ -26,6 +26,7 @@ const Task = ({
   );
 
   const [taskName, setTaskName] = useState<string>(currentTask.name);
+  const [properties, setProperties] = useState<string[]>([]);
 
   useEffect(() => {
     if (id === selectedNodeId) {
@@ -64,8 +65,22 @@ const Task = ({
   return (
     <>
       <div className="node-task">
-        <div className="node-task__name">{taskName}</div>
-        <div className="node-task__properties">property placeholder</div>
+        <div
+          className={`node-task__name ${
+            properties.length === 0 ? "higher-task-name" : ""
+          }`}
+        >
+          {taskName}
+        </div>
+        {properties.length > 0 && (
+          <div className="node-task__properties">
+            {properties.map((property, index) => (
+              <div key={index} className="node-task__property">
+                {property}
+              </div>
+            ))}
+          </div>
+        )}
         {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>
