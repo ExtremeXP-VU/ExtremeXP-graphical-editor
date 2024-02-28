@@ -2,13 +2,19 @@
 
 .sidebar {
   display: flex;
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: $board-color;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 6.8rem;
+  z-index: 4;
   height: 100%;
   border-left: 4px solid $primary-theme-color;
   overflow-y: auto;
+
 }
 
 @mixin select-style($color, $background, $border-color) {
@@ -17,6 +23,13 @@
   border: 1px solid $border-color;
   // Other styles you want to include in the mixin
 }
+.close-button {
+  position: absolute;
+  top: 0.1rem;
+  right: 6.5rem;
+  cursor: pointer;
+}
+
 
 .select-bar {
   position: absolute;
