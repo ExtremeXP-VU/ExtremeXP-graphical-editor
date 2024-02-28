@@ -50,7 +50,7 @@ const Task = ({
   }, [data.currentVariant, selectedTaskData]);
 
   useEffect(() => {
-    setTaskName(selectedTaskData.name);
+    setTaskName(currentTask.name);
   }, [selectedTaskData]);
 
   const handleAddTab = () => {
