@@ -49,13 +49,13 @@ export const linkProps = {
   },
   dataflow: {
     type: "dataflow",
-    style: { stroke: "#3d97b0aa", strokeWidth: 1.5 },
+    style: { stroke: "#000", strokeWidth: 1.5 },
     animated: true,
     markerEnd: {
       type: "arrow",
       width: 20,
       height: 20,
-      color: "#3d97b0aa",
+      color: "#000",
     },
   },
 };

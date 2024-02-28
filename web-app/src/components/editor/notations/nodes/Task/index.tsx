@@ -5,6 +5,9 @@ import { TabType, addTab } from "../../../../../stores/tabStore";
 import { useConfigPanelStore } from "../../../../../stores/configPanelStore";
 import { TaskDataType } from "../../../../../types/task";
 
+const handleSourceStyle = { top: 50, background: "#c3c3c3" };
+const handleTargetStyle = { top: 10, background: "#c3c3c3" };
+
 const Task = ({
   id,
   data,
@@ -65,10 +68,7 @@ const Task = ({
         <div className="node-task__properties">property placeholder</div>
         {currentTask.is_composite && (
           <div className="node-task__icon">
-            <div
-              className="node-task__icon__wrapper"
-              onDoubleClick={handleAddTab}
-            >
+            <div className="node-task__icon__wrapper" onClick={handleAddTab}>
               <span className="iconfont">&#xe601;</span>
             </div>
           </div>
@@ -77,11 +77,43 @@ const Task = ({
           type="source"
           position={sourcePosition}
           isConnectable={isConnectable}
+          id="s-bottom"
         />
+
+        <Handle
+          type="source"
+          position={Position.Right}
+          isConnectable={isConnectable}
+          style={handleSourceStyle}
+          id="s-right"
+        />
+        <Handle
+          type="source"
+          position={Position.Left}
+          isConnectable={isConnectable}
+          style={handleSourceStyle}
+          id="s-left"
+        />
+
         <Handle
           type="target"
           position={targetPosition}
           isConnectable={isConnectable}
+          id="t-top"
+        />
+        <Handle
+          type="target"
+          position={Position.Right}
+          isConnectable={isConnectable}
+          style={handleTargetStyle}
+          id="t-right"
+        />
+        <Handle
+          type="target"
+          position={Position.Left}
+          isConnectable={isConnectable}
+          style={handleTargetStyle}
+          id="t-left"
         />
       </div>
     </>
