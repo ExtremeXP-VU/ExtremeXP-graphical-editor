@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAccountStore } from "../../../stores/accountStore";
 import { clearTabs } from "../../../stores/tabStore";
+import { useConfigPanelStore } from "../../../stores/configPanelStore";
 
 interface HeaderProps {
   onExecution: () => void;
@@ -32,6 +33,8 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
     } else {
       navigate("/account/login");
     }
+
+    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
   };
 
   return (

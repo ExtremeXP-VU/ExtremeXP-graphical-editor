@@ -1,9 +1,12 @@
 @import '../../../../styles/colors.scss';
 
-.transparent-input{
+.transparent-input {
   border: none;
   background-color: transparent;
-  outline: none;
+  
+  &:hover {
+    outline: 1px dashed $primary-theme-color;
+  }
 }
 
 .table-component {

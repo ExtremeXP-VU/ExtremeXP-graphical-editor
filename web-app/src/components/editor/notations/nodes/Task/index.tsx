@@ -54,6 +54,12 @@ const Task = ({
     setTaskName(currentTask.name);
   }, [selectedTaskData]);
 
+  useEffect(() => {
+    const description = data.variants.find(
+      (t: TaskDataType) => t.id_task === data.currentVariant
+    ).description;
+  }, [selectedTaskData, data.currentVariant, data.variants]);
+
   const handleAddTab = () => {
     const tab: TabType = {
       name: currentTask.name,

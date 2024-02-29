@@ -45,6 +45,7 @@ const SideBar: React.FC = () => {
               className="transparent-input"
               defaultValue={selectedTaskData.name}
               onChange={handleNameChange}
+              
             />
           ),
           description: (
@@ -52,8 +53,7 @@ const SideBar: React.FC = () => {
               className="transparent-input"
               style={{
                 fontFamily: "inherit",
-                resize: "none",
-                width: "3rem",
+                width: "2.5rem",
                 height: "0.5rem",
               }}
               defaultValue={`Lorem ipsum dolor sit amet consectetur.`}
