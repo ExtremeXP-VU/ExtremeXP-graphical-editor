@@ -93,7 +93,10 @@ const Task = ({
         )}
         {currentTask.is_composite && (
           <div className="node-task__icon">
-            <div className="node-task__icon__wrapper" onClick={handleAddTab}>
+            <div
+              className="node-task__icon__wrapper"
+              onDoubleClick={handleAddTab}
+            >
               <span className="iconfont">&#xe601;</span>
             </div>
           </div>
