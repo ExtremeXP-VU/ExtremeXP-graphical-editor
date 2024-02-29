@@ -70,7 +70,11 @@ const Task = ({
 
   return (
     <>
-      <div className="node-task">
+      <div
+        className={`node-task ${
+          selectedNodeId === id ? "node-task-selected" : ""
+        }`}
+      >
         <div
           className={`node-task__name ${
             properties.length === 0 ? "higher-task-name" : ""
