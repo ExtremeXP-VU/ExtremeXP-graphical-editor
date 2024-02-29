@@ -53,7 +53,7 @@ const SideBar: React.FC = () => {
               className="transparent-input"
               style={{
                 fontFamily: "inherit",
-                width: "2.5rem",
+                width: "2.9rem",
                 height: "0.5rem",
               }}
               defaultValue={`Lorem ipsum dolor sit amet consectetur.`}

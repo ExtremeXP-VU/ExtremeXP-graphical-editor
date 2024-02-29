@@ -5,7 +5,7 @@
   background-color: transparent;
   width: 100%;
   &:focus {
-    outline: 1px dashed green;
+    outline: 1px dashed $secondary-theme-color;
   }
 }
 
