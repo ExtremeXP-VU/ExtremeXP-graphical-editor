@@ -19,8 +19,7 @@ const StringTable: React.FC = () => {
           <td className="value">
            
           <span
-                className="iconfont"
-                style={{ cursor: 'pointer' }}
+                className="clickable iconfont"
                 onClick={createString}
               >
                 &#xed1b;

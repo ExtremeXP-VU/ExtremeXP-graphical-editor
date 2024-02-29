@@ -3,9 +3,9 @@
 .transparent-input {
   border: none;
   background-color: transparent;
-  
-  &:hover {
-    outline: 1px dashed $primary-theme-color;
+  width: 100%;
+  &:focus {
+    outline: 1px dashed green;
   }
 }
 
