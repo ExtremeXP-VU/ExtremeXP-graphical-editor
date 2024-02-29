@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
       navigate("/account/login");
     }
 
-    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
+    useConfigPanelStore.getState().clearConfigStore();
   };
 
   return (

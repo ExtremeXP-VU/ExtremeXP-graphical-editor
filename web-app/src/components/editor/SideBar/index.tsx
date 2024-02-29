@@ -24,7 +24,7 @@ const SideBar: React.FC = () => {
   };
 
   const handleClosePanel = () => {
-    useConfigPanelStore.setState({ isOpenConfig: false });
+    useConfigPanelStore.getState().clearConfigStore();
   };
 
   return (

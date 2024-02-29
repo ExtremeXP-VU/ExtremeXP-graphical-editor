@@ -7,6 +7,7 @@ type ConfigPanelState = {
   selectedNodeId: string;
   selectedVariant: string;
   setSelectedTaskData: (newData: TaskDataType) => void;
+  clearConfigStore: () => void;
 };
 
 export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
@@ -20,4 +21,12 @@ export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
   selectedVariant: "",
   setSelectedVariant: (newVariant: string) =>
     set({ selectedVariant: newVariant }),
+    clearConfigStore: () => {
+      set({
+        isOpenConfig: false,
+        selectedTaskData: defaultTaskData,
+        selectedNodeId: "",
+        selectedVariant: "",
+      });
+    },
 }));
