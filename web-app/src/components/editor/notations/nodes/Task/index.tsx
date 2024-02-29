@@ -1,12 +1,12 @@
-import "./style.scss";
-import { memo, useEffect, useState } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
-import { TabType, addTab } from "../../../../../stores/tabStore";
-import { useConfigPanelStore } from "../../../../../stores/configPanelStore";
-import { TaskDataType } from "../../../../../types/task";
+import './style.scss';
+import { memo, useEffect, useState } from 'react';
+import { Handle, NodeProps, Position } from 'reactflow';
+import { TabType, addTab } from '../../../../../stores/tabStore';
+import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
+import { TaskDataType } from '../../../../../types/task';
 
-const handleSourceStyle = { top: 40, background: "#c3c3c3" };
-const handleTargetStyle = { top: 5, background: "#c3c3c3" };
+const handleSourceStyle = { top: 40, background: '#c3c3c3' };
+const handleTargetStyle = { top: 5, background: '#c3c3c3' };
 
 const Task = ({
   id,
@@ -72,12 +72,12 @@ const Task = ({
     <>
       <div
         className={`node-task ${
-          selectedNodeId === id ? "node-task-selected" : ""
+          selectedNodeId === id ? 'node-task-selected' : ''
         }`}
       >
         <div
           className={`node-task__name ${
-            properties.length === 0 ? "higher-task-name" : ""
+            properties.length === 0 ? 'higher-task-name' : ''
           }`}
         >
           {taskName}

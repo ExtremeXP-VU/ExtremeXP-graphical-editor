@@ -1,5 +1,5 @@
-import { ExperimentType } from "./experiment";
-import { TaskType } from "./task";
+import { ExperimentType } from './experiment';
+import { TaskType } from './task';
 
 export type LoginResponseType = {
   message: string;

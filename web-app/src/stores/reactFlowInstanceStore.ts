@@ -1,6 +1,6 @@
-import React from "react";
-import { create } from "zustand";
-import { nanoid } from "nanoid";
+import React from 'react';
+import { create } from 'zustand';
+import { nanoid } from 'nanoid';
 import {
   Edge,
   EdgeChange,
@@ -11,12 +11,12 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   Connection,
-} from "reactflow";
+} from 'reactflow';
 
 import {
   linkProps,
   LinksPropsType,
-} from "../components/editor/notations/notationConfigs/linkProps";
+} from '../components/editor/notations/notationConfigs/linkProps';
 
 export type RFState = {
   nodes: Node[];
@@ -39,7 +39,7 @@ export type RFState = {
 export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
   nodes: [],
   edges: [],
-  selectedLink: "regular",
+  selectedLink: 'regular',
   setSelectedLink: (link: LinksPropsType) => {
     set({
       selectedLink: link,
@@ -75,7 +75,7 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
       data: data,
     };
 
-    if (type === "task") {
+    if (type === 'task') {
       newNode.data = {
         ...newNode.data,
       };
@@ -99,6 +99,6 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
   },
   onDragOver: (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.dropEffect = 'move';
   },
 }));

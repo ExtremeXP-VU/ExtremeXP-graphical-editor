@@ -1,25 +1,25 @@
-import { memo } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { memo } from 'react';
+import { Handle, NodeProps, Position } from 'reactflow';
 
 const handleLeftSourceStyle = {
-  bottom: "-4px",
-  left: "-7px",
-  background: "#c3c3c3",
+  bottom: '-4px',
+  left: '-7px',
+  background: '#c3c3c3',
 };
 const handleLeftTargetStyle = {
-  top: "15px",
-  left: "-7px",
-  background: "#c3c3c3",
+  top: '15px',
+  left: '-7px',
+  background: '#c3c3c3',
 };
 const handleRightSourceStyle = {
-  bottom: "-4px",
-  right: "-7px",
-  background: "#c3c3c3",
+  bottom: '-4px',
+  right: '-7px',
+  background: '#c3c3c3',
 };
 const handleRightTargetStyle = {
-  top: "15px",
-  right: "-7px",
-  background: "#c3c3c3",
+  top: '15px',
+  right: '-7px',
+  background: '#c3c3c3',
 };
 
 const OpExclusive = ({

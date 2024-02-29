@@ -1,6 +1,6 @@
-import "./style.scss";
-import { EdgeLabelRenderer } from "reactflow";
-import React, { useState } from "react";
+import './style.scss';
+import { EdgeLabelRenderer } from 'reactflow';
+import React, { useState } from 'react';
 
 interface EdgeLabelProps {
   labelX: number;
@@ -19,7 +19,7 @@ const EdgeLabel: React.FC<EdgeLabelProps> = ({
   const [labelText, setLabelText] = useState(label);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       setEditable(false);
       onLabelChange(labelText);
     }
@@ -27,7 +27,7 @@ const EdgeLabel: React.FC<EdgeLabelProps> = ({
 
   const handleAddLabel = () => {
     setEditable(true);
-    setLabelText("condition");
+    setLabelText('condition');
   };
 
   return (

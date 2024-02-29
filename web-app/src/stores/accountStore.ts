@@ -1,14 +1,14 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 const initialAccountState = {
   isLogin: false,
-  username: "",
-  token: "",
+  username: '',
+  token: '',
 };
 
 export const useAccountStore = create<typeof initialAccountState>()(
-  persist(() => initialAccountState, { name: "account-store" })
+  persist(() => initialAccountState, { name: 'account-store' })
 );
 
 const setIsLogin = (isLogin: boolean) => {

@@ -42,7 +42,7 @@
 
 // draw a triangle on the top right corner
 .node-data::before {
-  content: "";
+  content: '';
   z-index: 2;
   position: absolute;
   top: 0;
@@ -52,7 +52,7 @@
   background-color: #dddddd;
 }
 .node-data::after {
-  content: "";
+  content: '';
   z-index: 1;
   position: absolute;
   top: 0;

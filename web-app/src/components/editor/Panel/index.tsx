@@ -1,24 +1,24 @@
-import "./style.scss";
+import './style.scss';
 
-import React from "react";
-import { useState, useEffect, useCallback } from "react";
-import { nanoid } from "nanoid";
+import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { nanoid } from 'nanoid';
 
-import { nodeImageSrc } from "../../../assets/nodes";
-import { linkImageSrc } from "../../../assets/links";
+import { nodeImageSrc } from '../../../assets/nodes';
+import { linkImageSrc } from '../../../assets/links';
 import {
   LinksPropsType,
   notationList,
-} from "../notations/notationConfigs/linkProps";
+} from '../notations/notationConfigs/linkProps';
 
-import { genericTask } from "../../../types/task";
+import { genericTask } from '../../../types/task';
 
-import SubTask from "./SubTask";
-import { useCategoryStore, setCategories } from "../../../stores/categoryStore";
+import SubTask from './SubTask';
+import { useCategoryStore, setCategories } from '../../../stores/categoryStore';
 
-import useRequest from "../../../hooks/useRequest";
-import { message } from "../../../utils/message";
-import { CategoriesResponseType } from "../../../types/requests";
+import useRequest from '../../../hooks/useRequest';
+import { message } from '../../../utils/message';
+import { CategoriesResponseType } from '../../../types/requests';
 
 interface PanelProps {
   selectedLink: string;
@@ -29,7 +29,7 @@ const nodesList = notationList.nodes;
 const edgesList = notationList.edges;
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
-  const [windowNode, setWindowNode] = useState("start");
+  const [windowNode, setWindowNode] = useState('start');
   const categories = useCategoryStore((state) => state.categories);
   const { request: categoriesRequest } = useRequest<CategoriesResponseType>();
 
@@ -43,8 +43,8 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
         }
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
       });
   }, [categoriesRequest, categories]);
@@ -59,21 +59,21 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   ) => {
     setWindowNode(nodeType);
     let data = {};
-    const id = nanoid() + "-variant-1";
-    if (nodeType === "task") {
+    const id = nanoid() + '-variant-1';
+    if (nodeType === 'task') {
       data = {
         currentVariant: id,
         variants: [
           {
             id_task: id,
-            name: "task",
+            name: 'task',
             is_composite: false,
           },
         ],
       };
     }
 
-    if (nodeType === "subflow") {
+    if (nodeType === 'subflow') {
       data = {
         currentVariant: id,
         variants: [
@@ -85,15 +85,15 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           },
         ],
       };
-      nodeType = "task";
+      nodeType = 'task';
     }
 
     const nodeData = { nodeType: nodeType, data: data };
     event.dataTransfer.setData(
-      "application/reactflow",
+      'application/reactflow',
       JSON.stringify(nodeData)
     );
-    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.effectAllowed = 'move';
   };
 
   const handleLinkSelection = (linkType: LinksPropsType) => {
@@ -154,7 +154,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
               <div
                 key={index}
                 className={`panel__links__content__link ${
-                  selectedLink === edgeType ? "selected" : ""
+                  selectedLink === edgeType ? 'selected' : ''
                 }`}
                 onClick={() => {
                   handleLinkSelection(edgeType as LinksPropsType);
@@ -173,7 +173,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
         <div className="panel__subtasks__content">
           <div
             className="panel__subtasks__content__generic__task"
-            onDragStart={(event) => onDragStart(event, "subflow")}
+            onDragStart={(event) => onDragStart(event, 'subflow')}
             draggable
           >
             <span className="iconfont">&#xe608;</span>

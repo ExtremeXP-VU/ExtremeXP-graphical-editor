@@ -1,12 +1,12 @@
-import "./style.scss";
-import React, { useState } from "react";
-import DropDown from "./DropDown";
-import RadioButton from "./RadioButton";
+import './style.scss';
+import React, { useState } from 'react';
+import DropDown from './DropDown';
+import RadioButton from './RadioButton';
 // import RangeSelector from "./RangeSelector";
-import StaticTable from "./StaticTable";
-import CustomButton from "./CustomButton";
-import DynamicTable from "./DynamicTable";
-import { useConfigPanelStore } from "../../../stores/configPanelStore";
+import StaticTable from './StaticTable';
+import CustomButton from './CustomButton';
+import DynamicTable from './DynamicTable';
+import { useConfigPanelStore } from '../../../stores/configPanelStore';
 
 const SideBar: React.FC = () => {
   const [numParameters, setNumParameters] = useState(0);
@@ -33,7 +33,7 @@ const SideBar: React.FC = () => {
         &#xe600;
       </span>
       <DropDown
-        options={["variant 1", "variant 2", "variant 3"]}
+        options={['variant 1', 'variant 2', 'variant 3']}
         defaultValue="variant 1"
         className="variant__dropdown"
       />
@@ -45,16 +45,15 @@ const SideBar: React.FC = () => {
               className="transparent-input"
               defaultValue={selectedTaskData.name}
               onChange={handleNameChange}
-              
             />
           ),
           description: (
             <textarea
               className="transparent-input"
               style={{
-                fontFamily: "inherit",
-                width: "2.9rem",
-                height: "0.5rem",
+                fontFamily: 'inherit',
+                width: '2.9rem',
+                height: '0.5rem',
               }}
               defaultValue={`Lorem ipsum dolor sit amet consectetur.`}
             />
@@ -62,24 +61,24 @@ const SideBar: React.FC = () => {
           abstract: (
             <RadioButton
               choices={[
-                { label: "yes", value: "yes" },
-                { label: "no", value: "no" },
+                { label: 'yes', value: 'yes' },
+                { label: 'no', value: 'no' },
               ]}
               defaultValue="no"
               name="abstract"
             />
           ),
-          implementation: "<URI>",
+          implementation: '<URI>',
           group: (
             <DropDown
-              options={["group 1", "group 2", "group 3"]}
+              options={['group 1', 'group 2', 'group 3']}
               defaultValue="group 1"
               className="normal__dropdown"
             />
           ),
           type: (
             <DropDown
-              options={["type 1", "type 2", "type 3"]}
+              options={['type 1', 'type 2', 'type 3']}
               defaultValue="type 1"
               className="normal__dropdown"
             />

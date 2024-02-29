@@ -1,14 +1,14 @@
-import { useState, useRef, useCallback } from "react";
-import axios, { AxiosRequestConfig } from "axios";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useCallback } from 'react';
+import axios, { AxiosRequestConfig } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-import { useAccountStore, logout } from "../stores/accountStore";
+import { useAccountStore, logout } from '../stores/accountStore';
 
 // Get the token from localStorage and add it to the request headers
 
 const defaultRequestConfig: AxiosRequestConfig = {
-  url: "/",
-  method: "GET",
+  url: '/',
+  method: 'GET',
   data: {},
 };
 
@@ -35,8 +35,8 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
 
       return axios
         .request<T>({
-          baseURL: "http://127.0.0.1/",
-          url: requestOptions?.url || "",
+          baseURL: 'http://127.0.0.1/',
+          url: requestOptions?.url || '',
           method: requestOptions?.method || options.method,
           signal: controllerRef.current.signal,
           params: { ...params, ...requestOptions?.params },
@@ -49,7 +49,7 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
         .catch((error) => {
           if (error?.response?.status === 403) {
             logout();
-            navigate("/account/login");
+            navigate('/account/login');
           }
           setError(error);
           throw error;

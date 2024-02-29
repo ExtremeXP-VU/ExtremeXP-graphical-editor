@@ -1,6 +1,6 @@
-import "./style.scss";
-import { memo, useState } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import './style.scss';
+import { memo, useState } from 'react';
+import { Handle, NodeProps, Position } from 'reactflow';
 
 const Data = ({
   data,

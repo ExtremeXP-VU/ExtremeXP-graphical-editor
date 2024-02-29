@@ -1,33 +1,33 @@
-import "./style.scss";
-import { useState, useEffect, useCallback } from "react";
-import useRequest from "../../../hooks/useRequest";
-import { message } from "../../../utils/message";
-import { timestampToDate, timeNow } from "../../../utils/timeToDate";
-import { useNavigate, useLocation } from "react-router-dom";
+import './style.scss';
+import { useState, useEffect, useCallback } from 'react';
+import useRequest from '../../../hooks/useRequest';
+import { message } from '../../../utils/message';
+import { timestampToDate, timeNow } from '../../../utils/timeToDate';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-import Popover from "../../general/Popover";
-import { TaskType, defaultTask } from "../../../types/task";
-import { GraphicalModelType } from "../../../types/experiment";
+import Popover from '../../general/Popover';
+import { TaskType, defaultTask } from '../../../types/task';
+import { GraphicalModelType } from '../../../types/experiment';
 import {
   TasksResponseType,
   CreateTaskResponseType,
   UpdateTaskInfoResponseType,
   DeleteTaskResponseType,
-} from "../../../types/requests";
-import { useAccountStore } from "../../../stores/accountStore";
+} from '../../../types/requests';
+import { useAccountStore } from '../../../stores/accountStore';
 
 const Category = () => {
   const username = useAccountStore((state) => state.username);
   const [tasks, setTasks] = useState([defaultTask]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newTaskName, setNewTaskName] = useState("");
+  const [newTaskName, setNewTaskName] = useState('');
 
   const [showPopover, setShowPopover] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   const isCategoryEmpty = tasks.length === 0;
   // make sure the expID is the same as the one in the url
-  const categoryIdByURL = useLocation().pathname.split("/")[3];
+  const categoryIdByURL = useLocation().pathname.split('/')[3];
 
   const { request: tasksRequest } = useRequest<TasksResponseType>();
   const { request: createTaskRequest } = useRequest<CreateTaskResponseType>();
@@ -62,7 +62,7 @@ const Category = () => {
     (name: string, provider: string, graphicalModel: GraphicalModelType) => {
       createTaskRequest({
         url: `task/categories/${categoryIdByURL}/tasks/create`,
-        method: "POST",
+        method: 'POST',
         data: {
           name: name,
           provider: provider,
@@ -99,9 +99,9 @@ const Category = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       if (editingIndex === null) return;
-      if (newTaskName === "" || newTaskName === tasks[editingIndex].name) {
+      if (newTaskName === '' || newTaskName === tasks[editingIndex].name) {
         setEditingIndex(null);
         return;
       }
@@ -111,17 +111,17 @@ const Category = () => {
   };
 
   const renameTask = () => {
-    if (newTaskName === "" || editingIndex === null) return;
+    if (newTaskName === '' || editingIndex === null) return;
     if (newTaskName === tasks[editingIndex].name) return;
     if (newTaskName.length > 35) {
-      message("The length of the name should be less than 35 characters.");
+      message('The length of the name should be less than 35 characters.');
       return;
     }
     updateTaskInfoRequest({
       url: `task/categories/${categoryIdByURL}/tasks/${
         tasks[editingIndex!].id_task
       }/update/info`,
-      method: "PUT",
+      method: 'PUT',
       data: {
         name: newTaskName,
         description: tasks[editingIndex!].description,
@@ -166,7 +166,7 @@ const Category = () => {
     if (deleteIndex === null) return;
     deleteTaskRequest({
       url: `task/categories/tasks/${tasks[deleteIndex].id_task}/delete`,
-      method: "DELETE",
+      method: 'DELETE',
     })
       .then(() => {
         getTasks();
@@ -211,7 +211,7 @@ const Category = () => {
                   <span
                     title="modify the name"
                     className={`iconfont ${
-                      task.is_user_defined ? "editable" : "not-editable"
+                      task.is_user_defined ? 'editable' : 'not-editable'
                     }`}
                     onClick={() => handleStartEditingName(index)}
                   >
@@ -239,7 +239,7 @@ const Category = () => {
                   <span
                     title="delete this specification"
                     className={`iconfont ${
-                      task.is_user_defined ? "editable" : "not-editable"
+                      task.is_user_defined ? 'editable' : 'not-editable'
                     }`}
                     onClick={() => handleOpenPopover(index)}
                   >
@@ -274,7 +274,7 @@ const Category = () => {
         <div className="popover__delete">
           <div className="popover__delete__text">
             {`Do you want to delete ${
-              deleteIndex ? tasks[deleteIndex].name : "the specification"
+              deleteIndex ? tasks[deleteIndex].name : 'the specification'
             }?`}
           </div>
           <div className="popover__delete__buttons">

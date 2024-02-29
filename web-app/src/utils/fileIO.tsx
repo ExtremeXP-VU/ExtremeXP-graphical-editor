@@ -1,14 +1,14 @@
-import { GraphicalModelType } from "../types/experiment";
+import { GraphicalModelType } from '../types/experiment';
 
 export function downloadGraphicalModel(model: object, filename: string) {
   const json = JSON.stringify(model, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
+  const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = `${filename}.json`;
-  a.style.display = "none";
+  a.style.display = 'none';
 
   document.body.appendChild(a);
   a.click();
@@ -33,7 +33,7 @@ const handleFile = (
         resolve(jsonObject);
         // Process the JSON object as needed
       } catch (error) {
-        reject("Error parsing JSON");
+        reject('Error parsing JSON');
       }
     }
   };
@@ -43,9 +43,9 @@ const handleFile = (
 
 const selectFile = (): Promise<GraphicalModelType> => {
   return new Promise((resolve, reject) => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = ".json"; // Specify the file types allowed to be selected
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json'; // Specify the file types allowed to be selected
 
     fileInput.onchange = (event: Event) => {
       const target = event.target as HTMLInputElement;

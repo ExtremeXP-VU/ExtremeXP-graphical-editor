@@ -1,6 +1,6 @@
-import { memo } from "react";
-import { BaseEdge, EdgeProps, getSmoothStepPath } from "reactflow";
-import EdgeLabel from "./EdgeLabel";
+import { memo } from 'react';
+import { BaseEdge, EdgeProps, getSmoothStepPath } from 'reactflow';
+import EdgeLabel from './EdgeLabel';
 
 function ExceptionalLink(props: EdgeProps) {
   const {

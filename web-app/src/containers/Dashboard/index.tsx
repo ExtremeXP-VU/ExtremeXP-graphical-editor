@@ -1,22 +1,22 @@
-import "./style.scss";
+import './style.scss';
 
-import { Link, useNavigate, Outlet, useLocation } from "react-router-dom";
-import { logout } from "../../stores/accountStore";
+import { Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { logout } from '../../stores/accountStore';
 
 const Repository = () => {
   const location = useLocation();
-  const isExperiments = location.pathname.includes("/projects");
-  const isUser = location.pathname.includes("/user");
-  const isTask = location.pathname.includes("/categories");
-  const experimentSelectedClass = isExperiments ? "selected" : "";
-  const userSelectedClass = isUser ? "selected" : "";
-  const taskSelectedClass = isTask ? "selected" : "";
+  const isExperiments = location.pathname.includes('/projects');
+  const isUser = location.pathname.includes('/user');
+  const isTask = location.pathname.includes('/categories');
+  const experimentSelectedClass = isExperiments ? 'selected' : '';
+  const userSelectedClass = isUser ? 'selected' : '';
+  const taskSelectedClass = isTask ? 'selected' : '';
 
   const navigate = useNavigate();
 
   const handleSignOut = () => {
     logout();
-    navigate("/account/login");
+    navigate('/account/login');
   };
 
   return (
@@ -26,7 +26,7 @@ const Repository = () => {
           <span>Dashboard</span>
         </div>
         <div className="repository__panel__items">
-          <Link to={"/dashboard/projects"}>
+          <Link to={'/dashboard/projects'}>
             <div
               className={`repository__panel__items__item ${experimentSelectedClass}`}
             >
@@ -34,7 +34,7 @@ const Repository = () => {
               <p>Experiments</p>
             </div>
           </Link>
-          <Link to={"/dashboard/categories"}>
+          <Link to={'/dashboard/categories'}>
             <div
               className={`repository__panel__items__item ${taskSelectedClass}`}
             >
@@ -42,7 +42,7 @@ const Repository = () => {
               <p>Tasks</p>
             </div>
           </Link>
-          <Link to={"/dashboard/user"}>
+          <Link to={'/dashboard/user'}>
             <div
               className={`repository__panel__items__item ${userSelectedClass}`}
             >

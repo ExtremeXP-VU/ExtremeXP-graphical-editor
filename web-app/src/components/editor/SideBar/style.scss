@@ -1,4 +1,4 @@
-@import "../../../styles/colors.scss";
+@import '../../../styles/colors.scss';
 
 .sidebar {
   display: flex;
@@ -14,7 +14,6 @@
   height: 100%;
   border-left: 2px solid $primary-theme-color;
   overflow-y: auto;
-
 }
 
 @mixin select-style($color, $background, $border-color) {
@@ -31,11 +30,14 @@
   color: $secondary-theme-color;
 }
 
-
 .select-bar {
   position: absolute;
   width: 100%;
-  select{
-      @include select-style($primary-background-color, $secondary-theme-color, $primary-theme-color);
+  select {
+    @include select-style(
+      $primary-background-color,
+      $secondary-theme-color,
+      $primary-theme-color
+    );
   }
 }

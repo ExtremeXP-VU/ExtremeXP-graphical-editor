@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export type TabType = {
   name: string;
@@ -6,8 +6,8 @@ export type TabType = {
 };
 
 const initialTabsState = {
-  tabs: [{ name: "main", id: "main" }],
-  selectedTab: "main",
+  tabs: [{ name: 'main', id: 'main' }],
+  selectedTab: 'main',
 };
 
 export const useTabStore = create<typeof initialTabsState>()(

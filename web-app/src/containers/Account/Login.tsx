@@ -1,24 +1,24 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { login } from "../../stores/accountStore";
-import useRequest from "../../hooks/useRequest";
-import { LoginResponseType } from "../../types/requests";
-import { message } from "../../utils/message";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { login } from '../../stores/accountStore';
+import useRequest from '../../hooks/useRequest';
+import { LoginResponseType } from '../../types/requests';
+import { message } from '../../utils/message';
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const { request: loginRequest } = useRequest<LoginResponseType>();
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!username || !password) return message("username or password is empty");
+    if (!username || !password) return message('username or password is empty');
 
     loginRequest({
       url: `users/login`,
-      method: "POST",
+      method: 'POST',
       data: {
         username: username,
         password: password,
@@ -28,16 +28,16 @@ const Login = () => {
         const token = response.data.jwt;
         if (token) {
           login(username, token);
-          navigate("/dashboard/projects");
+          navigate('/dashboard/projects');
         }
       })
       .catch((error) => {
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleLogin();
     }
   };

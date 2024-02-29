@@ -4,7 +4,7 @@ export default function Markers() {
       <svg
         width="0"
         height="0"
-        style={{ position: "absolute", overflow: "visible" }}
+        style={{ position: 'absolute', overflow: 'visible' }}
       >
         <marker
           id="diamondMarker"
@@ -26,7 +26,7 @@ export default function Markers() {
       <svg
         width="0"
         height="0"
-        style={{ position: "absolute", overflow: "visible" }}
+        style={{ position: 'absolute', overflow: 'visible' }}
       >
         <marker
           id="squareMarker"

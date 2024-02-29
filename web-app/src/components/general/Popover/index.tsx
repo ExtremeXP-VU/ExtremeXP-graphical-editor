@@ -1,5 +1,5 @@
-import "./style.scss";
-import { ReactNode } from "react";
+import './style.scss';
+import { ReactNode } from 'react';
 
 function Popover(props: {
   show: boolean;

@@ -1,28 +1,28 @@
-import "./common.scss";
-import "./experiments.scss";
-import { useState, useEffect, useCallback, useMemo } from "react";
-import useRequest from "../../hooks/useRequest";
-import { message } from "../../utils/message";
-import { timestampToDate } from "../../utils/timeToDate";
-import { Outlet, useNavigate } from "react-router-dom";
-import { defaultProject } from "../../types/experiment";
-import Popover from "../../components/general/Popover";
+import './common.scss';
+import './experiments.scss';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import useRequest from '../../hooks/useRequest';
+import { message } from '../../utils/message';
+import { timestampToDate } from '../../utils/timeToDate';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { defaultProject } from '../../types/experiment';
+import Popover from '../../components/general/Popover';
 import {
   ProjectsResponseType,
   CreateProjectResponseType,
   UpdateProjectResponseType,
   DeleteProjectResponseType,
-} from "../../types/requests";
+} from '../../types/requests';
 
 const Experiments = () => {
   const [projects, setProjects] = useState([defaultProject]);
   const [currentProj, setCurrentProj] = useState(defaultProject);
-  const [searchInput, setSearchInput] = useState("");
-  const [createprojName, setCreateProjName] = useState("");
+  const [searchInput, setSearchInput] = useState('');
+  const [createprojName, setCreateProjName] = useState('');
 
   const [isEditing, setIsEditing] = useState(false);
-  const [projNameInput, setProjNameInput] = useState("");
-  const [descriptionInput, setDescriptionInput] = useState("");
+  const [projNameInput, setProjNameInput] = useState('');
+  const [descriptionInput, setDescriptionInput] = useState('');
 
   const [showPopover, setShowPopover] = useState(false);
 
@@ -53,8 +53,8 @@ const Experiments = () => {
         }
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
       });
   }, [projectsRequest, projects]);
@@ -65,7 +65,7 @@ const Experiments = () => {
 
   // set the first experiment as the current experiment when enter the page
   useEffect(() => {
-    if (projects.length > 0 && currentProj.id_project === "default") {
+    if (projects.length > 0 && currentProj.id_project === 'default') {
       setCurrentProj(projects[0]);
     }
   }, [projects, currentProj.id_project]);
@@ -77,11 +77,11 @@ const Experiments = () => {
   // FIXME: Add experiment name validation
   const isProjectNameValid = (name: string) => {
     if (!name) {
-      message("Project name can not be empty");
+      message('Project name can not be empty');
       return false;
     }
     if (name.length > 50) {
-      message("Project name should be less than 50 characters");
+      message('Project name should be less than 50 characters');
       return false;
     }
     return true;
@@ -91,7 +91,7 @@ const Experiments = () => {
     if (!isProjectNameValid(createprojName)) return;
     createProjectRequest({
       url: `exp/projects/create`,
-      method: "POST",
+      method: 'POST',
       data: {
         name: createprojName,
       },
@@ -100,12 +100,12 @@ const Experiments = () => {
         getProjects();
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
-    setCreateProjName("");
+    setCreateProjName('');
   };
 
   const handleSelectProject = (index: number) => {
@@ -122,7 +122,7 @@ const Experiments = () => {
   const handleChangeNameKeyPress = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       updateProjectInfo();
     }
   };
@@ -130,7 +130,7 @@ const Experiments = () => {
   const handleChangeDescriptionKeyPress = (
     e: React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       updateProjectInfo();
     }
   };
@@ -147,7 +147,7 @@ const Experiments = () => {
 
     updateProjectRequest({
       url: `exp/projects/${currentProj.id_project}/update`,
-      method: "PUT",
+      method: 'PUT',
       data: {
         name: projNameInput,
         description: descriptionInput,
@@ -157,10 +157,10 @@ const Experiments = () => {
         window.location.reload();
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
   };
 
@@ -179,16 +179,16 @@ const Experiments = () => {
   const handleDeleteProject = () => {
     deleteProjectRequest({
       url: `exp/projects/${currentProj.id_project}/delete`,
-      method: "DELETE",
+      method: 'DELETE',
     })
       .then(() => {
         window.location.reload();
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
     closeMask();
   };
@@ -230,7 +230,7 @@ const Experiments = () => {
               {filteredProjects.map((project, index) => (
                 <li
                   className={`dashboard__common__panel__folders__list__item ${
-                    currentProj.name === project.name ? "selected" : ""
+                    currentProj.name === project.name ? 'selected' : ''
                   }`}
                   key={project.id_project}
                   onClick={() => handleSelectProject(index)}
