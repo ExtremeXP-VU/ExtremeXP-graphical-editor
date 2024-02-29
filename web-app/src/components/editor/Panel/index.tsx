@@ -68,6 +68,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
             id_task: id,
             name: 'task',
             is_composite: false,
+            variant: 1,
           },
         ],
       };
@@ -82,6 +83,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
             name: genericTask.name,
             is_composite: true,
             graphical_model: genericTask.graphical_model,
+            variant: 1,
           },
         ],
       };

@@ -52,7 +52,7 @@ const Task = ({
 
   useEffect(() => {
     setTaskName(currentTask.name);
-  }, [selectedTaskData]);
+  }, [selectedTaskData, currentTask]);
 
   useEffect(() => {
     const description = data.variants.find(

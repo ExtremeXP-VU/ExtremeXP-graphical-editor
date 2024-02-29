@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-import "./style.scss";
-
+import React, { useState } from 'react';
+import './style.scss';
 
 interface DropDownProps {
   options: string[];
@@ -9,8 +8,15 @@ interface DropDownProps {
   onOptionSelected?: (option: string) => void; // Callback function prop
 }
 
-const DropDown: React.FC<DropDownProps> = ({ options, defaultValue, className, onOptionSelected }) => {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>(defaultValue);
+const DropDown: React.FC<DropDownProps> = ({
+  options,
+  defaultValue,
+  className,
+  onOptionSelected,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+    defaultValue
+  );
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
@@ -31,4 +37,3 @@ const DropDown: React.FC<DropDownProps> = ({ options, defaultValue, className, o
 };
 
 export default DropDown;
-

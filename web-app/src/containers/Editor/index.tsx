@@ -178,7 +178,6 @@ const Editor = () => {
       let newGraph: GraphicalModelType = defaultGraphicalModel;
       traverseGraphicalModel(graphicalModel, (node) => {
         if (node.type === 'task') {
-          console.log(node.data);
           const task = node.data.variants.find(
             (t: TaskDataType) => t.id_task === node.data.currentVariant
           );
@@ -391,6 +390,13 @@ const Editor = () => {
 
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
+  const updateConfigPanel = () => {
+    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
+    setTimeout(() => {
+      useConfigPanelStore.setState({ isOpenConfig: true }); // Re-open the panel
+    }, 0);
+  };
+
   const handleInitConfigPanel = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
     useConfigPanelStore.setState({ selectedNodeId: node.id });
@@ -403,10 +409,7 @@ const Editor = () => {
     ); // Accessing the name of the current variant
     useConfigPanelStore.setState({ selectedTaskData: variantData });
 
-    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
-    setTimeout(() => {
-      useConfigPanelStore.setState({ isOpenConfig: true }); // Re-open the panel
-    }, 0);
+    updateConfigPanel();
   };
 
   useEffect(() => {
@@ -482,7 +485,9 @@ const Editor = () => {
                   onNodeDoubleClick={handleInitConfigPanel}
                   fitView
                 >
-                  {isOpenConfig && <SideBar />}
+                  {isOpenConfig && (
+                    <SideBar updateSideBar={updateConfigPanel} />
+                  )}
                   <Controls position="top-left" />
                   <Background />
                   <MiniMap nodeColor={'#4fa3bb'} position="bottom-left" />

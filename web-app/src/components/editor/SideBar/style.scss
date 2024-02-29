@@ -1,19 +1,36 @@
 @import '../../../styles/colors.scss';
 
 .sidebar {
-  display: flex;
+  z-index: 4;
+  overflow-y: auto;
   position: absolute;
   top: 0;
   right: 0;
-  background-color: $board-color;
-  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
   align-items: center;
   width: 6.8rem;
-  z-index: 4;
   height: 100%;
+  background-color: $board-color;
+  box-sizing: border-box;
   border-left: 2px solid $primary-theme-color;
-  overflow-y: auto;
+}
+
+.sidebar__variants {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.1rem;
+  width: 100%;
+  height: 0.2rem;
+
+  .iconfont {
+    margin-left: 0.05rem;
+    margin-top: 0.05rem;
+    color: $secondary-theme-color;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
 }
 
 @mixin select-style($color, $background, $border-color) {
@@ -28,6 +45,10 @@
   right: 6.5rem;
   cursor: pointer;
   color: $secondary-theme-color;
+
+  &:hover {
+    color: $alert-background-color;
+  }
 }
 
 .select-bar {

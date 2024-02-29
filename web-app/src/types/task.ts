@@ -171,7 +171,7 @@ export interface TaskDataType {
 export const defaultTaskData: TaskDataType = {
   id_task: 'default',
   name: 'task',
-  variant: 0,
+  variant: 1,
   is_composite: false,
   graphical_model: {
     nodes: [],
