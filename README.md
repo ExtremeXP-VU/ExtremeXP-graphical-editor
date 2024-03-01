@@ -23,4 +23,4 @@ To access the app: http://localhost:7001/
 
 **Editor:**
 
-![editor](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/editor_v2.jpg)
+![editor](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/editor_v3.jpg)

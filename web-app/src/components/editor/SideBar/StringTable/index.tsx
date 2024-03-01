@@ -19,8 +19,7 @@ const StringTable: React.FC = () => {
           <td className="value">
            
           <span
-                className="iconfont"
-                style={{ cursor: 'pointer' }}
+                className="clickable iconfont"
                 onClick={createString}
               >
                 &#xed1b;
@@ -37,7 +36,7 @@ const StringTable: React.FC = () => {
           </tr>
           <tr className="cell">
             <td className="value">
-              <input type="string" style={{ width: '10em' }} />
+              <input type="string"/>
             </td>
           </tr>
         </table>

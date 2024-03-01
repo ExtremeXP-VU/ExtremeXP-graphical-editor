@@ -34,8 +34,7 @@ const IntegerTable: React.FC = () => {
             />
             {selectedType === 'range' && (
               <span
-                className="iconfont"
-                style={{ cursor: 'pointer' }}
+                className="clickable iconfont"
                 onClick={createRange}
               >
                 &#xed1b;
@@ -43,7 +42,7 @@ const IntegerTable: React.FC = () => {
             )}
             {selectedType === 'number' && (
               <span
-                className="iconfont"
+                className="clickable iconfont"
                 style={{ cursor: 'pointer' }}
                 onClick={createNumber}
               >

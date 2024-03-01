@@ -1,9 +1,9 @@
-import "./style.scss";
-import { useNavigate } from "react-router-dom";
+import './style.scss';
+import { useNavigate } from 'react-router-dom';
 
-import { useAccountStore } from "../../stores/accountStore";
+import { useAccountStore } from '../../stores/accountStore';
 
-import logo from "../../assets/extremeXP_logo.png";
+import logo from '../../assets/extremeXP_logo.png';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,9 +11,9 @@ const Home = () => {
 
   const handleStart = () => {
     if (isLogin) {
-      navigate("/dashboard/projects");
+      navigate('/dashboard/projects');
     } else {
-      navigate("/account/login");
+      navigate('/account/login');
     }
   };
 

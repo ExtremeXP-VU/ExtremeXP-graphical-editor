@@ -1,4 +1,4 @@
-@import "../../styles/colors.scss";
+@import '../../styles/colors.scss';
 
 .editor {
   // prevent scrolling
@@ -51,7 +51,8 @@
     justify-content: start;
     top: 0;
     left: 0;
-    width: 100%;
+    margin-left: 0.5rem;
+    width: calc(50% - 0.5rem);
     height: 0.3rem;
 
     box-sizing: border-box;
@@ -63,7 +64,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 0.8rem;
+      min-width: 0.8rem;
       height: 0.3rem;
 
       margin-right: 0.02rem;
@@ -133,17 +134,17 @@
   }
 }
 
-.editor__bottom__right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 6.8rem;
-  height: 100%;
-  z-index: 2;
-  background-color: $board-color;
-  box-sizing: border-box;
-  border-left: 1px solid darken($color: $panel-color, $amount: 10);
-}
+// .editor__bottom__right {
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   width: 6.8rem;
+//   height: 100%;
+//   z-index: 2;
+//   background-color: $board-color;
+//   box-sizing: border-box;
+//   border-left: 1px solid darken($color: $panel-color, $amount: 10);
+// }
 
 .popover__save {
   width: 3rem;

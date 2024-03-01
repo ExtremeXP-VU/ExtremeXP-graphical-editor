@@ -30,8 +30,14 @@
     }
     .cell{
       padding: 0.05rem 0.05rem;
+      width: 100%;
       flex:1;
       font-size: 12px;
     }
+    
+  }
+  .value{
+    width: 100%;
+    display: flex;
   }
   

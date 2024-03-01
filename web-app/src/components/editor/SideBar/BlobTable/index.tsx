@@ -4,10 +4,9 @@ import './style.scss';
 const BlobTable: React.FC = () => {
   const [numString, setNumString] = useState(0);
 
-
   const createString = () => {
     setNumString(numString + 1);
-  }
+  };
 
   return (
     <>
@@ -17,15 +16,9 @@ const BlobTable: React.FC = () => {
         </tr>
         <tr className="cell">
           <td className="value">
-           
-          <span
-                className="iconfont"
-                style={{ cursor: 'pointer' }}
-                onClick={createString}
-              >
-                &#xed1b;
-              </span>
-
+            <span className="clickable iconfont" onClick={createString}>
+              &#xed1b;
+            </span>
           </td>
         </tr>
       </table>

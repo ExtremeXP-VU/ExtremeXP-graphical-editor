@@ -34,7 +34,7 @@ const RealTable: React.FC = () => {
             />
             {selectedType === 'range' && (
               <span
-                className="iconfont"
+                className="clickable iconfont"
                 style={{ cursor: 'pointer' }}
                 onClick={createRange}
               >

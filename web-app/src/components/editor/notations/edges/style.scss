@@ -1,4 +1,4 @@
-@import "../../../../styles/colors.scss";
+@import '../../../../styles/colors.scss';
 
 .edge__label__text {
   z-index: 3;
@@ -6,8 +6,8 @@
   height: 0.14rem;
   line-height: 0.14rem;
   background: $primary-button-text-color;
-  color: $secondary-theme-color;
-  font-size: 1.2em;
+  color: darken($color: $secondary-theme-color, $amount: 10);
+  font-size: 1.1em;
   font-weight: 500;
   pointer-events: all;
 
@@ -25,7 +25,7 @@
   height: 0.14rem;
   line-height: 0.14rem;
   background: $primary-button-text-color;
-  color: $secondary-theme-color;
+  color: darken($color: $secondary-theme-color, $amount: 10);
   font-size: 1.2em;
   font-weight: 500;
   pointer-events: all;

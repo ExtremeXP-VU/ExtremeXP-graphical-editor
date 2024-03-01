@@ -1,8 +1,9 @@
-import "./style.scss";
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAccountStore } from "../../../stores/accountStore";
-import { clearTabs } from "../../../stores/tabStore";
+import './style.scss';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAccountStore } from '../../../stores/accountStore';
+import { clearTabs } from '../../../stores/tabStore';
+import { useConfigPanelStore } from '../../../stores/configPanelStore';
 
 interface HeaderProps {
   onExecution: () => void;
@@ -14,14 +15,14 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
   const isLogin = useAccountStore((state) => state.isLogin);
 
   const navigate = useNavigate();
-  const specificationType = useLocation().pathname.split("/")[2];
-  const projID = useLocation().pathname.split("/")[3];
+  const specificationType = useLocation().pathname.split('/')[2];
+  const projID = useLocation().pathname.split('/')[3];
 
   const handleGoBack = () => {
     clearTabs();
     if (isLogin) {
-      let url = "";
-      specificationType === "experiment"
+      let url = '';
+      specificationType === 'experiment'
         ? (url = `/dashboard/projects/${projID}/experiments`)
         : (url = `/dashboard/categories/${projID}/tasks`);
       if (projID) {
@@ -30,8 +31,10 @@ const Header: React.FC<HeaderProps> = ({ onExecution, onSave, onSaveAs }) => {
         navigate(`/dashboard/projects`);
       }
     } else {
-      navigate("/account/login");
+      navigate('/account/login');
     }
+
+    useConfigPanelStore.getState().clearConfigStore();
   };
 
   return (

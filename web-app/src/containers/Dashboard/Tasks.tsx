@@ -1,32 +1,32 @@
-import "./common.scss";
-import "./tasks.scss";
-import { useState, useEffect, useCallback, useMemo } from "react";
-import useRequest from "../../hooks/useRequest";
-import { message } from "../../utils/message";
-import { Outlet, useNavigate } from "react-router-dom";
-import Popover from "../../components/general/Popover";
+import './common.scss';
+import './tasks.scss';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import useRequest from '../../hooks/useRequest';
+import { message } from '../../utils/message';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Popover from '../../components/general/Popover';
 import {
   CategoriesResponseType,
   CreateCategoryResponseType,
   UpdateCategoryResponseType,
   DeleteCategoryResponseType,
-} from "../../types/requests";
+} from '../../types/requests';
 
 import {
   useCategoryStore,
   setCategories,
   setCurrentCategory,
-} from "../../stores/categoryStore";
+} from '../../stores/categoryStore';
 
 const Tasks = () => {
   const categories = useCategoryStore((state) => state.categories);
   const currentCategory = useCategoryStore((state) => state.currentCategory);
 
-  const [searchInput, setSearchInput] = useState("");
-  const [createCategoryName, setCreateCategoryName] = useState("");
+  const [searchInput, setSearchInput] = useState('');
+  const [createCategoryName, setCreateCategoryName] = useState('');
 
   const [isEditing, setIsEditing] = useState(false);
-  const [categoryNameInput, setCategoryNameInput] = useState("");
+  const [categoryNameInput, setCategoryNameInput] = useState('');
 
   const [showPopover, setShowPopover] = useState(false);
 
@@ -56,8 +56,8 @@ const Tasks = () => {
         }
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
       });
   }, [categoriesRequest, categories]);
@@ -68,7 +68,7 @@ const Tasks = () => {
 
   // set the first category as the current category when enter the page
   useEffect(() => {
-    if (categories.length > 0 && currentCategory.id_category === "default") {
+    if (categories.length > 0 && currentCategory.id_category === 'default') {
       setCurrentCategory(categories[0]);
     }
   }, [categories, currentCategory.id_category]);
@@ -80,11 +80,11 @@ const Tasks = () => {
   // FIXME: Add category name validation
   const isCategoryNameValid = (name: string) => {
     if (!name) {
-      message("Category name can not be empty");
+      message('Category name can not be empty');
       return false;
     }
     if (name.length > 50) {
-      message("Category name should be less than 50 characters");
+      message('Category name should be less than 50 characters');
       return false;
     }
     return true;
@@ -94,7 +94,7 @@ const Tasks = () => {
     if (!isCategoryNameValid(createCategoryName)) return;
     createCategoryRequest({
       url: `task/categories/create`,
-      method: "POST",
+      method: 'POST',
       data: {
         name: createCategoryName,
       },
@@ -103,12 +103,12 @@ const Tasks = () => {
         getCategories();
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
-    setCreateCategoryName("");
+    setCreateCategoryName('');
   };
 
   const handleSelectCategory = (index: number) => {
@@ -124,7 +124,7 @@ const Tasks = () => {
   const handleChangeNameKeyPress = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       updateCategoryName();
     }
   };
@@ -136,7 +136,7 @@ const Tasks = () => {
 
     updateCategoryRequest({
       url: `task/categories/${currentCategory.id_category}/update`,
-      method: "PUT",
+      method: 'PUT',
       data: {
         name: categoryNameInput,
       },
@@ -145,10 +145,10 @@ const Tasks = () => {
         window.location.reload();
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
   };
 
@@ -167,16 +167,16 @@ const Tasks = () => {
   const handleDeleteCategory = () => {
     deleteCategoryRequest({
       url: `task/categories/${currentCategory.id_category}/delete`,
-      method: "DELETE",
+      method: 'DELETE',
     })
       .then(() => {
         window.location.reload();
       })
       .catch((error) => {
-        if (error.name === "AxiosError") {
-          message("Please login first");
+        if (error.name === 'AxiosError') {
+          message('Please login first');
         }
-        message(error.response.data?.message || "unknown error");
+        message(error.response.data?.message || 'unknown error');
       });
     closeMask();
   };
@@ -217,7 +217,7 @@ const Tasks = () => {
               {filteredCategory.map((category, index) => (
                 <li
                   className={`dashboard__common__panel__folders__list__item ${
-                    currentCategory.name === category.name ? "selected" : ""
+                    currentCategory.name === category.name ? 'selected' : ''
                   }`}
                   key={category.id_category}
                   onClick={() => handleSelectCategory(index)}

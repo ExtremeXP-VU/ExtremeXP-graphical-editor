@@ -1,5 +1,5 @@
-import { memo } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { memo } from 'react';
+import { Handle, NodeProps, Position } from 'reactflow';
 
 const EventEnd = ({
   data,
@@ -49,7 +49,7 @@ const EventEnd = ({
   );
 };
 
-EventEnd.displayName = "EventEnd";
+EventEnd.displayName = 'EventEnd';
 
 export default memo(EventEnd);
 // export default EventEnd;

@@ -1,30 +1,30 @@
-import "./style.scss";
-import { useState, useEffect, useCallback } from "react";
-import useRequest from "../../../hooks/useRequest";
-import { message } from "../../../utils/message";
-import { timestampToDate, timeNow } from "../../../utils/timeToDate";
-import { useNavigate, useLocation } from "react-router-dom";
+import './style.scss';
+import { useState, useEffect, useCallback } from 'react';
+import useRequest from '../../../hooks/useRequest';
+import { message } from '../../../utils/message';
+import { timestampToDate, timeNow } from '../../../utils/timeToDate';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   downloadGraphicalModel,
   uploadGraphicalModel,
-} from "../../../utils/fileIO";
-import Popover from "../../general/Popover";
+} from '../../../utils/fileIO';
+import Popover from '../../general/Popover';
 import {
   GraphicalModelType,
   ExperimentType,
   defaultExperiment,
-} from "../../../types/experiment";
+} from '../../../types/experiment';
 import {
   ExperimentsResponseType,
   CreateExperimentResponseType,
   UpdateExperimentNameResponseType,
   DeleteExperimentResponseType,
-} from "../../../types/requests";
+} from '../../../types/requests';
 
 const Project = () => {
   const [experiments, setExperiments] = useState([defaultExperiment]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newExpName, setNewExpName] = useState("");
+  const [newExpName, setNewExpName] = useState('');
 
   const [showPopover, setShowPopover] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
@@ -32,7 +32,7 @@ const Project = () => {
   const isExperimentEmpty = experiments.length === 0;
 
   // make sure the expID is the same as the one in the url
-  const projID = useLocation().pathname.split("/")[3];
+  const projID = useLocation().pathname.split('/')[3];
 
   const { request: experimentsRequest } = useRequest<ExperimentsResponseType>();
   const { request: createExperimentRequest } =
@@ -69,7 +69,7 @@ const Project = () => {
     (name: string, graphicalModel: GraphicalModelType) => {
       createExperimentRequest({
         url: `/exp/projects/${projID}/experiments/create`,
-        method: "POST",
+        method: 'POST',
         data: {
           exp_name: name,
           graphical_model: graphicalModel,
@@ -104,9 +104,9 @@ const Project = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       if (editingIndex === null) return;
-      if (newExpName === "" || newExpName === experiments[editingIndex].name) {
+      if (newExpName === '' || newExpName === experiments[editingIndex].name) {
         setEditingIndex(null);
         return;
       }
@@ -116,17 +116,17 @@ const Project = () => {
   };
 
   const renameExperiment = () => {
-    if (newExpName === "" || editingIndex === null) return;
+    if (newExpName === '' || editingIndex === null) return;
     if (newExpName === experiments[editingIndex].name) return;
     if (newExpName.length > 35) {
-      message("The length of the name should be less than 35 characters.");
+      message('The length of the name should be less than 35 characters.');
       return;
     }
     updateExpNameRequest({
       url: `/exp/projects/${projID}/experiments/${
         experiments[editingIndex!].id_experiment
       }/update/name`,
-      method: "PUT",
+      method: 'PUT',
       data: {
         exp_name: newExpName,
       },
@@ -168,7 +168,7 @@ const Project = () => {
     if (deleteIndex === null) return;
     deleteExperimentRequest({
       url: `/exp/projects/${projID}/experiments/${experiments[deleteIndex].id_experiment}/delete`,
-      method: "DELETE",
+      method: 'DELETE',
     })
       .then(() => {
         getExperiments();
@@ -283,7 +283,7 @@ const Project = () => {
         <div className="popover__delete">
           <div className="popover__delete__text">
             {`Do you want to delete ${
-              deleteIndex ? experiments[deleteIndex].name : "the specification"
+              deleteIndex ? experiments[deleteIndex].name : 'the specification'
             }?`}
           </div>
           <div className="popover__delete__buttons">

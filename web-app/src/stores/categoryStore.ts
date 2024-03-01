@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { CategoryType, defaultCategory } from "../types/task";
+import { create } from 'zustand';
+import { CategoryType, defaultCategory } from '../types/task';
 
 type CategoryState = {
   categories: CategoryType[];

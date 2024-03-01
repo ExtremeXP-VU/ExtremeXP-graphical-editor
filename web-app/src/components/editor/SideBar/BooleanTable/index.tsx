@@ -23,17 +23,13 @@ const BooleanTable: React.FC = () => {
         </tr>
         <tr className="cell">
           <td className="value flexContainer">
-          <DropDown
-                options={['true', 'false']}
-                defaultValue={selectedType}
-                className="normal__dropdown"
-                onOptionSelected={handleSelectedType}
-              />
-            <span
-              className="iconfont"
-              style={{ cursor: 'pointer' }}
-              onClick={createString}
-            >
+            <DropDown
+              options={['true', 'false']}
+              defaultValue={selectedType}
+              className="normal__dropdown"
+              onOptionSelected={handleSelectedType}
+            />
+            <span className="clickable iconfont" onClick={createString}>
               &#xed1b;
             </span>
           </td>

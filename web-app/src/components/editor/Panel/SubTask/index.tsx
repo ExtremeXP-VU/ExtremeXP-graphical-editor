@@ -1,15 +1,16 @@
-import { useState, useCallback, useEffect } from "react";
-import { CategoryType, defaultTask } from "../../../../types/task";
-import { TasksResponseType } from "../../../../types/requests";
-import useRequest from "../../../../hooks/useRequest";
-import { message } from "../../../../utils/message";
-import { nanoid } from "nanoid";
+import { useState, useCallback, useEffect } from 'react';
+import { CategoryType, defaultTask } from '../../../../types/task';
+import { TasksResponseType } from '../../../../types/requests';
+import useRequest from '../../../../hooks/useRequest';
+import { message } from '../../../../utils/message';
+import { nanoid } from 'nanoid';
 
 interface SubTaskProps {
   category: CategoryType;
+  setWindow: (nodeType: string) => void;
 }
 
-const SubTask = ({ category }: SubTaskProps) => {
+const SubTask = ({ category, setWindow }: SubTaskProps) => {
   const [tasks, setTasks] = useState([defaultTask]);
   const { request: tasksRequest } = useRequest<TasksResponseType>();
 
@@ -38,7 +39,8 @@ const SubTask = ({ category }: SubTaskProps) => {
     event: React.DragEvent<HTMLDivElement>,
     task: typeof defaultTask
   ) => {
-    const id = nanoid() + "-variant-1";
+    setWindow('subflow');
+    const id = nanoid() + '-variant-1';
     const data = {
       currentVariant: id,
       variants: [
@@ -50,12 +52,12 @@ const SubTask = ({ category }: SubTaskProps) => {
         },
       ],
     };
-    const nodeData = { nodeType: "task", data: data };
+    const nodeData = { nodeType: 'task', data: data };
     event.dataTransfer.setData(
-      "application/reactflow",
+      'application/reactflow',
       JSON.stringify(nodeData)
     );
-    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
