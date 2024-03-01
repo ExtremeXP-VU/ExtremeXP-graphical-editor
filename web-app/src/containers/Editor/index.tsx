@@ -399,6 +399,7 @@ const Editor = () => {
 
   const handleInitConfigPanel = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
+
     useConfigPanelStore.setState({ selectedNodeId: node.id });
 
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
@@ -482,7 +483,7 @@ const Editor = () => {
                   onDrop={onDrop}
                   onDragOver={onDragOver}
                   onNodesDelete={onNodesDelete}
-                  onNodeDoubleClick={handleInitConfigPanel}
+                  onNodeClick={handleInitConfigPanel}
                   fitView
                 >
                   {isOpenConfig && (

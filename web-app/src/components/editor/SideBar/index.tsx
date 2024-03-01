@@ -15,6 +15,7 @@ import Popover from '../../general/Popover';
 import { TasksResponseType } from '../../../types/requests';
 import useRequest from '../../../hooks/useRequest';
 import { message } from '../../../utils/message';
+import { removeTab, useTabStore } from '../../../stores/tabStore';
 
 interface SideBarProps {
   updateSideBar: () => void;
@@ -97,7 +98,7 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
   const handleAddCompositeTask = () => {
     const variantNumber = getMaxVariantNumber() + 1;
     const id = nanoid() + '-variant-' + variantNumber;
-    console.log('selectedTask', selectedTask);
+
     const newTask = {
       id_task: id,
       name: selectedTask.name,
@@ -109,6 +110,17 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
     setShowPopover(false);
   };
 
+  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
+  const tabs = useTabStore((state) => state.tabs);
+
+  const removeRedundantTabs = () => {
+    tabs.forEach((tab) => {
+      if (tab.id === selectedVariant) {
+        removeTab(selectedVariant);
+      }
+    });
+  };
+
   const handleSetCurrentVariant = (id: string) => {
     currentNode?.data && (currentNode.data.currentVariant = id);
     useConfigPanelStore.setState({ selectedVariant: id });
@@ -118,6 +130,8 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
         (t: TaskDataType) => t.id_task === currentNode.data.currentVariant
       );
       useConfigPanelStore.setState({ selectedTaskData: variantData });
+
+      removeRedundantTabs();
     }
 
     updateSideBar();
@@ -196,10 +210,12 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
             />
           ),
           implementation: '<URI>',
-          group: (
+          category: (
             <DropDown
-              options={['group 1', 'group 2', 'group 3']}
-              defaultValue="group 1"
+              options={categories
+                .map((category) => category.name)
+                .concat(['Generic'])}
+              defaultValue="generic"
               className="normal__dropdown"
             />
           ),

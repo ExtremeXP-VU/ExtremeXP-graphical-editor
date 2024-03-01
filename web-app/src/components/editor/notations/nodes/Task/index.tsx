@@ -54,13 +54,16 @@ const Task = ({
     setTaskName(currentTask.name);
   }, [selectedTaskData, currentTask]);
 
-  useEffect(() => {
-    const description = data.variants.find(
-      (t: TaskDataType) => t.id_task === data.currentVariant
-    ).description;
-  }, [selectedTaskData, data.currentVariant, data.variants]);
+  // useEffect(() => {
+  //   const description = data.variants.find(
+  //     (t: TaskDataType) => t.id_task === data.currentVariant
+  //   ).description;
+  // }, [selectedTaskData, data.currentVariant, data.variants]);
 
-  const handleAddTab = () => {
+  const handleAddTab = (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    if (!currentTask.is_composite) return;
     const tab: TabType = {
       name: currentTask.name,
       id: currentTask.id_task,
@@ -73,7 +76,8 @@ const Task = ({
       <div
         className={`node-task ${
           selectedNodeId === id ? 'node-task-selected' : ''
-        }`}
+        } ${currentTask.is_composite ? 'node-task-composite' : ''}`}
+        onContextMenu={handleAddTab}
       >
         <div
           className={`node-task__name ${
@@ -91,13 +95,13 @@ const Task = ({
             ))}
           </div>
         )}
-        {currentTask.is_composite && (
+        {/* {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>
               <span className="iconfont">&#xe601;</span>
             </div>
           </div>
-        )}
+        )} */}
         <Handle
           type="source"
           position={sourcePosition}

@@ -183,7 +183,13 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           </div>
           <div className="panel__subtasks__content__predefined">
             {categories.map((category, index) => {
-              return <SubTask key={index} category={category} />;
+              return (
+                <SubTask
+                  key={index}
+                  category={category}
+                  setWindow={setWindowNode}
+                />
+              );
             })}
           </div>
         </div>

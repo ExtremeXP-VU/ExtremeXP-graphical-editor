@@ -7,9 +7,10 @@ import { nanoid } from 'nanoid';
 
 interface SubTaskProps {
   category: CategoryType;
+  setWindow: (nodeType: string) => void;
 }
 
-const SubTask = ({ category }: SubTaskProps) => {
+const SubTask = ({ category, setWindow }: SubTaskProps) => {
   const [tasks, setTasks] = useState([defaultTask]);
   const { request: tasksRequest } = useRequest<TasksResponseType>();
 
@@ -38,6 +39,7 @@ const SubTask = ({ category }: SubTaskProps) => {
     event: React.DragEvent<HTMLDivElement>,
     task: typeof defaultTask
   ) => {
+    setWindow('subflow');
     const id = nanoid() + '-variant-1';
     const data = {
       currentVariant: id,
