@@ -388,6 +388,7 @@ const Editor = () => {
 
   // Config Panel
 
+  // const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
   const updateConfigPanel = () => {
@@ -397,11 +398,7 @@ const Editor = () => {
     }, 0);
   };
 
-  const handleInitConfigPanel = (event: React.MouseEvent, node: Node) => {
-    event.preventDefault();
-
-    useConfigPanelStore.setState({ selectedNodeId: node.id });
-
+  const initTaskNodeConfig = (node: Node) => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
     useConfigPanelStore.setState({ selectedVariant: currentVariant });
 
@@ -409,8 +406,36 @@ const Editor = () => {
       (t: TaskDataType) => t.id_task === node.data.currentVariant
     ); // Accessing the name of the current variant
     useConfigPanelStore.setState({ selectedTaskData: variantData });
+  };
 
-    updateConfigPanel();
+  const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
+    event.preventDefault();
+    // FIXME
+    // once the data and operators are available:
+    // if (node.type === 'start' || node.type === 'end') {
+    //   return;
+    // }
+
+    // set selectedNodeId and check isOpenConfig can be moved out of the function
+    if (node.type === 'task') {
+      useConfigPanelStore.setState({ selectedNodeId: node.id });
+      initTaskNodeConfig(node);
+
+      if (isOpenConfig) {
+        updateConfigPanel();
+      }
+    }
+  };
+
+  const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
+    handleSwitchSelectedNode(event, node);
+
+    // FIXME:
+    // once the data and operators are available:
+    // if (node.type !== 'start' && node.type !== 'end')
+    if (node.type === 'task') {
+      updateConfigPanel();
+    }
   };
 
   useEffect(() => {
@@ -483,7 +508,8 @@ const Editor = () => {
                   onDrop={onDrop}
                   onDragOver={onDragOver}
                   onNodesDelete={onNodesDelete}
-                  onNodeClick={handleInitConfigPanel}
+                  onNodeDoubleClick={handleOpenConfigPanel}
+                  onNodeClick={handleSwitchSelectedNode}
                   fitView
                 >
                   {isOpenConfig && (

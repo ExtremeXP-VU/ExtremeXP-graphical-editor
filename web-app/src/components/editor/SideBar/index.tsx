@@ -113,10 +113,10 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
   const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
   const tabs = useTabStore((state) => state.tabs);
 
-  const removeRedundantTabs = () => {
+  const removeRedundantTabs = (id: string) => {
     tabs.forEach((tab) => {
-      if (tab.id === selectedVariant) {
-        removeTab(selectedVariant);
+      if (tab.id === id) {
+        removeTab(id);
       }
     });
   };
@@ -131,7 +131,7 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
       );
       useConfigPanelStore.setState({ selectedTaskData: variantData });
 
-      removeRedundantTabs();
+      removeRedundantTabs(selectedVariant);
     }
 
     updateSideBar();

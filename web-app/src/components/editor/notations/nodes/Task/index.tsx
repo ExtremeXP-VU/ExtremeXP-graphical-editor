@@ -26,7 +26,7 @@ const Task = ({
   );
 
   const [taskName, setTaskName] = useState<string>(currentTask.name);
-  const [properties, setProperties] = useState<string[]>([]);
+  // const [properties, setProperties] = useState<string[]>([]);
 
   useEffect(() => {
     if (id === selectedNodeId) {
@@ -77,16 +77,11 @@ const Task = ({
         className={`node-task ${
           selectedNodeId === id ? 'node-task-selected' : ''
         } ${currentTask.is_composite ? 'node-task-composite' : ''}`}
-        onContextMenu={handleAddTab}
       >
-        <div
-          className={`node-task__name ${
-            properties.length === 0 ? 'higher-task-name' : ''
-          }`}
-        >
+        <div className={`node-task__name ${'higher-task-name'}`}>
           {taskName}
         </div>
-        {properties.length > 0 && (
+        {/* {properties.length > 0 && (
           <div className="node-task__properties">
             {properties.map((property, index) => (
               <div key={index} className="node-task__property">
@@ -94,14 +89,14 @@ const Task = ({
               </div>
             ))}
           </div>
-        )}
-        {/* {currentTask.is_composite && (
+        )} */}
+        {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>
               <span className="iconfont">&#xe601;</span>
             </div>
           </div>
-        )} */}
+        )}
         <Handle
           type="source"
           position={sourcePosition}
