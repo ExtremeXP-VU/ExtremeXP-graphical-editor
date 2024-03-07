@@ -392,7 +392,7 @@ const Editor = () => {
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
   const updateConfigPanel = () => {
-    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
+    useConfigPanelStore.setState({ isOpenConfig: false });
     setTimeout(() => {
       useConfigPanelStore.setState({ isOpenConfig: true }); // Re-open the panel
     }, 0);
@@ -408,6 +408,9 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedTaskData: variantData });
   };
 
+  const initExclusiveNodeConfig = (node: Node) => {}; //TODO Exclusive Node Config
+
+
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
     // FIXME
@@ -420,10 +423,15 @@ const Editor = () => {
     if (node.type === 'task') {
       useConfigPanelStore.setState({ selectedNodeId: node.id });
       initTaskNodeConfig(node);
+    }
 
-      if (isOpenConfig) {
-        updateConfigPanel();
-      }
+    if (node.type === 'OpExclusive') {
+      useConfigPanelStore.setState({ selectedNodeId: node.id });
+    }
+
+
+    if (isOpenConfig) {
+      updateConfigPanel();
     }
   };
 
@@ -432,21 +440,13 @@ const Editor = () => {
 
     // FIXME:
     // once the data and operators are available:
-    // if (node.type !== 'start' && node.type !== 'end')
-    if (node.type === 'task') {
+    if (node.type !== 'start' && node.type !== 'end')
+   {
       updateConfigPanel();
     }
+
   };
 
-  useEffect(() => {
-    const handleUrlChange = () => {
-      useConfigPanelStore.setState({ isOpenConfig: false });
-    };
-    window.addEventListener('popstate', handleUrlChange);
-    return () => {
-      window.removeEventListener('popstate', handleUrlChange);
-    };
-  }, []);
 
   return (
     <div className="editor">
