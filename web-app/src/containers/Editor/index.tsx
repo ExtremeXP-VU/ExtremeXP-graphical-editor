@@ -49,7 +49,7 @@ import Markers from '../../components/editor/notations/edges/Markers';
 import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
-import SideBar from '../../components/editor/SideBar';
+import TaskConfigPanel from '../../components/editor/ConfigPanel/TaskConfigPanel';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -408,7 +408,6 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedTaskData: variantData });
   };
 
-  const initExclusiveNodeConfig = (node: Node) => {}; //TODO Exclusive Node Config
 
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
@@ -513,7 +512,7 @@ const Editor = () => {
                   fitView
                 >
                   {isOpenConfig && (
-                    <SideBar updateSideBar={updateConfigPanel} />
+                    <TaskConfigPanel updateSideBar={updateConfigPanel} />
                   )}
                   <Controls position="top-left" />
                   <Background />

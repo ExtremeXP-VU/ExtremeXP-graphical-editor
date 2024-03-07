@@ -1,0 +1,15 @@
+@import "../../../../../styles/colors.scss";
+
+.flexContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 0.1rem;
+    align-items: center;
+}
+.sub-row {
+    padding-left: 0.3rem;
+}
+.clickable {
+    cursor: pointer;
+    color: $secondary-theme-color;
+}

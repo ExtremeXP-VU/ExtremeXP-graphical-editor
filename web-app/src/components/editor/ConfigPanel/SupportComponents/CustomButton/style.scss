@@ -1,0 +1,15 @@
+@import '../../../../../styles/colors.scss';
+
+.button-container {
+    width: 1.2rem;
+    height: 0.3rem; 
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+    background-color: $secondary-theme-color;
+  }
+  .add-parameter-button {
+    background-color: transparent;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
