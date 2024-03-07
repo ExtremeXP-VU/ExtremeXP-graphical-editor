@@ -19,9 +19,10 @@ import { removeTab, useTabStore } from '../../../stores/tabStore';
 
 interface SideBarProps {
   updateSideBar: () => void;
+  isVariantable?: boolean;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
+const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }) => {
   const [numParameters, setNumParameters] = useState(0);
   const selectedTaskData = useConfigPanelStore(
     (state) => state.selectedTaskData
@@ -163,20 +164,23 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar }) => {
         &#xe600;
       </span>
       <div className="sidebar__variants">
-        <DropDown
-          options={
-            currentNode?.data?.variants.map((variant: TaskDataType) => {
-              // return `variant-${variant.variant}`;
-              return variant.id_task;
-            }) || []
-          }
-          onOptionSelected={handleSetCurrentVariant}
-          defaultValue={currentNode?.data?.currentVariant || 'variant'}
-          className="variant__dropdown"
-        />
+        {isVariantable && (
+          <DropDown
+            options={
+              currentNode?.data?.variants.map((variant: TaskDataType) => {
+                // return `variant-${variant.variant}`;
+                return variant.id_task;
+              }) || []
+            }
+            onOptionSelected={handleSetCurrentVariant}
+            defaultValue={currentNode?.data?.currentVariant || 'variant'}
+            className="variant__dropdown"
+          />
+        )}
+        {isVariantable && (
         <span className="iconfont " onClick={handleOpenPopover}>
           &#xe601;
-        </span>
+        </span> )}
       </div>
       <StaticTable
         properties={{
