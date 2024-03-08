@@ -408,26 +408,21 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedTaskData: variantData });
   };
 
-
-
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
-    // FIXME
-    // once the data and operators are available:
-    // if (node.type === 'start' || node.type === 'end') {
-    //   return;
-    // }
 
-    // set selectedNodeId and check isOpenConfig can be moved out of the function
-    if (node.type === 'task') {
-      useConfigPanelStore.setState({ selectedNodeId: node.id });
-      initTaskNodeConfig(node);
+    switch (node.type) {
+      case 'task':
+        useConfigPanelStore.setState({ selectedNodeId: node.id });
+        initTaskNodeConfig(node);
+        break;
+      case 'opExclusive':
+        // useConfigPanelStore.setState({ selectedNodeId: node.id });
+        console.log('exclusive operator clicked');
+        break;
+      default:
+        return;
     }
-
-    if (node.type === 'OpExclusive') {
-      useConfigPanelStore.setState({ selectedNodeId: node.id });
-    }
-
 
     if (isOpenConfig) {
       updateConfigPanel();
@@ -437,15 +432,10 @@ const Editor = () => {
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
     handleSwitchSelectedNode(event, node);
 
-    // FIXME:
-    // once the data and operators are available:
-    if (node.type !== 'start' && node.type !== 'end')
-   {
+    if (node.type !== 'start' && node.type !== 'end') {
       updateConfigPanel();
     }
-
   };
-
 
   return (
     <div className="editor">

@@ -212,10 +212,10 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
           implementation: '<URI>',
           category: (
             <DropDown
-              options={categories
-                .map((category) => category.name)
-                .concat(['Generic'])}
-              defaultValue="generic"
+              options={['Generic'].concat(
+                categories.map((category) => category.name)
+              )}
+              defaultValue={'Generic'}
               className="normal__dropdown"
             />
           ),

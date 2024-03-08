@@ -165,7 +165,7 @@ export interface TaskDataType {
   name: string;
   variant: number;
   is_composite: boolean;
-  graphical_model: GraphicalModelType;
+  graphical_model: GraphicalModelType | null;
 }
 
 export const defaultTaskData: TaskDataType = {
@@ -184,6 +184,6 @@ export interface TaskNodeType {
   type: 'task';
   data: {
     currentVariant: string; // <id_task>
-    variants: TaskType[];
+    variants: TaskDataType[];
   };
 }
