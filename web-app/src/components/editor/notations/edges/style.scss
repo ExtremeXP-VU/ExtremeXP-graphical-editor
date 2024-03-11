@@ -37,7 +37,8 @@
 }
 
 .edge__label__marker {
-  z-index: 3;
+  z-index: 4;
+  position: absolute;
   width: 0.16rem;
   height: 0.16rem;
   border-radius: 0.08rem;

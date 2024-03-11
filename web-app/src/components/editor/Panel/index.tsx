@@ -6,10 +6,8 @@ import { nanoid } from 'nanoid';
 
 import { nodeImageSrc } from '../../../assets/nodes';
 import { linkImageSrc } from '../../../assets/links';
-import {
-  LinksPropsType,
-  notationList,
-} from '../notations/notationConfigs/linkProps';
+import { LinksPropsType } from '../notations/notationConfigs/linkProps';
+import { notationList } from '../notations/notationConfigs/notationList';
 
 import { genericTask, defaultTaskData } from '../../../types/task';
 

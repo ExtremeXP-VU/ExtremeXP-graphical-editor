@@ -1,17 +1,3 @@
-export const notationList = {
-  nodes: [
-    'start',
-    'end',
-    'task',
-    'data',
-    'opParallel',
-    'opExclusive',
-    'opInclusive',
-    'opComplex',
-  ],
-  edges: ['regular', 'conditional', 'exceptional', 'dataflow'],
-};
-
 export const linkProps = {
   regular: {
     type: 'regular',

@@ -16,6 +16,15 @@ function RegularLink(props: EdgeProps) {
     id,
   } = props;
 
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+
   const [selected, setSelected] = useState(false);
   const [linkIndex, setLinkIndex] = useState(-1);
 
@@ -30,15 +39,6 @@ function RegularLink(props: EdgeProps) {
       }
     });
   }, [outgoingLinks]);
-
-  const [edgePath, labelX, labelY] = getSmoothStepPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  });
 
   const handleLabelChange = (newLabel: string) => {
     data.label = newLabel;
@@ -57,7 +57,7 @@ function RegularLink(props: EdgeProps) {
         <EdgeLabelRenderer>
           <div
             style={{
-              transform: `translate(-50%, 0%) translate(${sourceX}px,${sourceY}px)`,
+              transform: `translate(-50%, -20%) translate(${sourceX}px,${sourceY}px)`,
             }}
             className="nodrag nopan edge__label__marker"
           >
@@ -66,7 +66,7 @@ function RegularLink(props: EdgeProps) {
 
           <div
             style={{
-              transform: `translate(-50%, -200%) translate(${targetX}px,${targetY}px)`,
+              transform: `translate(-50%, -150%) translate(${targetX}px,${targetY}px)`,
             }}
             className="nodrag nopan edge__label__marker"
           >
