@@ -1,59 +1,68 @@
 import './style.scss';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { nanoid } from 'nanoid';
-import DropDown from './DropDown';
-import RadioButton from './RadioButton';
-// import RangeSelector from "./RangeSelector";
-import StaticTable from './StaticTable';
-import CustomButton from './CustomButton';
-import DynamicTable from './DynamicTable';
-import { useConfigPanelStore } from '../../../stores/configPanelStore';
-import { useReactFlowInstanceStore } from '../../../stores/reactFlowInstanceStore';
-import { useCategoryStore } from '../../../stores/categoryStore';
+import { useImmerReducer } from 'use-immer';
+import taskConfigReducer, { Action } from './reducer';
+
+import { useConfigPanelStore } from '../../../../stores/configPanelStore';
+import { useReactFlowInstanceStore } from '../../../../stores/reactFlowInstanceStore';
+import { useCategoryStore } from '../../../../stores/categoryStore';
 import {
   TaskDataType,
   TaskType,
   genericTask,
   defaultTaskData,
-} from '../../../types/task';
-import Popover from '../../general/Popover';
-import { TasksResponseType } from '../../../types/requests';
-import useRequest from '../../../hooks/useRequest';
-import { message } from '../../../utils/message';
-import { removeTab, useTabStore } from '../../../stores/tabStore';
+} from '../../../../types/task';
 
-interface SideBarProps {
+import Popover from '../../../general/Popover';
+import { TasksResponseType } from '../../../../types/requests';
+import useRequest from '../../../../hooks/useRequest';
+import { message } from '../../../../utils/message';
+import { removeTab, useTabStore } from '../../../../stores/tabStore';
+
+import DropDown from '../SupportComponents/DropDown';
+import RadioButton from '../SupportComponents/RadioButton';
+import StaticTable from '../SupportComponents/StaticTable';
+import CustomButton from '../SupportComponents/CustomButton';
+import DynamicTable from '../SupportComponents/DynamicTable';
+
+interface TaskConfigPanelProps {
   updateSideBar: () => void;
-  isVariantable?: boolean;
 }
 
-const SideBar: React.FC<SideBarProps> = ({
-  updateSideBar,
-  isVariantable = true,
-}) => {
-  const [numParameters, setNumParameters] = useState(0);
+const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
+  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const selectedTaskData = useConfigPanelStore(
     (state) => state.selectedTaskData
   );
-  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
 
-  const nodes = useReactFlowInstanceStore((state) => state.nodes);
-  const currentNode = nodes.find((node) => node.id === selectedNodeId);
+  const [taskState, dispatch] = useImmerReducer(
+    taskConfigReducer,
+    selectedTaskData
+  );
 
-  const addParameter = () => {
-    setNumParameters(numParameters + 1);
-  };
+  useEffect(() => {
+    useConfigPanelStore.setState({ selectedTaskData: taskState });
+  }, [taskState]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newTaskData = {
-      ...selectedTaskData,
-      name: event.target.value,
-    };
-    useConfigPanelStore.setState({ selectedTaskData: newTaskData });
+    const action: Action = { type: 'UPDATE_NAME', payload: event.target.value };
+    dispatch(action);
   };
 
-  const handleClosePanel = () => {
-    useConfigPanelStore.getState().clearConfigStore();
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const action: Action = {
+      type: 'UPDATE_DESCRIPTION',
+      payload: event.target.value,
+    };
+    dispatch(action);
+  };
+
+  const [numParameters, setNumParameters] = useState(0);
+  const addParameter = () => {
+    setNumParameters(numParameters + 1);
   };
 
   // handle add variant
@@ -62,6 +71,9 @@ const SideBar: React.FC<SideBarProps> = ({
   const categories = useCategoryStore((state) => state.categories);
   const [taskList, setTaskList] = useState<TaskType[]>([genericTask]);
   const [selectedTask, setSelectedTask] = useState<TaskType>(taskList[0]);
+
+  const nodes = useReactFlowInstanceStore((state) => state.nodes);
+  const currentNode = nodes.find((node) => node.id === selectedNodeId);
 
   const closeMask = () => {
     setShowPopover(false);
@@ -93,7 +105,7 @@ const SideBar: React.FC<SideBarProps> = ({
 
   const handleAddNormalTask = () => {
     const variantNumber = getMaxVariantNumber() + 1;
-    const id = nanoid() + '-variant-' + variantNumber;
+    const id = 'variant-' + variantNumber + '-' + nanoid();
     const newTask = {
       ...defaultTaskData,
       id_task: id,
@@ -106,7 +118,7 @@ const SideBar: React.FC<SideBarProps> = ({
 
   const handleAddCompositeTask = () => {
     const variantNumber = getMaxVariantNumber() + 1;
-    const id = nanoid() + '-variant-' + variantNumber;
+    const id = 'variant-' + variantNumber + '-' + nanoid();
 
     const newTask = {
       ...defaultTaskData,
@@ -169,30 +181,31 @@ const SideBar: React.FC<SideBarProps> = ({
     [tasksRequest]
   );
 
+  const handleClosePanel = () => {
+    useConfigPanelStore.getState().clearConfigStore();
+  };
+
   return (
     <div className="sidebar">
       <span className="iconfont close-button" onClick={handleClosePanel}>
         &#xe600;
       </span>
       <div className="sidebar__variants">
-        {isVariantable && (
-          <DropDown
-            options={
-              currentNode?.data?.variants.map((variant: TaskDataType) => {
-                // return `variant-${variant.variant}`;
-                return variant.id_task;
-              }) || []
-            }
-            onOptionSelected={handleSetCurrentVariant}
-            defaultValue={currentNode?.data?.currentVariant || 'variant'}
-            className="variant__dropdown"
-          />
-        )}
-        {isVariantable && (
-          <span className="iconfont " onClick={handleOpenPopover}>
-            &#xe601;
-          </span>
-        )}
+        <DropDown
+          options={
+            currentNode?.data?.variants.map((variant: TaskDataType) => {
+              // return `variant-${variant.variant}`;
+              return variant.id_task;
+            }) || []
+          }
+          onOptionSelected={handleSetCurrentVariant}
+          defaultValue={currentNode?.data?.currentVariant || 'variant'}
+          className="variant__dropdown"
+        />
+
+        <span className="iconfont " onClick={handleOpenPopover}>
+          &#xe601;
+        </span>
       </div>
       <StaticTable
         properties={{
@@ -200,7 +213,7 @@ const SideBar: React.FC<SideBarProps> = ({
             <input
               type="text"
               className="transparent-input"
-              defaultValue={selectedTaskData.name}
+              defaultValue={taskState.name}
               onChange={handleNameChange}
             />
           ),
@@ -212,7 +225,8 @@ const SideBar: React.FC<SideBarProps> = ({
                 width: '2.9rem',
                 height: '0.5rem',
               }}
-              defaultValue={`Lorem ipsum dolor sit amet consectetur.`}
+              defaultValue={taskState.description}
+              onChange={handleDescriptionChange}
             />
           ),
           abstract: (
@@ -228,10 +242,10 @@ const SideBar: React.FC<SideBarProps> = ({
           implementation: '<URI>',
           category: (
             <DropDown
-              options={categories
-                .map((category) => category.name)
-                .concat(['Generic'])}
-              defaultValue="generic"
+              options={['Generic'].concat(
+                categories.map((category) => category.name)
+              )}
+              defaultValue={'Generic'}
               className="normal__dropdown"
             />
           ),
@@ -267,4 +281,4 @@ const SideBar: React.FC<SideBarProps> = ({
   );
 };
 
-export default SideBar;
+export default TaskConfigPanel;

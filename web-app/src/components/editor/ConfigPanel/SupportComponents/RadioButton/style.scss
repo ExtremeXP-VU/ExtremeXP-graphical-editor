@@ -1,0 +1,20 @@
+@import '../../../../../styles/colors.scss';
+
+.radio-button-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    accent-color: black;
+  
+    .radio-button-label {
+      margin-right: 0.1rem; // Adjust spacing between radio buttons as needed
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+    }
+  
+    .radio-button-input {
+      margin-right: 0.05rem; // Space between the radio button and its label
+    }
+  }
+  

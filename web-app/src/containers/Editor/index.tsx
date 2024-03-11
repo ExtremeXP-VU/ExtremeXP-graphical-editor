@@ -17,7 +17,10 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
-import { useConfigPanelStore } from '../../stores/configPanelStore';
+import {
+  useConfigPanelStore,
+  OutgoingLinkType,
+} from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -49,7 +52,7 @@ import Markers from '../../components/editor/notations/edges/Markers';
 import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
-import SideBar from '../../components/editor/SideBar';
+import TaskConfigPanel from '../../components/editor/ConfigPanel/TaskConfigPanel';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -388,40 +391,71 @@ const Editor = () => {
 
   // Config Panel
 
+  // const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
   const updateConfigPanel = () => {
-    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
+    useConfigPanelStore.setState({ isOpenConfig: false });
     setTimeout(() => {
       useConfigPanelStore.setState({ isOpenConfig: true }); // Re-open the panel
     }, 0);
   };
 
-  const handleInitConfigPanel = (event: React.MouseEvent, node: Node) => {
-    event.preventDefault();
+  const setOutgoingLinks = (node: Node) => {
+    const links = edges.filter((edge) => edge.source === node.id);
+    const outgoingLinks = [];
+    for (let i = 0; i < links.length; i++) {
+      const link: OutgoingLinkType = {
+        index: i + 1,
+        linkId: links[i].id,
+        target: links[i].target,
+      };
+      outgoingLinks.push(link);
+    }
+    useConfigPanelStore.setState({ outgoingLinks: outgoingLinks });
+    console.log(outgoingLinks);
+  };
 
-    useConfigPanelStore.setState({ selectedNodeId: node.id });
-
+  const initTaskNodeConfig = (node: Node) => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
-    useConfigPanelStore.setState({ selectedVariant: currentVariant });
+    useConfigPanelStore.setState({ selectedTaskVariant: currentVariant });
 
     const variantData: TaskDataType = node.data.variants.find(
       (t: TaskDataType) => t.id_task === node.data.currentVariant
     ); // Accessing the name of the current variant
     useConfigPanelStore.setState({ selectedTaskData: variantData });
-
-    updateConfigPanel();
   };
 
-  useEffect(() => {
-    const handleUrlChange = () => {
-      useConfigPanelStore.setState({ isOpenConfig: false });
-    };
-    window.addEventListener('popstate', handleUrlChange);
-    return () => {
-      window.removeEventListener('popstate', handleUrlChange);
-    };
-  }, []);
+  const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
+    event.preventDefault();
+
+    setOutgoingLinks(node);
+
+    switch (node.type) {
+      case 'task':
+        useConfigPanelStore.setState({ selectedNodeId: node.id });
+        initTaskNodeConfig(node);
+        break;
+      case 'opExclusive':
+        // useConfigPanelStore.setState({ selectedNodeId: node.id });
+        console.log('exclusive operator clicked');
+        break;
+      default:
+        return;
+    }
+
+    if (isOpenConfig) {
+      updateConfigPanel();
+    }
+  };
+
+  const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
+    handleSwitchSelectedNode(event, node);
+
+    if (node.type !== 'start' && node.type !== 'end') {
+      updateConfigPanel();
+    }
+  };
 
   return (
     <div className="editor">
@@ -483,11 +517,12 @@ const Editor = () => {
                   onDrop={onDrop}
                   onDragOver={onDragOver}
                   onNodesDelete={onNodesDelete}
-                  onNodeClick={handleInitConfigPanel}
+                  onNodeDoubleClick={handleOpenConfigPanel}
+                  onNodeClick={handleSwitchSelectedNode}
                   fitView
                 >
                   {isOpenConfig && (
-                    <SideBar updateSideBar={updateConfigPanel} />
+                    <TaskConfigPanel updateSideBar={updateConfigPanel} />
                   )}
                   <Controls position="top-left" />
                   <Background />

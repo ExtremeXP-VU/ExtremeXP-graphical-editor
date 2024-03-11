@@ -19,21 +19,22 @@ const Task = ({
     (state) => state.selectedTaskData
   );
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
+  const selectedVariant = useConfigPanelStore(
+    (state) => state.selectedTaskVariant
+  );
 
   const [currentTask, setCurrentTask] = useState<TaskDataType>(
     data.variants[0]
   );
 
   const [taskName, setTaskName] = useState<string>(currentTask.name);
-  const [properties, setProperties] = useState<string[]>([]);
 
   useEffect(() => {
     if (id === selectedNodeId) {
-      const variant = data.variants.find(
+      const variantIndex = data.variants.findIndex(
         (variant: TaskDataType) => variant.id_task === selectedVariant
       );
-      variant.name = selectedTaskData.name;
+      data.variants[variantIndex] = { ...selectedTaskData };
     }
   }, [selectedNodeId, selectedTaskData]);
 
@@ -54,12 +55,6 @@ const Task = ({
     setTaskName(currentTask.name);
   }, [selectedTaskData, currentTask]);
 
-  // useEffect(() => {
-  //   const description = data.variants.find(
-  //     (t: TaskDataType) => t.id_task === data.currentVariant
-  //   ).description;
-  // }, [selectedTaskData, data.currentVariant, data.variants]);
-
   const handleAddTab = (event: React.MouseEvent) => {
     event.preventDefault();
 
@@ -77,16 +72,11 @@ const Task = ({
         className={`node-task ${
           selectedNodeId === id ? 'node-task-selected' : ''
         } ${currentTask.is_composite ? 'node-task-composite' : ''}`}
-        onContextMenu={handleAddTab}
       >
-        <div
-          className={`node-task__name ${
-            properties.length === 0 ? 'higher-task-name' : ''
-          }`}
-        >
+        <div className={`node-task__name ${'higher-task-name'}`}>
           {taskName}
         </div>
-        {properties.length > 0 && (
+        {/* {properties.length > 0 && (
           <div className="node-task__properties">
             {properties.map((property, index) => (
               <div key={index} className="node-task__property">
@@ -94,14 +84,14 @@ const Task = ({
               </div>
             ))}
           </div>
-        )}
-        {/* {currentTask.is_composite && (
+        )} */}
+        {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>
               <span className="iconfont">&#xe601;</span>
             </div>
           </div>
-        )} */}
+        )}
         <Handle
           type="source"
           position={sourcePosition}
