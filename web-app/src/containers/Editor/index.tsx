@@ -17,7 +17,10 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
-import { useConfigPanelStore, LinkType } from '../../stores/configPanelStore';
+import {
+  useConfigPanelStore,
+  OutgoingLinkType,
+} from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -402,7 +405,7 @@ const Editor = () => {
     const links = edges.filter((edge) => edge.source === node.id);
     const outgoingLinks = [];
     for (let i = 0; i < links.length; i++) {
-      const link: LinkType = {
+      const link: OutgoingLinkType = {
         index: i + 1,
         linkId: links[i].id,
         target: links[i].target,
