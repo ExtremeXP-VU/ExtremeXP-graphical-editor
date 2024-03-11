@@ -164,9 +164,10 @@ export const genericTask: TaskType = {
 export interface TaskDataType {
   id_task: string;
   name: string;
-  description: string;
   variant: number;
   is_composite: boolean;
+  description: string;
+  isAbstract: boolean;
   graphical_model: GraphicalModelType | null;
 }
 
@@ -175,6 +176,7 @@ export const defaultTaskData: TaskDataType = {
   name: 'task',
   description: 'no description',
   variant: 1,
+  isAbstract: true,
   is_composite: false,
   graphical_model: {
     nodes: [],

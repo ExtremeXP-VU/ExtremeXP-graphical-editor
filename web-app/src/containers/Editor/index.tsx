@@ -17,7 +17,7 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
-import { useConfigPanelStore } from '../../stores/configPanelStore';
+import { useConfigPanelStore, LinkType } from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -398,6 +398,21 @@ const Editor = () => {
     }, 0);
   };
 
+  const setOutgoingLinks = (node: Node) => {
+    const links = edges.filter((edge) => edge.source === node.id);
+    const outgoingLinks = [];
+    for (let i = 0; i < links.length; i++) {
+      const link: LinkType = {
+        index: i + 1,
+        linkId: links[i].id,
+        target: links[i].target,
+      };
+      outgoingLinks.push(link);
+    }
+    useConfigPanelStore.setState({ outgoingLinks: outgoingLinks });
+    console.log(outgoingLinks);
+  };
+
   const initTaskNodeConfig = (node: Node) => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
     useConfigPanelStore.setState({ selectedTaskVariant: currentVariant });
@@ -410,6 +425,8 @@ const Editor = () => {
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
+
+    setOutgoingLinks(node);
 
     switch (node.type) {
       case 'task':

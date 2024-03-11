@@ -1,6 +1,8 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { BaseEdge, EdgeProps, getSmoothStepPath } from 'reactflow';
 import EdgeLabel from './EdgeLabel';
+import { EdgeLabelRenderer } from 'reactflow';
+import { useConfigPanelStore } from '../../../../stores/configPanelStore';
 
 function RegularLink(props: EdgeProps) {
   const {
@@ -11,7 +13,23 @@ function RegularLink(props: EdgeProps) {
     targetY,
     targetPosition,
     data,
+    id,
   } = props;
+
+  const [selected, setSelected] = useState(false);
+  const [linkIndex, setLinkIndex] = useState(-1);
+
+  const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
+
+  useEffect(() => {
+    setSelected(false);
+    outgoingLinks.forEach((link) => {
+      if (link.linkId === id) {
+        setSelected(true);
+        setLinkIndex(link.index);
+      }
+    });
+  }, [outgoingLinks]);
 
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
@@ -35,6 +53,27 @@ function RegularLink(props: EdgeProps) {
         label={data.label}
         onLabelChange={handleLabelChange}
       />
+      {selected && (
+        <EdgeLabelRenderer>
+          <div
+            style={{
+              transform: `translate(-50%, 0%) translate(${sourceX}px,${sourceY}px)`,
+            }}
+            className="nodrag nopan edge__label__marker"
+          >
+            {linkIndex}
+          </div>
+
+          <div
+            style={{
+              transform: `translate(-50%, -200%) translate(${targetX}px,${targetY}px)`,
+            }}
+            className="nodrag nopan edge__label__marker"
+          >
+            {linkIndex}
+          </div>
+        </EdgeLabelRenderer>
+      )}
     </>
   );
 }

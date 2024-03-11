@@ -1,11 +1,18 @@
 import { create } from 'zustand';
 import { TaskDataType, defaultTaskData } from '../types/task';
 
+export type LinkType = {
+  index: number;
+  linkId: string;
+  target: string;
+};
+
 type ConfigPanelState = {
   isOpenConfig: boolean;
   selectedNodeId: string;
   selectedTaskData: TaskDataType;
   selectedTaskVariant: string;
+  outgoingLinks: LinkType[];
   setSelectedTaskData: (newData: TaskDataType) => void;
   clearConfigStore: () => void;
 };
@@ -21,6 +28,8 @@ export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
   selectedTaskVariant: '',
   setSelectedTaskVariant: (newVariant: string) =>
     set({ selectedTaskVariant: newVariant }),
+  outgoingLinks: [],
+  setOutgoingLinks: (newLinks: LinkType[]) => set({ outgoingLinks: newLinks }),
   clearConfigStore: () => {
     set({
       isOpenConfig: false,

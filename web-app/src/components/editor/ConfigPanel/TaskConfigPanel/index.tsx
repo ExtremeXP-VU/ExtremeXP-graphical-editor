@@ -45,11 +45,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     useConfigPanelStore.setState({ selectedTaskData: taskState });
   }, [taskState]);
 
-  const [numParameters, setNumParameters] = useState(0);
-  const addParameter = () => {
-    setNumParameters(numParameters + 1);
-  };
-
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const action: Action = { type: 'UPDATE_NAME', payload: event.target.value };
     dispatch(action);
@@ -63,6 +58,11 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       payload: event.target.value,
     };
     dispatch(action);
+  };
+
+  const [numParameters, setNumParameters] = useState(0);
+  const addParameter = () => {
+    setNumParameters(numParameters + 1);
   };
 
   // handle add variant
