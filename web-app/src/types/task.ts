@@ -121,6 +121,7 @@ export const genericTask: TaskType = {
               id_task: 'JNxVx_pK_BFW_30VshVeG-variant-1',
               is_composite: false,
               name: 'task',
+              description: 'generic task',
             },
           ],
         },
@@ -163,6 +164,7 @@ export const genericTask: TaskType = {
 export interface TaskDataType {
   id_task: string;
   name: string;
+  description: string;
   variant: number;
   is_composite: boolean;
   graphical_model: GraphicalModelType | null;
@@ -171,6 +173,7 @@ export interface TaskDataType {
 export const defaultTaskData: TaskDataType = {
   id_task: 'default',
   name: 'task',
+  description: 'no description',
   variant: 1,
   is_composite: false,
   graphical_model: {

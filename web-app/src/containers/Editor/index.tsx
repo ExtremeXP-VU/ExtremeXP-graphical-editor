@@ -400,7 +400,7 @@ const Editor = () => {
 
   const initTaskNodeConfig = (node: Node) => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
-    useConfigPanelStore.setState({ selectedVariant: currentVariant });
+    useConfigPanelStore.setState({ selectedTaskVariant: currentVariant });
 
     const variantData: TaskDataType = node.data.variants.find(
       (t: TaskDataType) => t.id_task === node.data.currentVariant

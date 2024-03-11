@@ -1,49 +1,68 @@
 import './style.scss';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { nanoid } from 'nanoid';
-import DropDown from '../SupportComponents/DropDown';
-import RadioButton from '../SupportComponents/RadioButton';
-import StaticTable from '../SupportComponents/StaticTable';
-import CustomButton from '../SupportComponents/CustomButton';
-import DynamicTable from '../SupportComponents/DynamicTable';
+import { useImmerReducer } from 'use-immer';
+import taskConfigReducer, { Action } from './reducer';
+
 import { useConfigPanelStore } from '../../../../stores/configPanelStore';
 import { useReactFlowInstanceStore } from '../../../../stores/reactFlowInstanceStore';
 import { useCategoryStore } from '../../../../stores/categoryStore';
-import { TaskDataType, TaskType, genericTask } from '../../../../types/task';
+import {
+  TaskDataType,
+  TaskType,
+  genericTask,
+  defaultTaskData,
+} from '../../../../types/task';
+
 import Popover from '../../../general/Popover';
 import { TasksResponseType } from '../../../../types/requests';
 import useRequest from '../../../../hooks/useRequest';
 import { message } from '../../../../utils/message';
 import { removeTab, useTabStore } from '../../../../stores/tabStore';
 
+import DropDown from '../SupportComponents/DropDown';
+import RadioButton from '../SupportComponents/RadioButton';
+import StaticTable from '../SupportComponents/StaticTable';
+import CustomButton from '../SupportComponents/CustomButton';
+import DynamicTable from '../SupportComponents/DynamicTable';
+
 interface TaskConfigPanelProps {
   updateSideBar: () => void;
 }
 
 const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
-  const [numParameters, setNumParameters] = useState(0);
+  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const selectedTaskData = useConfigPanelStore(
     (state) => state.selectedTaskData
   );
-  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
 
-  const nodes = useReactFlowInstanceStore((state) => state.nodes);
-  const currentNode = nodes.find((node) => node.id === selectedNodeId);
+  const [taskState, dispatch] = useImmerReducer(
+    taskConfigReducer,
+    selectedTaskData
+  );
 
+  useEffect(() => {
+    useConfigPanelStore.setState({ selectedTaskData: taskState });
+  }, [taskState]);
+
+  const [numParameters, setNumParameters] = useState(0);
   const addParameter = () => {
     setNumParameters(numParameters + 1);
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newTaskData = {
-      ...selectedTaskData,
-      name: event.target.value,
-    };
-    useConfigPanelStore.setState({ selectedTaskData: newTaskData });
+    const action: Action = { type: 'UPDATE_NAME', payload: event.target.value };
+    dispatch(action);
   };
 
-  const handleClosePanel = () => {
-    useConfigPanelStore.getState().clearConfigStore();
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const action: Action = {
+      type: 'UPDATE_DESCRIPTION',
+      payload: event.target.value,
+    };
+    dispatch(action);
   };
 
   // handle add variant
@@ -52,6 +71,9 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   const categories = useCategoryStore((state) => state.categories);
   const [taskList, setTaskList] = useState<TaskType[]>([genericTask]);
   const [selectedTask, setSelectedTask] = useState<TaskType>(taskList[0]);
+
+  const nodes = useReactFlowInstanceStore((state) => state.nodes);
+  const currentNode = nodes.find((node) => node.id === selectedNodeId);
 
   const closeMask = () => {
     setShowPopover(false);
@@ -83,12 +105,12 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const handleAddNormalTask = () => {
     const variantNumber = getMaxVariantNumber() + 1;
-    const id = nanoid() + '-variant-' + variantNumber;
+    const id = 'variant-' + variantNumber + '-' + nanoid();
     const newTask = {
+      ...defaultTaskData,
       id_task: id,
-      name: 'task',
-      is_composite: false,
       variant: variantNumber,
+      graphical_model: null,
     };
     currentNode?.data?.variants.push(newTask);
     setShowPopover(false);
@@ -96,9 +118,10 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const handleAddCompositeTask = () => {
     const variantNumber = getMaxVariantNumber() + 1;
-    const id = nanoid() + '-variant-' + variantNumber;
+    const id = 'variant-' + variantNumber + '-' + nanoid();
 
     const newTask = {
+      ...defaultTaskData,
       id_task: id,
       name: selectedTask.name,
       is_composite: true,
@@ -109,7 +132,9 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     setShowPopover(false);
   };
 
-  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
+  const selectedVariant = useConfigPanelStore(
+    (state) => state.selectedTaskVariant
+  );
   const tabs = useTabStore((state) => state.tabs);
 
   const removeRedundantTabs = (id: string) => {
@@ -122,7 +147,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const handleSetCurrentVariant = (id: string) => {
     currentNode?.data && (currentNode.data.currentVariant = id);
-    useConfigPanelStore.setState({ selectedVariant: id });
+    useConfigPanelStore.setState({ selectedTaskVariant: id });
 
     if (currentNode?.data) {
       const variantData: TaskDataType = currentNode.data.variants.find(
@@ -156,6 +181,10 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     [tasksRequest]
   );
 
+  const handleClosePanel = () => {
+    useConfigPanelStore.getState().clearConfigStore();
+  };
+
   return (
     <div className="sidebar">
       <span className="iconfont close-button" onClick={handleClosePanel}>
@@ -184,7 +213,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
             <input
               type="text"
               className="transparent-input"
-              defaultValue={selectedTaskData.name}
+              defaultValue={taskState.name}
               onChange={handleNameChange}
             />
           ),
@@ -196,7 +225,8 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
                 width: '2.9rem',
                 height: '0.5rem',
               }}
-              defaultValue={`Lorem ipsum dolor sit amet consectetur.`}
+              defaultValue={taskState.description}
+              onChange={handleDescriptionChange}
             />
           ),
           abstract: (

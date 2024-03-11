@@ -10,7 +10,12 @@ import DynamicTable from './DynamicTable';
 import { useConfigPanelStore } from '../../../stores/configPanelStore';
 import { useReactFlowInstanceStore } from '../../../stores/reactFlowInstanceStore';
 import { useCategoryStore } from '../../../stores/categoryStore';
-import { TaskDataType, TaskType, genericTask } from '../../../types/task';
+import {
+  TaskDataType,
+  TaskType,
+  genericTask,
+  defaultTaskData,
+} from '../../../types/task';
 import Popover from '../../general/Popover';
 import { TasksResponseType } from '../../../types/requests';
 import useRequest from '../../../hooks/useRequest';
@@ -22,7 +27,10 @@ interface SideBarProps {
   isVariantable?: boolean;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }) => {
+const SideBar: React.FC<SideBarProps> = ({
+  updateSideBar,
+  isVariantable = true,
+}) => {
   const [numParameters, setNumParameters] = useState(0);
   const selectedTaskData = useConfigPanelStore(
     (state) => state.selectedTaskData
@@ -87,10 +95,10 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
     const variantNumber = getMaxVariantNumber() + 1;
     const id = nanoid() + '-variant-' + variantNumber;
     const newTask = {
+      ...defaultTaskData,
       id_task: id,
-      name: 'task',
-      is_composite: false,
       variant: variantNumber,
+      graphical_model: null,
     };
     currentNode?.data?.variants.push(newTask);
     setShowPopover(false);
@@ -101,6 +109,7 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
     const id = nanoid() + '-variant-' + variantNumber;
 
     const newTask = {
+      ...defaultTaskData,
       id_task: id,
       name: selectedTask.name,
       is_composite: true,
@@ -111,7 +120,9 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
     setShowPopover(false);
   };
 
-  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
+  const selectedVariant = useConfigPanelStore(
+    (state) => state.selectedTaskVariant
+  );
   const tabs = useTabStore((state) => state.tabs);
 
   const removeRedundantTabs = (id: string) => {
@@ -124,7 +135,7 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
 
   const handleSetCurrentVariant = (id: string) => {
     currentNode?.data && (currentNode.data.currentVariant = id);
-    useConfigPanelStore.setState({ selectedVariant: id });
+    useConfigPanelStore.setState({ selectedTaskVariant: id });
 
     if (currentNode?.data) {
       const variantData: TaskDataType = currentNode.data.variants.find(
@@ -178,9 +189,10 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
           />
         )}
         {isVariantable && (
-        <span className="iconfont " onClick={handleOpenPopover}>
-          &#xe601;
-        </span> )}
+          <span className="iconfont " onClick={handleOpenPopover}>
+            &#xe601;
+          </span>
+        )}
       </div>
       <StaticTable
         properties={{

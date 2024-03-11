@@ -1,5 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
-import { CategoryType, defaultTask } from '../../../../types/task';
+import {
+  CategoryType,
+  defaultTask,
+  defaultTaskData,
+} from '../../../../types/task';
 import { TasksResponseType } from '../../../../types/requests';
 import useRequest from '../../../../hooks/useRequest';
 import { message } from '../../../../utils/message';
@@ -45,6 +49,7 @@ const SubTask = ({ category, setWindow }: SubTaskProps) => {
       currentVariant: id,
       variants: [
         {
+          ...defaultTaskData,
           id_task: id,
           name: task.name,
           is_composite: true,
