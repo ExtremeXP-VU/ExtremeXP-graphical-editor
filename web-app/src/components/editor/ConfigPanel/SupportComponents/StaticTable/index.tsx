@@ -9,7 +9,8 @@ type TableProps = {
     implementation?: string; // For custom element, like a link
     category?: JSX.Element; // For dropdown
     type?: JSX.Element; // For dropdown
-
+    condition?: JSX.Element; // For the condition input
+    conditions?: JSX.Element; // For the conditions input
     range?: JSX.Element; // For the range input
   };
 };

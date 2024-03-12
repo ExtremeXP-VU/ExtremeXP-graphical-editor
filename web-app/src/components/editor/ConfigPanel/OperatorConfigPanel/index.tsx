@@ -1,29 +1,27 @@
 import './style.scss';
 import React, { useState, useCallback } from 'react';
 import { nanoid } from 'nanoid';
-import DropDown from './DropDown';
-import RadioButton from './RadioButton';
-// import RangeSelector from "./RangeSelector";
-import StaticTable from './StaticTable';
-import CustomButton from './CustomButton';
-import DynamicTable from './DynamicTable';
-import { useConfigPanelStore } from '../../../stores/configPanelStore';
-import { useReactFlowInstanceStore } from '../../../stores/reactFlowInstanceStore';
-import { useCategoryStore } from '../../../stores/categoryStore';
-import { TaskDataType, TaskType, genericTask } from '../../../types/task';
-import Popover from '../../general/Popover';
-import { TasksResponseType } from '../../../types/requests';
-import useRequest from '../../../hooks/useRequest';
-import { message } from '../../../utils/message';
-import { removeTab, useTabStore } from '../../../stores/tabStore';
+import DropDown from '../SupportComponents/DropDown';
+import RadioButton from '../SupportComponents/RadioButton';
+import StaticTable from '../SupportComponents/StaticTable';
+// import CustomButton from '../SupportComponents/CustomButton';
+// import DynamicTable from '../SupportComponents/DynamicTable';
+import { useConfigPanelStore } from '../../../../stores/configPanelStore';
+import { useReactFlowInstanceStore } from '../../../../stores/reactFlowInstanceStore';
+import { useCategoryStore } from '../../../../stores/categoryStore';
+import { TaskDataType, TaskType, genericTask } from '../../../../types/task';
+import Popover from '../../../general/Popover';
+import { TasksResponseType } from '../../../../types/requests';
+import useRequest from '../../../../hooks/useRequest';
+import { message } from '../../../../utils/message';
+import { removeTab, useTabStore } from '../../../../stores/tabStore';
 
-interface SideBarProps {
+interface OperatorConfigPanelProps {
   updateSideBar: () => void;
-  isVariantable?: boolean;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }) => {
-  const [numParameters, setNumParameters] = useState(0);
+const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = ({ updateSideBar }) => {
+  // const [numParameters, setNumParameters] = useState(0);
   const selectedTaskData = useConfigPanelStore(
     (state) => state.selectedTaskData
   );
@@ -32,9 +30,9 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
   const nodes = useReactFlowInstanceStore((state) => state.nodes);
   const currentNode = nodes.find((node) => node.id === selectedNodeId);
 
-  const addParameter = () => {
-    setNumParameters(numParameters + 1);
-  };
+  // const addParameter = () => {
+  //   setNumParameters(numParameters + 1);
+  // };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTaskData = {
@@ -163,81 +161,29 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
       <span className="iconfont close-button" onClick={handleClosePanel}>
         &#xe600;
       </span>
-      <div className="sidebar__variants">
-        {isVariantable && (
-          <DropDown
-            options={
-              currentNode?.data?.variants.map((variant: TaskDataType) => {
-                // return `variant-${variant.variant}`;
-                return variant.id_task;
-              }) || []
-            }
-            onOptionSelected={handleSetCurrentVariant}
-            defaultValue={currentNode?.data?.currentVariant || 'variant'}
-            className="variant__dropdown"
-          />
-        )}
-        {isVariantable && (
-        <span className="iconfont " onClick={handleOpenPopover}>
-          &#xe601;
-        </span> )}
-      </div>
       <StaticTable
         properties={{
-          name: (
+          condition: (
             <input
               type="text"
-              className="transparent-input"
-              defaultValue={selectedTaskData.name}
-              onChange={handleNameChange}
-            />
-          ),
-          description: (
-            <textarea
-              className="transparent-input"
-              style={{
-                fontFamily: 'inherit',
-                width: '2.9rem',
-                height: '0.5rem',
+              value={selectedTaskData.condition}
+              onChange={(event) => {
+                const newTaskData = {
+                  ...selectedTaskData,
+                  condition: event.target.value,
+                };
+                useConfigPanelStore.setState({ selectedTaskData: newTaskData });
               }}
-              defaultValue={`Lorem ipsum dolor sit amet consectetur.`}
-            />
-          ),
-          abstract: (
-            <RadioButton
-              choices={[
-                { label: 'yes', value: 'yes' },
-                { label: 'no', value: 'no' },
-              ]}
-              defaultValue="no"
-              name="abstract"
-            />
-          ),
-          implementation: '<URI>',
-          category: (
-            <DropDown
-              options={categories
-                .map((category) => category.name)
-                .concat(['Generic'])}
-              defaultValue="generic"
-              className="normal__dropdown"
-            />
-          ),
-          type: (
-            <DropDown
-              options={['type 1', 'type 2', 'type 3']}
-              defaultValue="type 1"
-              className="normal__dropdown"
             />
           ),
         }}
       />
 
-      {Array.from({ length: numParameters }).map((_, index) => (
+      {/* {Array.from({ length: numParameters }).map((_, index) => (
         <DynamicTable key={index} number={index + 1} />
-      ))}
+      ))} */}
 
-      <CustomButton buttonText="add parameter" handleClick={addParameter} />
+      {/* <CustomButton buttonText="add parameter" handleClick={addParameter} /> */}
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__variant">
           <button onClick={handleAddNormalTask}>Add Normal Task</button>
@@ -255,4 +201,4 @@ const SideBar: React.FC<SideBarProps> = ({ updateSideBar, isVariantable = true }
   );
 };
 
-export default SideBar;
+export default OperatorConfigPanel;

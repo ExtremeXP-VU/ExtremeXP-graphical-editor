@@ -50,6 +50,7 @@ import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
 import TaskConfigPanel from '../../components/editor/ConfigPanel/TaskConfigPanel';
+import OperatorConfigPanel from '../../components/editor/ConfigPanel/OperatorConfigPanel';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -401,6 +402,7 @@ const Editor = () => {
   const initTaskNodeConfig = (node: Node) => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
     useConfigPanelStore.setState({ selectedVariant: currentVariant });
+    useConfigPanelStore.setState({ selectedNodeType: node.type });
 
     const variantData: TaskDataType = node.data.variants.find(
       (t: TaskDataType) => t.id_task === node.data.currentVariant
@@ -512,7 +514,7 @@ const Editor = () => {
                   fitView
                 >
                   {isOpenConfig && (
-                    <TaskConfigPanel updateSideBar={updateConfigPanel} />
+                    <OperatorConfigPanel updateSideBar={updateConfigPanel} />
                   )}
                   <Controls position="top-left" />
                   <Background />
