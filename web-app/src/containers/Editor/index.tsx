@@ -45,7 +45,7 @@ import {
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
   CreateTaskResponseType,
-  ExecutionResponseType,
+  // ExecutionResponseType,
 } from '../../types/requests';
 
 import Markers from '../../components/editor/notations/edges/Markers';
@@ -82,7 +82,7 @@ const Editor = () => {
   >();
 
   // FIXME: Temporary Execution Demo
-  const { request: executionRequest } = useRequest<ExecutionResponseType>();
+  // const { request: executionRequest } = useRequest<ExecutionResponseType>();
 
   const {
     selectedLink,
@@ -360,30 +360,6 @@ const Editor = () => {
       });
   }
 
-  // FIXEME: duplicated code
-  function handleExecution() {
-    const graphicalModel = { nodes, edges };
-    executionRequest({
-      url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: 'POST',
-      data: {
-        graphical_model: graphicalModel,
-      },
-    })
-      .then((data) => {
-        if (data.data.result) {
-          alert(`The execution result is: ${data.data.result}`);
-        }
-      })
-      .catch((error) => {
-        if (error.response.data.message) {
-          message(error.response.data.message);
-        } else if (error.message) {
-          message(error.message);
-        }
-      });
-  }
-
   const handleSelectTab = (id: string) => {
     handleSave();
     setSelectedTab(id);
@@ -460,11 +436,7 @@ const Editor = () => {
   return (
     <div className="editor">
       <div className="editor__top">
-        <Header
-          onExecution={handleExecution}
-          onSave={handleSave}
-          onSaveAs={handleShowPopover}
-        />
+        <Header onSave={handleSave} onSaveAs={handleShowPopover} />
       </div>
       <ReactFlowProvider>
         <div className="editor__bottom">
