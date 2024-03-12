@@ -389,7 +389,6 @@ const Editor = () => {
       outgoingLinks.push(link);
     }
     useConfigPanelStore.setState({ outgoingLinks: outgoingLinks });
-    console.log(outgoingLinks);
   };
 
   const initTaskNodeConfig = (node: Node) => {

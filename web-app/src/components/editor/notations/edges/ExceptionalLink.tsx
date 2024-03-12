@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { BaseEdge, EdgeProps, getSmoothStepPath } from 'reactflow';
 import EdgeLabel from './EdgeLabel';
-import { EdgeLabelRenderer } from 'reactflow';
+import EdgeIndexMarker from './EdgeIndexMarker';
 import { useConfigPanelStore } from '../../../../stores/configPanelStore';
 
 function ExceptionalLink(props: EdgeProps) {
@@ -54,25 +54,13 @@ function ExceptionalLink(props: EdgeProps) {
         onLabelChange={handleLabelChange}
       />
       {selected && (
-        <EdgeLabelRenderer>
-          <div
-            style={{
-              transform: `translate(-50%, -20%) translate(${sourceX}px,${sourceY}px)`,
-            }}
-            className="nodrag nopan edge__label__marker"
-          >
-            {linkIndex}
-          </div>
-
-          <div
-            style={{
-              transform: `translate(-50%, -150%) translate(${targetX}px,${targetY}px)`,
-            }}
-            className="nodrag nopan edge__label__marker"
-          >
-            {linkIndex}
-          </div>
-        </EdgeLabelRenderer>
+        <EdgeIndexMarker
+          sourceX={sourceX}
+          sourceY={sourceY}
+          targetX={targetX}
+          targetY={targetY}
+          index={linkIndex}
+        />
       )}
     </>
   );

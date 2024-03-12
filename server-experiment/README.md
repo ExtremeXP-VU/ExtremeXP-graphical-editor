@@ -53,3 +53,9 @@ data: {
 | /task/categories/tasks/<task_id>/delete                    | DELETE | /                                                                                      | Delete a task                                                                 | 204: Deleted, <br> 404: Not found      |
 | /task/categories/<category_id>/tasks/<task_id>/update/info |  PUT   | {"name": \<new task name>, "description" : \<task description>}                        | Update task name and description                                              | 200: OK, <br> 409: Duplicate name      |
 | /task/categories/tasks/<task_id>/update/graphical_model    |  PUT   | {"graphical_model": \<graphical model>}                                                | Update task graphical model                                                   | 200: OK                                |
+
+## Execution
+
+| API                             | Method | Payload | Description                                                                                         | Status Code                                                         |
+| :------------------------------ | :----: | :------ | :-------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------ |
+| /exp/execution/convert/<exp_id> |  POST  | /       | Convert graphical model into EMF format model. The returned model contains both JSON and XMI format | 200: OK, <br> 404: Experiment not exist, <br> 500: Converting error |

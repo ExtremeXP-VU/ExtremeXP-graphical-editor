@@ -45,7 +45,7 @@ const Execution = () => {
           </div>
           <p>editor</p>
         </button>
-        <p className="convertor__header__title">Converting Results</p>
+        <p className="convertor__header__title">{`Graphical Model => EMF Model`}</p>
       </div>
       <div className="convertor__content">
         <div className="convertor__content__wrapper convertor__content__wrapper__left">
