@@ -3,9 +3,9 @@ from flask_cors import CORS, cross_origin
 from userAuthHandler import userAuthHandler
 from projectHandler import projectHandler
 from experimentHandler import experimentHandler
-from executionHandler import executionHandler
 from categoryHandler import categoryHandler
 from taskHandler import taskHandler
+from convertorHandler import convertorHandler
 
 app = Flask(__name__)
 cors = CORS(app)  # cors is added in advance to allow cors requests
@@ -13,6 +13,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 
 ERROR_FORBIDDEN = "Error: Forbidden"
 ERROR_DUPLICATE = "Error: Duplicate name"
+ERROR_NOT_FOUND = "Error: Not found"
 
 ENDPOINT_WITHOUT_AUTH = []
 
@@ -47,6 +48,7 @@ def index():
     return "experiment service connected"
 
 
+# PROJECTS
 @app.route("/exp/projects", methods=["GET"])
 @cross_origin()
 def get_projects():
@@ -97,6 +99,7 @@ def delete_project(proj_id):
     return {"message": "project deleted"}, 204
 
 
+# EXPERIMENTS
 @app.route("/exp/projects/<proj_id>/experiments", methods=["GET"])
 @cross_origin()
 def get_experiments(proj_id):
@@ -174,26 +177,7 @@ def update_experiment_graphical_model(proj_id, exp_id):
     return {"message": "experiment graphical model updated"}, 200
 
 
-# FIXME: temporary solution
-@app.route(
-    "/exp/projects/<proj_id>/experiments/<exp_id>/execution",
-    methods=["OPTIONS", "POST"],
-)
-@cross_origin()
-def execute_experiment(proj_id, exp_id):
-    graphical_model = request.json["graphical_model"]
-    experimentHandler.update_experiment_graphical_model(
-        exp_id, proj_id, graphical_model
-    )
-    response = executionHandler.execute_experiment(graphical_model)
-    if response["verified"]:
-        return {
-            "message": "experiment executed",
-            "data": {"file": response["filename"], "result": response["result"]},
-        }, 200
-    return {"error": "execution failed", "message": response["error"]}, 401
-
-
+# CATEGORIES
 @app.route("/task/categories", methods=["GET"])
 @cross_origin()
 def get_categories():
@@ -238,12 +222,13 @@ def update_category_name(category_id):
 # FIXME: delete official category should not be allowed
 def delete_category(category_id):
     if not categoryHandler.category_exists(category_id):
-        return {"message": "category does not exist"}, 404
+        return {"error": ERROR_NOT_FOUND, "message": "category does not exist"}, 404
     categoryHandler.delete_category(category_id)
     taskHandler.delete_tasks(category_id)
     return {"message": "category deleted"}, 204
 
 
+# TASKS
 @app.route("/task/categories/<category_id>/tasks", methods=["GET"])
 @cross_origin()
 def get_tasks(category_id):
@@ -288,7 +273,7 @@ def create_task(category_id):
 @cross_origin()
 def delete_task(task_id):
     if not taskHandler.task_exists(task_id):
-        return {"message": "this task does not exist"}, 404
+        return {"error": ERROR_NOT_FOUND, "message": "this task does not exist"}, 404
     taskHandler.delete_task(task_id)
     return {"message": "task deleted"}, 204
 
@@ -319,3 +304,23 @@ def update_task_graphical_model(task_id):
     graphical_model = request.json["graphical_model"]
     taskHandler.update_task_graphical_model(task_id, graphical_model)
     return {"message": "task graphical model updated"}, 200
+
+
+# EXECUTION
+@app.route("/exp/execute/convert/<exp_id>", methods=["OPTIONS", "POST"])
+@cross_origin()
+def convert_to_source_model(exp_id):
+    if not experimentHandler.experiment_exists(exp_id):
+        return {"error": ERROR_NOT_FOUND, "message": "experiment not found"}, 404
+    exp = experimentHandler.get_experiment(exp_id)
+    convert_res = convertorHandler.convert(exp)
+
+    if not convert_res["verified"]:
+        return {"error": "Error converting model", "message": convert_res["error"]}, 500
+    return {
+        "message": "source model converted",
+        "data": convert_res["data"],
+    }, 200
+
+
+# 406: Not Acceptable

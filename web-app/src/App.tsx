@@ -1,4 +1,5 @@
 import './styles/app.scss';
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Home from './containers/Home';
@@ -12,6 +13,7 @@ import Tasks from './containers/Dashboard/Tasks';
 import Category from './components/dashboard/Task';
 import User from './containers/Dashboard/User';
 import Editor from './containers/Editor';
+import Execution from './containers/Execution';
 
 const router = createBrowserRouter([
   {
@@ -65,6 +67,10 @@ const router = createBrowserRouter([
   {
     path: '/editor/:type/:projID/:experimentID',
     element: <Editor />,
+  },
+  {
+    path: '/execution/convert/:projID/:experimentID',
+    element: <Execution />,
   },
 ]);
 

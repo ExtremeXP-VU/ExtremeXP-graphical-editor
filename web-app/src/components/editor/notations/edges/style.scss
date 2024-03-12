@@ -35,3 +35,13 @@
     font-size: 1.3em;
   }
 }
+
+.edge__label__marker {
+  z-index: 4;
+  position: absolute;
+  width: 0.16rem;
+  height: 0.16rem;
+  border-radius: 0.08rem;
+  background: $alert-background-color;
+  color: $primary-button-text-color;
+}

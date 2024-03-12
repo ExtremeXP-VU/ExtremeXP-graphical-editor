@@ -17,7 +17,10 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
-import { useConfigPanelStore } from '../../stores/configPanelStore';
+import {
+  useConfigPanelStore,
+  OutgoingLinkType,
+} from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -42,7 +45,7 @@ import {
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
   CreateTaskResponseType,
-  ExecutionResponseType,
+  // ExecutionResponseType,
 } from '../../types/requests';
 
 import Markers from '../../components/editor/notations/edges/Markers';
@@ -80,7 +83,7 @@ const Editor = () => {
   >();
 
   // FIXME: Temporary Execution Demo
-  const { request: executionRequest } = useRequest<ExecutionResponseType>();
+  // const { request: executionRequest } = useRequest<ExecutionResponseType>();
 
   const {
     selectedLink,
@@ -358,30 +361,6 @@ const Editor = () => {
       });
   }
 
-  // FIXEME: duplicated code
-  function handleExecution() {
-    const graphicalModel = { nodes, edges };
-    executionRequest({
-      url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: 'POST',
-      data: {
-        graphical_model: graphicalModel,
-      },
-    })
-      .then((data) => {
-        if (data.data.result) {
-          alert(`The execution result is: ${data.data.result}`);
-        }
-      })
-      .catch((error) => {
-        if (error.response.data.message) {
-          message(error.response.data.message);
-        } else if (error.message) {
-          message(error.message);
-        }
-      });
-  }
-
   const handleSelectTab = (id: string) => {
     handleSave();
     setSelectedTab(id);
@@ -399,10 +378,24 @@ const Editor = () => {
     }, 0);
   };
 
+  const setOutgoingLinks = (node: Node) => {
+    const links = edges.filter((edge) => edge.source === node.id);
+    const outgoingLinks: OutgoingLinkType[] = [];
+
+    for (let i = 0; i < links.length; i++) {
+      const link: OutgoingLinkType = {
+        index: i + 1,
+        linkId: links[i].id,
+        target: links[i].target,
+      };
+      outgoingLinks.push(link);
+    }
+    useConfigPanelStore.setState({ outgoingLinks: outgoingLinks });
+  };
+
   const initTaskNodeConfig = (node: Node) => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
-    useConfigPanelStore.setState({ selectedVariant: currentVariant });
-    useConfigPanelStore.setState({ selectedNodeType: node.type });
+    useConfigPanelStore.setState({ selectedTaskVariant: currentVariant });
 
     const variantData: TaskDataType = node.data.variants.find(
       (t: TaskDataType) => t.id_task === node.data.currentVariant
@@ -410,26 +403,23 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedTaskData: variantData });
   };
 
-
-
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
-    // FIXME
-    // once the data and operators are available:
-    // if (node.type === 'start' || node.type === 'end') {
-    //   return;
-    // }
 
-    // set selectedNodeId and check isOpenConfig can be moved out of the function
-    if (node.type === 'task') {
-      useConfigPanelStore.setState({ selectedNodeId: node.id });
-      initTaskNodeConfig(node);
+    setOutgoingLinks(node);
+
+    switch (node.type) {
+      case 'task':
+        useConfigPanelStore.setState({ selectedNodeId: node.id });
+        initTaskNodeConfig(node);
+        break;
+      case 'opExclusive':
+        // useConfigPanelStore.setState({ selectedNodeId: node.id });
+        console.log('exclusive operator clicked');
+        break;
+      default:
+        return;
     }
-
-    if (node.type === 'OpExclusive') {
-      useConfigPanelStore.setState({ selectedNodeId: node.id });
-    }
-
 
     if (isOpenConfig) {
       updateConfigPanel();
@@ -439,24 +429,15 @@ const Editor = () => {
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
     handleSwitchSelectedNode(event, node);
 
-    // FIXME:
-    // once the data and operators are available:
-    if (node.type !== 'start' && node.type !== 'end')
-   {
+    if (node.type !== 'start' && node.type !== 'end') {
       updateConfigPanel();
     }
-
   };
-
 
   return (
     <div className="editor">
       <div className="editor__top">
-        <Header
-          onExecution={handleExecution}
-          onSave={handleSave}
-          onSaveAs={handleShowPopover}
-        />
+        <Header onSave={handleSave} onSaveAs={handleShowPopover} />
       </div>
       <ReactFlowProvider>
         <div className="editor__bottom">
