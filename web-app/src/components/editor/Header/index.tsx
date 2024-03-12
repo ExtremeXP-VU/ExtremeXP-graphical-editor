@@ -38,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({ onSave, onSaveAs }) => {
   };
 
   const handleExecution = () => {
+    onSave();
     navigate(`/execution/convert/${projID}/${experimentID}`);
   };
 

@@ -82,8 +82,8 @@
   height: calc(100% - 0.5rem);
 
   &__wrapper {
-    overflow-y: auto;
-    overflow-x: auto;
+    // overflow-y: auto;
+    // overflow-x: auto;
     width: 50%;
     height: 100%;
     background-color: $board-color;
@@ -111,7 +111,10 @@
     &__viewer {
       overflow-y: auto;
       overflow-x: auto;
+      width: 100%;
+      height: calc(100% - 0.3rem);
       padding: 0.2rem;
+      box-sizing: border-box;
     }
   }
 }
