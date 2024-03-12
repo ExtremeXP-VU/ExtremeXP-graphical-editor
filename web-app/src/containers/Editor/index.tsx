@@ -379,7 +379,8 @@ const Editor = () => {
 
   const setOutgoingLinks = (node: Node) => {
     const links = edges.filter((edge) => edge.source === node.id);
-    const outgoingLinks = [];
+    const outgoingLinks: OutgoingLinkType[] = [];
+
     for (let i = 0; i < links.length; i++) {
       const link: OutgoingLinkType = {
         index: i + 1,
