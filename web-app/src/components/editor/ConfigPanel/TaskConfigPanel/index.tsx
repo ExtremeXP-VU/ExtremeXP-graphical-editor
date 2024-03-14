@@ -90,6 +90,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     const task = taskList.find((task) => task.id_task === event.target.value);
     if (task) {
       setSelectedTask(task);
+      
     }
   };
 

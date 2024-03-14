@@ -1,5 +1,7 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
+import { useConfigOperatorPanelStore, useConfigPanelStore } from '../../../../../stores/configPanelStore';
+import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 
 const handleLeftSourceStyle = {
   bottom: '-4px',
@@ -28,6 +30,17 @@ const OpInclusive = ({
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
+  const selectedOperatorData = useConfigOperatorPanelStore(
+    (state) => state.selectedOperatorData
+  );
+  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
+  const nodes = useReactFlowInstanceStore((state) => state.nodes);
+  useEffect(() => {
+    const selectedNode = nodes.find((node) => node.id === selectedNodeId);
+    if (selectedNode) {
+      selectedNode.data = selectedOperatorData;
+    }
+  }, [selectedNodeId, selectedOperatorData]);
   return (
     <>
       <svg

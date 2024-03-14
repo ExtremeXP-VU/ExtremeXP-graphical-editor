@@ -20,6 +20,7 @@ import {
 import {
   useConfigPanelStore,
   OutgoingLinkType,
+  useConfigOperatorPanelStore,
 } from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -52,8 +53,8 @@ import Markers from '../../components/editor/notations/edges/Markers';
 import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
-import TaskConfigPanel from '../../components/editor/ConfigPanel/TaskConfigPanel';
-import OperatorConfigPanel from '../../components/editor/ConfigPanel/OperatorConfigPanel';
+import ConfigPanel from '../../components/editor/ConfigPanel';
+import { OperatorDataType } from '../../types/operator';
 
 const selector = (state: RFState) => ({
   selectedLink: state.selectedLink,
@@ -368,7 +369,6 @@ const Editor = () => {
 
   // Config Panel
 
-  // const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
   const updateConfigPanel = () => {
@@ -403,10 +403,16 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedTaskData: variantData });
   };
 
+  const initOperatorNodeConfig = (node: Node) => {
+    const operatorData:OperatorDataType = node.data;
+    useConfigOperatorPanelStore.setState({ selectedOperatorData: operatorData });
+  }
+
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
 
     setOutgoingLinks(node);
+    useConfigPanelStore.setState({ selectedNodeType: node.type });
 
     switch (node.type) {
       case 'task':
@@ -414,8 +420,12 @@ const Editor = () => {
         initTaskNodeConfig(node);
         break;
       case 'opExclusive':
-        // useConfigPanelStore.setState({ selectedNodeId: node.id });
-        console.log('exclusive operator clicked');
+        useConfigPanelStore.setState({ selectedNodeId: node.id });
+        initOperatorNodeConfig(node);
+        break;
+      case 'opInclusive':
+        useConfigPanelStore.setState({ selectedNodeId: node.id });
+        initOperatorNodeConfig(node);
         break;
       default:
         return;
@@ -495,7 +505,7 @@ const Editor = () => {
                   fitView
                 >
                   {isOpenConfig && (
-                    <OperatorConfigPanel updateSideBar={updateConfigPanel} />
+                    <ConfigPanel updateSideBar={updateConfigPanel} />
                   )}
                   <Controls position="top-left" />
                   <Background />

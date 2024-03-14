@@ -3,8 +3,8 @@ import './style.scss';
 
 type TableProps = {
   properties: {
-    name: JSX.Element;
-    description: JSX.Element;
+    name?: JSX.Element;
+    description?: JSX.Element;
     abstract?: JSX.Element; // For the radio buttons
     implementation?: string; // For custom element, like a link
     category?: JSX.Element; // For dropdown

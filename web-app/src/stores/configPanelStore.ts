@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { TaskDataType, defaultTaskData } from '../types/task';
+import { OperatorDataType, defaultOperatorData } from '../types/operator';
 
 export type OutgoingLinkType = {
   index: number;
@@ -21,17 +22,19 @@ type ConfigPanelState = {
 };
 
 type ConfigOperatorPanelState = {
-  selectedOperatorType: string;
+  selectedOperatorData: OperatorDataType;
   opExclusiveCondition: string;
   onInclusiveConditions: string[];
+  setSelectedOperatorData: (newData: OperatorDataType) => void;
   setOpExclusiveCondition: (newCondition: string) => void;
   setOpInclusiveConditions: (newConditions: string[]) => void;
 }
 
 export const useConfigOperatorPanelStore = create<ConfigOperatorPanelState>((set) => ({
-  selectedOperatorType: '',
   opExclusiveCondition: '',
   onInclusiveConditions: [],
+  selectedOperatorData: defaultOperatorData,
+  setSelectedOperatorData: (newData: OperatorDataType) => set({ selectedOperatorData: newData }),
   setOpExclusiveCondition: (newCondition: string) => set({ opExclusiveCondition: newCondition }),
   setOpInclusiveConditions: (newConditions: string[]) => set({ onInclusiveConditions: newConditions }),
 }));
