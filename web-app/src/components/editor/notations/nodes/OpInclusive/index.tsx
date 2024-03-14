@@ -37,7 +37,7 @@ const OpInclusive = ({
   const nodes = useReactFlowInstanceStore((state) => state.nodes);
   useEffect(() => {
     const selectedNode = nodes.find((node) => node.id === selectedNodeId);
-    if (selectedNode) {
+    if (selectedNode?.type === 'opInclusive') {
       selectedNode.data = selectedOperatorData;
     }
   }, [selectedNodeId, selectedOperatorData]);

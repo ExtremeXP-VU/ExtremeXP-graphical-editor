@@ -39,7 +39,7 @@ const OpExclusive = ({
   const nodes = useReactFlowInstanceStore((state) => state.nodes);
   useEffect(() => {
     const selectedNode = nodes.find((node) => node.id === selectedNodeId);
-    if (selectedNode) {
+    if (selectedNode?.type === 'opExclusive') {
       selectedNode.data = selectedOperatorData;
     }
   }, [selectedNodeId, selectedOperatorData]);
