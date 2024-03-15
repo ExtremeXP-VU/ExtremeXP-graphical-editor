@@ -169,7 +169,25 @@ export interface TaskDataType {
   description: string;
   isAbstract: boolean;
   graphical_model: GraphicalModelType | null;
+  parameters: ParameterType[];
 }
+
+export interface ParameterType {
+  name: string;
+  type: string;
+  abstract: boolean;
+  values: (number | string | boolean | { min: number; max: number; step: number; minInclusive: boolean; maxInclusive: boolean })[];
+  id: string;
+}
+
+export const defaultParameter: ParameterType = {
+  name: 'Parameter Name',
+  type: 'integer',
+  abstract: false,
+  values: [],
+  id: '',
+}
+
 
 export const defaultTaskData: TaskDataType = {
   id_task: 'default',
@@ -182,6 +200,7 @@ export const defaultTaskData: TaskDataType = {
     nodes: [],
     edges: [],
   },
+  parameters: [],
 };
 
 export interface TaskNodeType {

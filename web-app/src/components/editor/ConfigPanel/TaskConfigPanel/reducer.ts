@@ -1,10 +1,15 @@
-import { TaskDataType } from '../../../../types/task';
+import { ParameterType, TaskDataType } from '../../../../types/task';
+
+
 
 export type Action =
   | { type: 'UPDATE_NAME'; payload: string }
-  | { type: 'UPDATE_DESCRIPTION'; payload: string };
+  | { type: 'UPDATE_DESCRIPTION'; payload: string }
+  | { type: 'UPDATE_PARAM_NAME'; payload: string }
+  | { type: 'UPDATE_PARAM_TYPE'; payload: string }
+  | { type: 'UPDATE_PARAM_ABSTRACT'; payload: boolean }
 
-function taskConfigReducer(draft: TaskDataType, action: Action) {
+export function taskConfigReducer(draft: TaskDataType, action: Action) {
   switch (action.type) {
     case 'UPDATE_NAME':
       draft.name = action.payload;
@@ -17,4 +22,21 @@ function taskConfigReducer(draft: TaskDataType, action: Action) {
   }
 }
 
-export default taskConfigReducer;
+export function paramConfigReducer(
+  draft: ParameterType,
+  action: Action
+) {
+  switch (action.type) {
+    case 'UPDATE_PARAM_NAME':
+      draft.name = action.payload;
+      return draft;
+    case 'UPDATE_PARAM_TYPE':
+      draft.type = action.payload;
+      return draft;
+    case 'UPDATE_PARAM_ABSTRACT':
+      draft.abstract = action.payload;
+      return draft;
+    default:
+      return draft;
+  }
+}

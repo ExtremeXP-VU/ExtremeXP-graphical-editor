@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import DropDown from '../DropDown';
 import RadioButton from '../RadioButton';
@@ -7,22 +7,86 @@ import RealTable from '../RealTable';
 import StringTable from '../StringTable';
 import BooleanTable from '../BooleanTable';
 import BlobTable from '../BlobTable';
+import {
+  useConfigPanelStore,
+  useParamStore,
+} from '../../../../../stores/configPanelStore';
+import { useImmerReducer } from 'use-immer';
+import { paramConfigReducer, Action } from '../../TaskConfigPanel/reducer';
+import { ParameterType, TaskDataType } from '../../../../../types/task';
+import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 
 interface DynamicTableProps {
-  number: number;
+  id: string;
 }
 
-const DynamicTable: React.FC<DynamicTableProps> = ({number}) => {
-  const [selectedType, setSelectedType] = useState<string>('please select a type');
+const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
+  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
 
-  // Function to handle the selected type from DropDown
-  const handleSelectedType = (selectedType: string) => {
-    setSelectedType(selectedType);
+  const selectedParamId = useParamStore((state) => state.selectedParamId);
+  const selectedParamData = useParamStore((state) => state.selectedParamData);
+
+  const nodes = useReactFlowInstanceStore((state) => state.nodes);
+  const currentNode = nodes.find((node) => node.id === selectedNodeId);
+  const selectedVariant = useConfigPanelStore(
+    (state) => state.selectedTaskVariant
+  );
+
+  const variantIndex = currentNode?.data.variants.findIndex(
+    (variant: TaskDataType) => variant.id_task === selectedVariant
+  );
+  const [paramIndex, setParamIndex] = useState<number>(-1);
+
+
+  useEffect(() => {
+    const Index = currentNode?.data.variants[
+      variantIndex
+    ].parameters.findIndex(
+      (param: ParameterType) => param.id === selectedParamId
+    );
+    setParamIndex(Index);
+    useParamStore.setState({
+      selectedParamData:
+        currentNode?.data?.variants[variantIndex]?.parameters[paramIndex],
+    });
+    console.log('selectedParamData', selectedParamData);
+  }, [selectedParamId]);
+
+  const [paramState, paramDispatch] = useImmerReducer<ParameterType, Action>(
+    paramConfigReducer,
+    selectedParamData
+  );
+
+  const handleParamNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const action: Action = {
+      type: 'UPDATE_PARAM_NAME',
+      payload: event.target.value,
+    };
+    paramDispatch(action);
+  };
+
+  const handleParamTypeChange = (option: string) => {
+    const action: Action = {
+      type: 'UPDATE_PARAM_TYPE',
+      payload: option,
+    };
+    paramDispatch(action);
+  };
+
+  useEffect(() => {
+    useParamStore.setState({ selectedParamData: paramState });
+  }, [paramState]);
+
+  const handleEnterParam = (id: string) => {
+    console.log('entering param', id);
+    useParamStore.setState({ selectedParamId: id });
   };
 
   return (
-    <div className="table-component">
-      <div className="header-text">Parameter {number}</div>
+    <div className="table-component" onClick={() => handleEnterParam(id)}>
+      <div className="header-text">{paramState.name}</div>
       {/* Header Row */}
       <table className="row header-row">
         <tr className="cell">
@@ -40,7 +104,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({number}) => {
         </tr>
         <tr className="cell">
           <td className="value">
-            <input type="text" className="transparent-input" defaultValue={`click to enter`} />
+            <input
+              type="text"
+              className="transparent-input"
+              defaultValue={`click to enter`}
+              onChange={handleParamNameChange}
+              value={paramState.name}
+            />
           </td>
         </tr>
       </table>
@@ -60,9 +130,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({number}) => {
                 'array',
                 'boolean',
               ]}
-              defaultValue={selectedType}
+              defaultValue={paramState.type}
               className="normal__dropdown"
-              onOptionSelected={handleSelectedType}
+              onOptionSelected={handleParamTypeChange}
             />
           </td>
         </tr>
@@ -79,17 +149,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({number}) => {
                 { label: 'no', value: 'no' },
               ]}
               defaultValue="no"
-              name={`abstract-${number}`}
+              name={`abstract-${paramState.id}`}
             />
           </td>
         </tr>
       </table>
-      {selectedType === 'integer' && <IntegerTable />}
-      {selectedType === 'real' && <RealTable />}
-      {selectedType === 'blob' && <BlobTable />}
-      {selectedType === 'string' && <StringTable />}
-      {selectedType === 'array' && <div>array</div> }
-      {selectedType === 'boolean' && <BooleanTable />}
+      {paramState.type === 'integer' && <IntegerTable />}
+      {paramState.type === 'real' && <RealTable />}
+      {paramState.type === 'blob' && <BlobTable />}
+      {paramState.type === 'string' && <StringTable />}
+      {paramState.type === 'array' && <div>array</div>}
+      {paramState.type === 'boolean' && <BooleanTable />}
     </div>
   );
 };

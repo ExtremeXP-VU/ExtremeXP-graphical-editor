@@ -5,7 +5,7 @@ interface DropDownProps {
   options: string[];
   defaultValue?: string;
   className?: string;
-  onOptionSelected?: (option: string) => void; // Callback function prop
+  onOptionSelected?: (option: string) => void; 
 }
 
 const DropDown: React.FC<DropDownProps> = ({

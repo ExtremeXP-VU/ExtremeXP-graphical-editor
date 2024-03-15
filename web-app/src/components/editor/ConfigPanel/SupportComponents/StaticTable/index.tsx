@@ -1,5 +1,7 @@
 import React from 'react';
 import './style.scss';
+import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
+import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 
 type TableProps = {
   properties: {
@@ -17,10 +19,18 @@ type TableProps = {
 
 const StaticTable: React.FC<TableProps> = ({ properties }) => {
   const entries = Object.entries(properties); // Convert the properties object to an array of entries
+  const selectedNodeType = useConfigPanelStore(
+    (state) => state.selectedNodeType
+  );
 
+  const edges = useReactFlowInstanceStore((state) => state.edges);
+  const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
+  const outgoingEdges = edges.filter((edge) => outgoingLinks.some((link) => link.linkId === edge.id));
   return (
     <div className="table-component">
-      <div className="header-text">Generic Properties</div>
+      {selectedNodeType === 'task' && (
+        <div className="header-text">Generic Properties</div>
+      )}
       {/* Header Row */}
       <table className="row header-row">
         <tr className="cell">
@@ -42,6 +52,19 @@ const StaticTable: React.FC<TableProps> = ({ properties }) => {
           </tr>
         </table>
       ))}
+      <div className="header-text top-padding">Outgoing Links</div>
+      {outgoingEdges.map((edge, index) => {
+        return (
+          <table className={`row `} >
+          <tr className="cell">
+            <td className="property"> {`Link ${index+1}`} </td>
+          </tr>
+          <tr className="cell">
+            <td className="value"> {edge.data.label}</td>
+          </tr>
+        </table>
+        )
+      })}
     </div>
   );
 };

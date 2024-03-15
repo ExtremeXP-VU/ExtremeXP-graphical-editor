@@ -2,9 +2,12 @@ import './style.scss';
 import React, { useState, useCallback, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { useImmerReducer } from 'use-immer';
-import taskConfigReducer, { Action } from './reducer';
+import { taskConfigReducer, Action } from './reducer';
 
-import { useConfigPanelStore } from '../../../../stores/configPanelStore';
+import {
+  useConfigPanelStore,
+  useParamStore,
+} from '../../../../stores/configPanelStore';
 import { useReactFlowInstanceStore } from '../../../../stores/reactFlowInstanceStore';
 import { useCategoryStore } from '../../../../stores/categoryStore';
 import {
@@ -12,6 +15,8 @@ import {
   TaskType,
   genericTask,
   defaultTaskData,
+  ParameterType,
+  defaultParameter,
 } from '../../../../types/task';
 
 import Popover from '../../../general/Popover';
@@ -60,11 +65,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     dispatch(action);
   };
 
-  const [numParameters, setNumParameters] = useState(0);
-  const addParameter = () => {
-    setNumParameters(numParameters + 1);
-  };
-
   // handle add variant
   const [showPopover, setShowPopover] = useState(false);
   const { request: tasksRequest } = useRequest<TasksResponseType>();
@@ -74,6 +74,13 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const nodes = useReactFlowInstanceStore((state) => state.nodes);
   const currentNode = nodes.find((node) => node.id === selectedNodeId);
+  const selectedVariant = useConfigPanelStore(
+    (state) => state.selectedTaskVariant
+  );
+
+  const variantIndex = currentNode?.data.variants.findIndex(
+    (variant: TaskDataType) => variant.id_task === selectedVariant
+  );
 
   const closeMask = () => {
     setShowPopover(false);
@@ -90,7 +97,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     const task = taskList.find((task) => task.id_task === event.target.value);
     if (task) {
       setSelectedTask(task);
-      
     }
   };
 
@@ -102,6 +108,23 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       }
     }
     return max;
+  };
+
+  const numParams = useParamStore((state) => state.numParams);
+  const handleAddParameter = () => {
+    useParamStore.setState({ numParams: numParams + 1 });
+    const name = 'parameter name';
+    const id = 'parameter-' + '-' + nanoid();
+    const newParam: ParameterType = {
+      ...defaultParameter,
+      id: id,
+      name: name,
+      type: 'integer',
+      abstract: false,
+      values: [],
+    };
+    currentNode?.data?.variants[variantIndex]?.parameters.push(newParam);
+    useParamStore.setState({ selectedParamData: newParam });
   };
 
   const handleAddNormalTask = () => {
@@ -133,9 +156,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     setShowPopover(false);
   };
 
-  const selectedVariant = useConfigPanelStore(
-    (state) => state.selectedTaskVariant
-  );
   const tabs = useTabStore((state) => state.tabs);
 
   const removeRedundantTabs = (id: string) => {
@@ -260,11 +280,17 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         }}
       />
 
-      {Array.from({ length: numParameters }).map((_, index) => (
-        <DynamicTable key={index} number={index + 1} />
-      ))}
+      {currentNode?.data?.variants[variantIndex]?.parameters?.map(
+        (param: ParameterType) => (
+          <DynamicTable id={param.id}/>
+        )
+      )}
 
-      <CustomButton buttonText="add parameter" handleClick={addParameter} />
+      <CustomButton
+        buttonText="add parameter"
+        handleClick={handleAddParameter}
+      />
+
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__variant">
           <button onClick={handleAddNormalTask}>Add Normal Task</button>

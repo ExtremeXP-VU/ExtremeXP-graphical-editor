@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { TaskDataType, defaultTaskData } from '../types/task';
+import { TaskDataType, defaultTaskData, ParameterType, defaultParameter} from '../types/task';
 import { OperatorDataType, defaultOperatorData } from '../types/operator';
 
 export type OutgoingLinkType = {
@@ -64,3 +64,24 @@ export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
     });
   },
 }));
+
+
+type ParamState= {
+  numParams: number;
+  selectedParamId: string;
+  selectedParamData: ParameterType;
+};
+
+export const useParamStore = create<ParamState>((set) => ({
+  numParams: 0,
+  selectedParamId: '',
+  setNumParams: (newNum: number) => set({ numParams: newNum }),
+  setSelectedParamId: (newId: string) => set({ selectedParamId: newId }),
+
+
+  selectedParamData: defaultParameter,
+  setSelectedParamData: (newData: ParameterType) =>
+    set({ selectedParamData: newData }),
+}));
+
+

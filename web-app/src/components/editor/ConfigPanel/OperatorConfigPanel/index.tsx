@@ -12,6 +12,7 @@ import {
 // import DropDown from '../SupportComponents/DropDown';
 // import RadioButton from '../SupportComponents/RadioButton';
 import StaticTable from '../SupportComponents/StaticTable';
+import { defaultOperatorData } from '../../../../types/operator';
 
 interface TaskConfigPanelProps {
   updateSideBar: () => void;
@@ -38,7 +39,7 @@ const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
   const handleSetConditions = (event: React.ChangeEvent<HTMLInputElement>) => {
     const action: Action = {
       type: 'UPDATE_CONDITIONS',
-      payload: event.target.value.split(','),
+      payload: event.target.value.split('||'),
     };
     dispatch(action);
   }
@@ -69,8 +70,9 @@ const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
               <input
                 type="text"
                 className="transparent-input"
-                defaultValue={operatorState.condition}
+                defaultValue={defaultOperatorData.condition}
                 onChange={handleSetCondition}
+                value={operatorState.condition}
               />
             ),
           }
@@ -86,8 +88,9 @@ const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
               <input
                 type="text"
                 className="transparent-input"
-                defaultValue={operatorState.conditions}
+                defaultValue={defaultOperatorData.conditions}
                 onChange={handleSetConditions}
+                value={operatorState.conditions}
               />
             ),
           }
