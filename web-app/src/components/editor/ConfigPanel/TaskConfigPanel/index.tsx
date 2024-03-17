@@ -27,7 +27,7 @@ import Popover from '../../../general/Popover';
 import { TasksResponseType } from '../../../../types/requests';
 import useRequest from '../../../../hooks/useRequest';
 import { message } from '../../../../utils/message';
-import { removeTab, useTabStore } from '../../../../stores/tabStore';
+import { removeTab } from '../../../../stores/tabStore';
 
 import DropDown from '../SupportComponents/DropDown';
 import RadioButton from '../SupportComponents/RadioButton';
@@ -54,21 +54,15 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   );
 
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedTaskData = useConfigPanelStore(
-    (state) => state.selectedTaskVariant
-  );
 
-  const selectedVariant = useConfigPanelStore(
-    (state) => state.selectedTaskVariantID
-  );
-
-  const variantIndex = selectedNode?.data.variants.findIndex(
-    (variant: TaskVariantType) => variant.id_task === selectedVariant
+  const currentTaskVariantId = selectedNode?.data.currentVariant;
+  const currentTaskVariant: TaskVariantType = selectedNode?.data.variants.find(
+    (variant: TaskVariantType) => variant.id_task === currentTaskVariantId
   );
 
   const [taskState, dispatch] = useImmerReducer(
     taskConfigReducer,
-    selectedTaskData
+    currentTaskVariant || defaultTaskVariant
   );
 
   function updateSelectedNodeData(taskData: TaskVariantType) {
@@ -84,7 +78,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   }
 
   useEffect(() => {
-    useConfigPanelStore.setState({ selectedTaskVariant: taskState });
     updateSelectedNodeData(taskState);
   }, [taskState]);
 
@@ -122,7 +115,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       abstract: false,
       values: [],
     };
-    selectedNode?.data?.variants[variantIndex]?.parameters.push(newParam);
+    currentTaskVariant?.parameters.push(newParam);
     useParamStore.setState({ selectedParamData: newParam });
   };
 
@@ -132,10 +125,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   const categories = useCategoryStore((state) => state.categories);
   const [taskList, setTaskList] = useState<TaskType[]>([genericTask]);
   const [selectedTask, setSelectedTask] = useState<TaskType>(taskList[0]);
-
-  const closeMask = () => {
-    setShowPopover(false);
-  };
 
   const handleOpenPopover = () => {
     setShowPopover(true);
@@ -159,6 +148,16 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       }
     }
     return max;
+  };
+
+  const handleSetCurrentVariant = (id: string) => {
+    const prevId = selectedNode?.data?.currentVariant;
+    selectedNode?.data && (selectedNode.data.currentVariant = id);
+
+    if (selectedNode?.data) {
+      removeTab(prevId);
+    }
+    updateSideBar();
   };
 
   const handleAddTask = (isComsite: boolean) => {
@@ -186,32 +185,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
     selectedNode?.data?.variants.push(newTask);
     setShowPopover(false);
-  };
-
-  const tabs = useTabStore((state) => state.tabs);
-
-  const removeRedundantTabs = (id: string) => {
-    tabs.forEach((tab) => {
-      if (tab.id === id) {
-        removeTab(id);
-      }
-    });
-  };
-
-  const handleSetCurrentVariant = (id: string) => {
-    selectedNode?.data && (selectedNode.data.currentVariant = id);
-    useConfigPanelStore.setState({ selectedTaskVariantID: id });
-
-    if (selectedNode?.data) {
-      const variantData: TaskVariantType = selectedNode.data.variants.find(
-        (t: TaskVariantType) => t.id_task === selectedNode.data.currentVariant
-      );
-      useConfigPanelStore.setState({ selectedTaskVariant: variantData });
-
-      removeRedundantTabs(selectedVariant);
-    }
-
-    updateSideBar();
+    handleSetCurrentVariant(id);
   };
 
   const getTasks = useCallback(
@@ -308,18 +282,19 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         }}
       />
 
-      {selectedNode?.data?.variants[variantIndex]?.parameters?.map(
-        (param: TaskParameterType) => (
-          <DynamicTable id={param.id} key={param.id} />
-        )
-      )}
+      {currentTaskVariant.parameters?.map((param: TaskParameterType) => (
+        <DynamicTable id={param.id} key={param.id} />
+      ))}
 
       <CustomButton
         buttonText="add parameter"
         handleClick={handleAddParameter}
       />
 
-      <Popover show={showPopover} blankClickCallback={closeMask}>
+      <Popover
+        show={showPopover}
+        blankClickCallback={() => setShowPopover(false)}
+      >
         <div className="popover__variant">
           <button onClick={() => handleAddTask(false)}>Add Normal Task</button>
           <select name="" id="" onChange={handleSelectTask}>

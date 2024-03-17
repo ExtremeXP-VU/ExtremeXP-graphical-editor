@@ -1,11 +1,7 @@
 import { create } from 'zustand';
-import {
-  TaskVariantType,
-  defaultTaskVariant,
-  TaskParameterType,
-  defaultParameter,
-} from '../types/task';
+import { TaskParameterType, defaultParameter } from '../types/task';
 import { OperatorDataType, defaultOperatorData } from '../types/operator';
+import { Edge, Node } from 'reactflow';
 
 export type OutgoingLinkType = {
   index: number;
@@ -22,12 +18,8 @@ type ConfigPanelState = {
   selectedNodeType: string;
   selectedNodeId: string;
   outgoingLinks: OutgoingLinkType[];
+  setOutgoingLinks: (node: Node, edges: Edge[]) => void;
   clearConfigStore: () => void;
-
-  // For Task Node
-  selectedTaskVariant: TaskVariantType;
-  selectedTaskVariantID: string;
-  setSelectedTaskData: (newData: TaskVariantType) => void;
 };
 
 type ConfigOperatorPanelState = {
@@ -56,25 +48,31 @@ export const useConfigOperatorPanelStore = create<ConfigOperatorPanelState>(
 export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
   isOpenConfig: false,
   setIsOpenConfig: (newState: boolean) => set({ isOpenConfig: newState }),
-  selectedTaskVariant: defaultTaskVariant,
-  setSelectedTaskData: (newData: TaskVariantType) =>
-    set({ selectedTaskVariant: newData }),
   selectedNodeId: '',
   setSelectedNodeId: (newId: string) => set({ selectedNodeId: newId }),
   selectedNodeType: '',
   setSelectedNodeType: (newType: string) => set({ selectedNodeType: newType }),
-  selectedTaskVariantID: '',
-  setSelectedTaskVariant: (newVariant: string) =>
-    set({ selectedTaskVariantID: newVariant }),
   outgoingLinks: [],
-  setOutgoingLinks: (newLinks: OutgoingLinkType[]) =>
-    set({ outgoingLinks: newLinks }),
+  setOutgoingLinks: (node: Node, edges: Edge[]) => {
+    const links = edges.filter((edge) => edge.source === node.id);
+    const outgoingLinks: OutgoingLinkType[] = [];
+
+    for (let i = 0; i < links.length; i++) {
+      const link: OutgoingLinkType = {
+        index: i + 1,
+        linkId: links[i].id,
+        target: links[i].target,
+      };
+      outgoingLinks.push(link);
+    }
+    set({ outgoingLinks: outgoingLinks });
+  },
   clearConfigStore: () => {
     set({
       isOpenConfig: false,
-      selectedTaskVariant: defaultTaskVariant,
+      // selectedTaskVariant: defaultTaskVariant,
       selectedNodeId: '',
-      selectedTaskVariantID: '',
+      // selectedTaskVariantID: '',
     });
   },
 }));

@@ -7,10 +7,7 @@ import RealTable from '../RealTable';
 import StringTable from '../StringTable';
 import BooleanTable from '../BooleanTable';
 import BlobTable from '../BlobTable';
-import {
-  useConfigPanelStore,
-  useParamStore,
-} from '../../../../../stores/configPanelStore';
+import { useParamStore } from '../../../../../stores/configPanelStore';
 import { useImmerReducer } from 'use-immer';
 import { paramConfigReducer, Action } from '../../TaskConfigPanel/reducer';
 import { TaskParameterType, TaskVariantType } from '../../../../../types/task';
@@ -21,30 +18,24 @@ interface DynamicTableProps {
 }
 
 const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
-  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-
   const selectedParamId = useParamStore((state) => state.selectedParamId);
   const selectedParamData = useParamStore((state) => state.selectedParamData);
 
-  const nodes = useReactFlowInstanceStore((state) => state.nodes);
-  const currentNode = nodes.find((node) => node.id === selectedNodeId);
-  const selectedVariant = useConfigPanelStore(
-    (state) => state.selectedTaskVariantID
+  const selectedNode = useReactFlowInstanceStore((state) => state.selectedNode);
+  const currentTaskVariantId = selectedNode?.data.currentVariant;
+  const currentTaskVariant: TaskVariantType = selectedNode?.data.variants.find(
+    (variant: TaskVariantType) => variant.id_task === currentTaskVariantId
   );
 
-  const variantIndex = currentNode?.data.variants.findIndex(
-    (variant: TaskVariantType) => variant.id_task === selectedVariant
-  );
   const [paramIndex, setParamIndex] = useState<number>(-1);
 
   useEffect(() => {
-    const Index = currentNode?.data.variants[variantIndex].parameters.findIndex(
+    const Index = currentTaskVariant.parameters.findIndex(
       (param: TaskParameterType) => param.id === selectedParamId
     );
     setParamIndex(Index);
     useParamStore.setState({
-      selectedParamData:
-        currentNode?.data?.variants[variantIndex]?.parameters[paramIndex],
+      selectedParamData: currentTaskVariant.parameters[paramIndex],
     });
     // console.log('selectedParamData', selectedParamData);
   }, [selectedParamId]);

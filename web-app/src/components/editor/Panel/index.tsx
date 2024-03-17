@@ -57,7 +57,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   ) => {
     setWindowNode(nodeType);
     let data = {};
-    const id = nanoid() + '-variant-1';
+    const id = 'variant-1-' + nanoid();
     if (nodeType === 'task') {
       data = {
         currentVariant: id,

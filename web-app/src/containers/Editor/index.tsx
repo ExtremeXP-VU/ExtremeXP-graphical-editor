@@ -19,7 +19,6 @@ import {
 } from '../../stores/reactFlowInstanceStore';
 import {
   useConfigPanelStore,
-  OutgoingLinkType,
   useConfigOperatorPanelStore,
 } from '../../stores/configPanelStore';
 
@@ -72,7 +71,6 @@ const selector = (state: RFState) => ({
 });
 
 const Editor = () => {
-  // const reactFlowWrapper = useRef(null);
   const { request: specificationRequest } = useRequest<
     ExperimentResponseType | TaskResponseType
   >();
@@ -83,9 +81,6 @@ const Editor = () => {
   const { request: createNewSpecRequest } = useRequest<
     CreateExperimentResponseType | CreateTaskResponseType
   >();
-
-  // FIXME: Temporary Execution Demo
-  // const { request: executionRequest } = useRequest<ExecutionResponseType>();
 
   const {
     selectedLink,
@@ -103,42 +98,19 @@ const Editor = () => {
   } = useReactFlowInstanceStore(selector, shallow);
 
   const navigate = useNavigate();
+  const specificationType = useLocation().pathname.split('/')[2];
+  const projID = useLocation().pathname.split('/')[3];
+  const experimentID = useLocation().pathname.split('/')[4];
 
   const [experiment, setExperiment] = useState<ExperimentType | TaskType>(
     defaultExperiment
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const specificationType = useLocation().pathname.split('/')[2];
-  const projID = useLocation().pathname.split('/')[3];
-  const experimentID = useLocation().pathname.split('/')[4];
-
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
 
-  const [showPopover, setShowPopover] = useState(false);
-  const [newExpName, setNewExpName] = useState('');
-
-  const tabs = useTabStore((state) => state.tabs);
-  const selectedTab = useTabStore((state) => state.selectedTab);
-
-  function traverseGraphicalModel(
-    graphicalModel: GraphicalModelType,
-    callback: (node: Node) => void
-  ) {
-    graphicalModel.nodes.forEach((node) => {
-      callback(node as unknown as Node);
-      if (node.type === 'task') {
-        const task = node.data.variants.find(
-          (t: TaskVariantType) => t.id_task === node.data.currentVariant
-        );
-        if (task.is_composite && task.graphical_model) {
-          traverseGraphicalModel(task.graphical_model, callback);
-        }
-      }
-    });
-  }
-
+  // Fetch the experiment or task
   useEffect(() => {
     let url = '';
     specificationType === 'experiment'
@@ -177,6 +149,32 @@ const Editor = () => {
     setEdges(graphicalModel.edges);
   }, [graphicalModel]);
 
+  // Tabs management
+  const tabs = useTabStore((state) => state.tabs);
+  const selectedTab = useTabStore((state) => state.selectedTab);
+
+  function traverseGraphicalModel(
+    graphicalModel: GraphicalModelType,
+    callback: (node: Node) => void
+  ) {
+    graphicalModel.nodes.forEach((node) => {
+      callback(node as unknown as Node);
+      if (node.type === 'task') {
+        const task = node.data.variants.find(
+          (t: TaskVariantType) => t.id_task === node.data.currentVariant
+        );
+        if (task.is_composite && task.graphical_model) {
+          traverseGraphicalModel(task.graphical_model, callback);
+        }
+      }
+    });
+  }
+
+  const handleSelectTab = (id: string) => {
+    handleSave();
+    setSelectedTab(id);
+  };
+
   useEffect(() => {
     if (selectedTab === 'main') {
       setNodes(graphicalModel.nodes);
@@ -204,21 +202,7 @@ const Editor = () => {
     }
   }, [selectedTab, tabs]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-        event.preventDefault();
-        handleSave();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [nodes, edges]);
-
+  // Node Drag and Drop
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
@@ -259,6 +243,26 @@ const Editor = () => {
     },
     [nodes, edges]
   );
+
+  // Save and Save As
+
+  const [showPopover, setShowPopover] = useState(false);
+  const [newExpName, setNewExpName] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        handleSave();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [nodes, edges]);
 
   const updateGraphicalModel = (graph: GraphicalModelType) => {
     let url = '';
@@ -364,13 +368,7 @@ const Editor = () => {
       });
   }
 
-  const handleSelectTab = (id: string) => {
-    handleSave();
-    setSelectedTab(id);
-  };
-
   // Config Panel
-
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
   const updateConfigPanel = () => {
@@ -378,31 +376,6 @@ const Editor = () => {
     setTimeout(() => {
       useConfigPanelStore.setState({ isOpenConfig: true }); // Re-open the panel
     }, 0);
-  };
-
-  const setOutgoingLinks = (node: Node) => {
-    const links = edges.filter((edge) => edge.source === node.id);
-    const outgoingLinks: OutgoingLinkType[] = [];
-
-    for (let i = 0; i < links.length; i++) {
-      const link: OutgoingLinkType = {
-        index: i + 1,
-        linkId: links[i].id,
-        target: links[i].target,
-      };
-      outgoingLinks.push(link);
-    }
-    useConfigPanelStore.setState({ outgoingLinks: outgoingLinks });
-  };
-
-  const initTaskNodeConfig = (node: Node) => {
-    const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
-    useConfigPanelStore.setState({ selectedTaskVariantID: currentVariant });
-
-    const variantData: TaskVariantType = node.data.variants.find(
-      (t: TaskVariantType) => t.id_task === node.data.currentVariant
-    ); // Accessing the name of the current variant
-    useConfigPanelStore.setState({ selectedTaskVariant: variantData });
   };
 
   const initOperatorNodeConfig = (node: Node) => {
@@ -415,21 +388,16 @@ const Editor = () => {
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
 
-    setSelectedNode(node.id);
-    setOutgoingLinks(node); // Set the outgoing links of the selected node
+    setSelectedNode(node.id); // Set the selected node in the reactFlowInstanceStore
+    useConfigPanelStore.getState().setOutgoingLinks(node, edges); // Set the outgoing links of the selected node
     useConfigPanelStore.setState({ selectedNodeType: node.type });
+    useConfigPanelStore.setState({ selectedNodeId: node.id });
 
     switch (node.type) {
-      case 'task':
-        useConfigPanelStore.setState({ selectedNodeId: node.id });
-        initTaskNodeConfig(node);
-        break;
       case 'opExclusive':
-        useConfigPanelStore.setState({ selectedNodeId: node.id });
         initOperatorNodeConfig(node);
         break;
       case 'opInclusive':
-        useConfigPanelStore.setState({ selectedNodeId: node.id });
         initOperatorNodeConfig(node);
         break;
       default:

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   CategoryType,
   defaultTask,
@@ -44,7 +44,7 @@ const SubTask = ({ category, setWindow }: SubTaskProps) => {
     task: typeof defaultTask
   ) => {
     setWindow('subflow');
-    const id = nanoid() + '-variant-1';
+    const id = '-variant-1-' + nanoid();
     const data = {
       currentVariant: id,
       variants: [
