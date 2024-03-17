@@ -13,7 +13,7 @@ import {
 } from '../../../../../stores/configPanelStore';
 import { useImmerReducer } from 'use-immer';
 import { paramConfigReducer, Action } from '../../TaskConfigPanel/reducer';
-import { ParameterType, TaskDataType } from '../../../../../types/task';
+import { TaskParameterType, TaskVariantType } from '../../../../../types/task';
 import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 
 interface DynamicTableProps {
@@ -33,13 +33,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
   );
 
   const variantIndex = currentNode?.data.variants.findIndex(
-    (variant: TaskDataType) => variant.id_task === selectedVariant
+    (variant: TaskVariantType) => variant.id_task === selectedVariant
   );
   const [paramIndex, setParamIndex] = useState<number>(-1);
 
   useEffect(() => {
     const Index = currentNode?.data.variants[variantIndex].parameters.findIndex(
-      (param: ParameterType) => param.id === selectedParamId
+      (param: TaskParameterType) => param.id === selectedParamId
     );
     setParamIndex(Index);
     useParamStore.setState({
@@ -49,10 +49,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
     // console.log('selectedParamData', selectedParamData);
   }, [selectedParamId]);
 
-  const [paramState, paramDispatch] = useImmerReducer<ParameterType, Action>(
-    paramConfigReducer,
-    selectedParamData
-  );
+  const [paramState, paramDispatch] = useImmerReducer<
+    TaskParameterType,
+    Action
+  >(paramConfigReducer, selectedParamData);
 
   const handleParamNameChange = (
     event: React.ChangeEvent<HTMLInputElement>

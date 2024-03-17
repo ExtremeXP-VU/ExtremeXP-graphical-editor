@@ -38,7 +38,7 @@ import {
   GraphicalModelType,
 } from '../../types/experiment';
 
-import { TaskType, TaskDataType } from '../../types/task';
+import { TaskType, TaskVariantType } from '../../types/task';
 
 import {
   TaskResponseType,
@@ -130,7 +130,7 @@ const Editor = () => {
       callback(node as unknown as Node);
       if (node.type === 'task') {
         const task = node.data.variants.find(
-          (t: TaskDataType) => t.id_task === node.data.currentVariant
+          (t: TaskVariantType) => t.id_task === node.data.currentVariant
         );
         if (task.is_composite && task.graphical_model) {
           traverseGraphicalModel(task.graphical_model, callback);
@@ -186,7 +186,7 @@ const Editor = () => {
       traverseGraphicalModel(graphicalModel, (node) => {
         if (node.type === 'task') {
           const task = node.data.variants.find(
-            (t: TaskDataType) => t.id_task === node.data.currentVariant
+            (t: TaskVariantType) => t.id_task === node.data.currentVariant
           );
           if (task.id_task === selectedTab) {
             newGraph = task.graphical_model;
@@ -247,7 +247,7 @@ const Editor = () => {
       traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
         if (node.type === 'task') {
           const task = node.data.variants.find(
-            (t: TaskDataType) => t.id_task === node.data.currentVariant
+            (t: TaskVariantType) => t.id_task === node.data.currentVariant
           );
           tabs.forEach((tab) => {
             if (tab.id === task.id_task) {
@@ -290,7 +290,7 @@ const Editor = () => {
       traverseGraphicalModel(graphicalModel, (node) => {
         if (node.type === 'task') {
           const task = node.data.variants.find(
-            (t: TaskDataType) => t.id_task === node.data.currentVariant
+            (t: TaskVariantType) => t.id_task === node.data.currentVariant
           );
           if (task.id_task === selectedTab) {
             task.graphical_model = { nodes, edges };
@@ -399,8 +399,8 @@ const Editor = () => {
     const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
     useConfigPanelStore.setState({ selectedTaskVariant: currentVariant });
 
-    const variantData: TaskDataType = node.data.variants.find(
-      (t: TaskDataType) => t.id_task === node.data.currentVariant
+    const variantData: TaskVariantType = node.data.variants.find(
+      (t: TaskVariantType) => t.id_task === node.data.currentVariant
     ); // Accessing the name of the current variant
     useConfigPanelStore.setState({ selectedTaskData: variantData });
   };

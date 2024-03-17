@@ -15,11 +15,11 @@ import {
 import { shallow } from 'zustand/shallow';
 import { useCategoryStore } from '../../../../stores/categoryStore';
 import {
-  TaskDataType,
+  TaskVariantType,
   TaskType,
   genericTask,
-  defaultTaskData,
-  ParameterType,
+  defaultTaskVariant,
+  TaskParameterType,
   defaultParameter,
 } from '../../../../types/task';
 
@@ -42,14 +42,16 @@ interface TaskConfigPanelProps {
 const selector = (state: RFState) => ({
   nodes: state.nodes,
   edges: state.edges,
-  updateNode: state.updateNode,
+  updateNodeData: state.updateNodeData,
   selectedNode: state.selectedNode,
-  updateEdge: state.updateEdge,
+  updateEdgeData: state.updateEdgeData,
 });
 
 const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
-  const { nodes, edges, updateNode, selectedNode, updateEdge } =
-    useReactFlowInstanceStore(selector, shallow);
+  const { updateNodeData, selectedNode } = useReactFlowInstanceStore(
+    selector,
+    shallow
+  );
 
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const selectedTaskData = useConfigPanelStore(
@@ -61,7 +63,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   );
 
   const variantIndex = selectedNode?.data.variants.findIndex(
-    (variant: TaskDataType) => variant.id_task === selectedVariant
+    (variant: TaskVariantType) => variant.id_task === selectedVariant
   );
 
   const [taskState, dispatch] = useImmerReducer(
@@ -69,29 +71,28 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     selectedTaskData
   );
 
-  function updateSelectedNodeData(taskData: TaskDataType) {
-    updateNode(
+  function updateSelectedNodeData(taskData: TaskVariantType) {
+    updateNodeData(
       {
-        ...selectedNode,
-        data: {
-          ...selectedNode?.data,
-          variants: selectedNode?.data?.variants.map((variant) =>
-            variant.id_task === taskData.id_task ? taskData : variant
-          ),
-        },
+        ...selectedNode?.data,
+        variants: selectedNode?.data?.variants.map((variant) =>
+          variant.id_task === taskData.id_task ? taskData : variant
+        ),
       },
       selectedNodeId
     );
-    console.log('updated node', nodes);
   }
 
   useEffect(() => {
     useConfigPanelStore.setState({ selectedTaskData: taskState });
-    // if (taskState) {
-    //   updateSelectedNodeData(taskState);
-    // }
+    updateSelectedNodeData(taskState);
   }, [taskState]);
 
+  const handleClosePanel = () => {
+    useConfigPanelStore.getState().clearConfigStore();
+  };
+
+  // handle panel generic properties change
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const action: Action = { type: 'UPDATE_NAME', payload: event.target.value };
     dispatch(action);
@@ -107,7 +108,25 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     dispatch(action);
   };
 
-  // handle add variant
+  // handle add parameter
+  const numParams = useParamStore((state) => state.numParams);
+  const handleAddParameter = () => {
+    useParamStore.setState({ numParams: numParams + 1 });
+    const name = 'parameter name';
+    const id = 'parameter-' + '-' + nanoid();
+    const newParam: TaskParameterType = {
+      ...defaultParameter,
+      id: id,
+      name: name,
+      type: 'integer',
+      abstract: false,
+      values: [],
+    };
+    selectedNode?.data?.variants[variantIndex]?.parameters.push(newParam);
+    useParamStore.setState({ selectedParamData: newParam });
+  };
+
+  // handle add Task variant
   const [showPopover, setShowPopover] = useState(false);
   const { request: tasksRequest } = useRequest<TasksResponseType>();
   const categories = useCategoryStore((state) => state.categories);
@@ -142,48 +161,29 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     return max;
   };
 
-  const numParams = useParamStore((state) => state.numParams);
-  const handleAddParameter = () => {
-    useParamStore.setState({ numParams: numParams + 1 });
-    const name = 'parameter name';
-    const id = 'parameter-' + '-' + nanoid();
-    const newParam: ParameterType = {
-      ...defaultParameter,
-      id: id,
-      name: name,
-      type: 'integer',
-      abstract: false,
-      values: [],
-    };
-    selectedNode?.data?.variants[variantIndex]?.parameters.push(newParam);
-    useParamStore.setState({ selectedParamData: newParam });
-  };
-
-  const handleAddNormalTask = () => {
+  const handleAddTask = (isComsite: boolean) => {
     const variantNumber = getMaxVariantNumber() + 1;
     const id = 'variant-' + variantNumber + '-' + nanoid();
-    const newTask = {
-      ...defaultTaskData,
-      id_task: id,
-      variant: variantNumber,
-      graphical_model: null,
-    };
-    selectedNode?.data?.variants.push(newTask);
-    setShowPopover(false);
-  };
+    let newTask: TaskVariantType = defaultTaskVariant;
 
-  const handleAddCompositeTask = () => {
-    const variantNumber = getMaxVariantNumber() + 1;
-    const id = 'variant-' + variantNumber + '-' + nanoid();
+    if (isComsite) {
+      newTask = {
+        ...newTask,
+        id_task: id,
+        name: selectedTask.name,
+        is_composite: true,
+        variant: variantNumber,
+        graphical_model: selectedTask.graphical_model,
+      };
+    } else {
+      newTask = {
+        ...newTask,
+        id_task: id,
+        variant: variantNumber,
+        graphical_model: null,
+      };
+    }
 
-    const newTask = {
-      ...defaultTaskData,
-      id_task: id,
-      name: selectedTask.name,
-      is_composite: true,
-      variant: variantNumber,
-      graphical_model: selectedTask.graphical_model,
-    };
     selectedNode?.data?.variants.push(newTask);
     setShowPopover(false);
   };
@@ -203,8 +203,8 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     useConfigPanelStore.setState({ selectedTaskVariant: id });
 
     if (selectedNode?.data) {
-      const variantData: TaskDataType = selectedNode.data.variants.find(
-        (t: TaskDataType) => t.id_task === selectedNode.data.currentVariant
+      const variantData: TaskVariantType = selectedNode.data.variants.find(
+        (t: TaskVariantType) => t.id_task === selectedNode.data.currentVariant
       );
       useConfigPanelStore.setState({ selectedTaskData: variantData });
 
@@ -234,10 +234,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     [tasksRequest]
   );
 
-  const handleClosePanel = () => {
-    useConfigPanelStore.getState().clearConfigStore();
-  };
-
   return (
     <div className="sidebar">
       <span className="iconfont close-button" onClick={handleClosePanel}>
@@ -246,7 +242,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       <div className="sidebar__variants">
         <DropDown
           options={
-            selectedNode?.data?.variants.map((variant: TaskDataType) => {
+            selectedNode?.data?.variants.map((variant: TaskVariantType) => {
               // return `variant-${variant.variant}`;
               return variant.id_task;
             }) || []
@@ -313,7 +309,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       />
 
       {selectedNode?.data?.variants[variantIndex]?.parameters?.map(
-        (param: ParameterType) => (
+        (param: TaskParameterType) => (
           <DynamicTable id={param.id} key={param.id} />
         )
       )}
@@ -325,7 +321,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__variant">
-          <button onClick={handleAddNormalTask}>Add Normal Task</button>
+          <button onClick={() => handleAddTask(false)}>Add Normal Task</button>
           <select name="" id="" onChange={handleSelectTask}>
             {taskList.map((task) => (
               <option key={task.id_task} value={task.id_task}>
@@ -333,7 +329,9 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
               </option>
             ))}
           </select>
-          <button onClick={handleAddCompositeTask}>Add Composite Task</button>
+          <button onClick={() => handleAddTask(true)}>
+            Add Composite Task
+          </button>
         </div>
       </Popover>
     </div>

@@ -23,8 +23,8 @@ export type RFState = {
   edges: Edge[];
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
-  updateNode: (data: object, nodeId: string) => void;
-  updateEdge: (edge: Edge) => void;
+  updateNodeData: (data: object, nodeId: string) => void;
+  updateEdgeData: (data: object, edgeId: string) => void;
 
   selectedNode: Node | null;
   setSelectedNode: (nodeId: string) => void;
@@ -58,14 +58,16 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
       edges,
     });
   },
-  updateNode: (data: object, nodeId: string) => {
+  updateNodeData: (data: object, nodeId: string) => {
     const nodes = get().nodes.map((n) =>
       n.id === nodeId ? { ...n, data } : n
     );
     set({ nodes });
   },
-  updateEdge: (edge: Edge) => {
-    const edges = get().edges.map((e) => (e.id === edge.id ? edge : e));
+  updateEdgeData: (data: object, edgeId: string) => {
+    const edges = get().edges.map((e) =>
+      e.id === edgeId ? { ...e, data } : e
+    );
     set({ edges });
   },
 

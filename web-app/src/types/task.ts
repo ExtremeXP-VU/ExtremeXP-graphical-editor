@@ -44,6 +44,67 @@ export const defaultTask: TaskType = {
   },
 };
 
+export interface TaskNodeType {
+  id: string;
+  type: 'task';
+  data: {
+    currentVariant: string; // <id_task>
+    variants: TaskVariantType[];
+  };
+}
+
+export interface TaskVariantType {
+  id_task: string;
+  name: string;
+  variant: number;
+  is_composite: boolean;
+  description: string;
+  isAbstract: boolean;
+  graphical_model: GraphicalModelType | null;
+  parameters: TaskParameterType[];
+}
+
+export interface TaskParameterType {
+  name: string;
+  type: string;
+  abstract: boolean;
+  values: (
+    | number
+    | string
+    | boolean
+    | {
+        min: number;
+        max: number;
+        step: number;
+        minInclusive: boolean;
+        maxInclusive: boolean;
+      }
+  )[];
+  id: string;
+}
+
+export const defaultParameter: TaskParameterType = {
+  name: 'Parameter Name',
+  type: 'integer',
+  abstract: false,
+  values: [],
+  id: '',
+};
+
+export const defaultTaskVariant: TaskVariantType = {
+  id_task: 'default',
+  name: 'task',
+  description: 'no description',
+  variant: 1,
+  isAbstract: true,
+  is_composite: false,
+  graphical_model: {
+    nodes: [],
+    edges: [],
+  },
+  parameters: [],
+};
+
 export const genericTask: TaskType = {
   id_task: 'task-generic',
   name: 'generic task',
@@ -160,64 +221,3 @@ export const genericTask: TaskType = {
     ],
   },
 };
-
-export interface TaskDataType {
-  id_task: string;
-  name: string;
-  variant: number;
-  is_composite: boolean;
-  description: string;
-  isAbstract: boolean;
-  graphical_model: GraphicalModelType | null;
-  parameters: ParameterType[];
-}
-
-export interface ParameterType {
-  name: string;
-  type: string;
-  abstract: boolean;
-  values: (
-    | number
-    | string
-    | boolean
-    | {
-        min: number;
-        max: number;
-        step: number;
-        minInclusive: boolean;
-        maxInclusive: boolean;
-      }
-  )[];
-  id: string;
-}
-
-export const defaultParameter: ParameterType = {
-  name: 'Parameter Name',
-  type: 'integer',
-  abstract: false,
-  values: [],
-  id: '',
-};
-
-export const defaultTaskData: TaskDataType = {
-  id_task: 'default',
-  name: 'task',
-  description: 'no description',
-  variant: 1,
-  isAbstract: true,
-  is_composite: false,
-  graphical_model: {
-    nodes: [],
-    edges: [],
-  },
-  parameters: [defaultParameter],
-};
-
-export interface TaskNodeType {
-  id: string;
-  type: 'task';
-  data: {
-    currentVariant: string; // <id_task>
-    variants: TaskDataType[];
-  };
-}

@@ -3,7 +3,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { TabType, addTab } from '../../../../../stores/tabStore';
 import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
-import { TaskDataType } from '../../../../../types/task';
+import { TaskVariantType } from '../../../../../types/task';
 
 const handleSourceStyle = { top: 40, background: '#c3c3c3' };
 const handleTargetStyle = { top: 5, background: '#c3c3c3' };
@@ -24,7 +24,8 @@ const Task = ({
     (state) => state.selectedTaskVariant
   );
 
-  const [currentTask, setCurrentTask] = useState<TaskDataType>(
+  // console.log('data now', data);
+  const [currentTask, setCurrentTask] = useState<TaskVariantType>(
     data.variants[0]
   );
 
@@ -33,8 +34,9 @@ const Task = ({
   useEffect(() => {
     if (id === selectedNodeId) {
       const variantIndex = data.variants.findIndex(
-        (variant: TaskDataType) => variant.id_task === selectedVariant
+        (variant: TaskVariantType) => variant.id_task === selectedVariant
       );
+
       if (variantIndex !== -1) {
         data.variants[variantIndex] = { ...selectedTaskData };
       }
@@ -49,7 +51,7 @@ const Task = ({
 
   useEffect(() => {
     const task = data.variants.find(
-      (t: TaskDataType) => t.id_task === data.currentVariant
+      (t: TaskVariantType) => t.id_task === data.currentVariant
     );
     setCurrentTask(task);
   }, [data.currentVariant, selectedTaskData]);

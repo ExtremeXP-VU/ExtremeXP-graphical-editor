@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import { TaskDataType, defaultTaskData, ParameterType, defaultParameter} from '../types/task';
+import {
+  TaskVariantType,
+  defaultTaskVariant,
+  TaskParameterType,
+  defaultParameter,
+} from '../types/task';
 import { OperatorDataType, defaultOperatorData } from '../types/operator';
 
 export type OutgoingLinkType = {
@@ -9,15 +14,15 @@ export type OutgoingLinkType = {
 };
 
 type ConfigPanelState = {
-  // This is originally for the TaskConfigPanel, but it is also used for the overall control 
+  // This is originally for the TaskConfigPanel, but it is also used for the overall control
   // of the ConfigPanel
   isOpenConfig: boolean;
   selectedNodeType: string;
   selectedNodeId: string;
-  selectedTaskData: TaskDataType;
+  selectedTaskData: TaskVariantType;
   selectedTaskVariant: string;
   outgoingLinks: OutgoingLinkType[];
-  setSelectedTaskData: (newData: TaskDataType) => void;
+  setSelectedTaskData: (newData: TaskVariantType) => void;
   clearConfigStore: () => void;
 };
 
@@ -28,22 +33,27 @@ type ConfigOperatorPanelState = {
   setSelectedOperatorData: (newData: OperatorDataType) => void;
   setOpExclusiveCondition: (newCondition: string) => void;
   setOpInclusiveConditions: (newConditions: string[]) => void;
-}
+};
 
-export const useConfigOperatorPanelStore = create<ConfigOperatorPanelState>((set) => ({
-  opExclusiveCondition: '',
-  onInclusiveConditions: [],
-  selectedOperatorData: defaultOperatorData,
-  setSelectedOperatorData: (newData: OperatorDataType) => set({ selectedOperatorData: newData }),
-  setOpExclusiveCondition: (newCondition: string) => set({ opExclusiveCondition: newCondition }),
-  setOpInclusiveConditions: (newConditions: string[]) => set({ onInclusiveConditions: newConditions }),
-}));
+export const useConfigOperatorPanelStore = create<ConfigOperatorPanelState>(
+  (set) => ({
+    opExclusiveCondition: '',
+    onInclusiveConditions: [],
+    selectedOperatorData: defaultOperatorData,
+    setSelectedOperatorData: (newData: OperatorDataType) =>
+      set({ selectedOperatorData: newData }),
+    setOpExclusiveCondition: (newCondition: string) =>
+      set({ opExclusiveCondition: newCondition }),
+    setOpInclusiveConditions: (newConditions: string[]) =>
+      set({ onInclusiveConditions: newConditions }),
+  })
+);
 
 export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
   isOpenConfig: false,
   setIsOpenConfig: (newState: boolean) => set({ isOpenConfig: newState }),
-  selectedTaskData: defaultTaskData,
-  setSelectedTaskData: (newData: TaskDataType) =>
+  selectedTaskData: defaultTaskVariant,
+  setSelectedTaskData: (newData: TaskVariantType) =>
     set({ selectedTaskData: newData }),
   selectedNodeId: '',
   setSelectedNodeId: (newId: string) => set({ selectedNodeId: newId }),
@@ -58,18 +68,17 @@ export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
   clearConfigStore: () => {
     set({
       isOpenConfig: false,
-      selectedTaskData: defaultTaskData,
+      selectedTaskData: defaultTaskVariant,
       selectedNodeId: '',
       selectedTaskVariant: '',
     });
   },
 }));
 
-
-type ParamState= {
+type ParamState = {
   numParams: number;
   selectedParamId: string;
-  selectedParamData: ParameterType;
+  selectedParamData: TaskParameterType;
 };
 
 export const useParamStore = create<ParamState>((set) => ({
@@ -78,10 +87,7 @@ export const useParamStore = create<ParamState>((set) => ({
   setNumParams: (newNum: number) => set({ numParams: newNum }),
   setSelectedParamId: (newId: string) => set({ selectedParamId: newId }),
 
-
   selectedParamData: defaultParameter,
-  setSelectedParamData: (newData: ParameterType) =>
+  setSelectedParamData: (newData: TaskParameterType) =>
     set({ selectedParamData: newData }),
 }));
-
-

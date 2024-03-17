@@ -9,7 +9,7 @@ import { linkImageSrc } from '../../../assets/links';
 import { LinksPropsType } from '../notations/notationConfigs/linkProps';
 import { notationList } from '../notations/notationConfigs/notationList';
 
-import { genericTask, defaultTaskData } from '../../../types/task';
+import { genericTask, defaultTaskVariant } from '../../../types/task';
 
 import SubTask from './SubTask';
 import { useCategoryStore, setCategories } from '../../../stores/categoryStore';
@@ -63,7 +63,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
         currentVariant: id,
         variants: [
           {
-            ...defaultTaskData,
+            ...defaultTaskVariant,
             id_task: id,
           },
         ],
@@ -75,7 +75,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
         currentVariant: id,
         variants: [
           {
-            ...defaultTaskData,
+            ...defaultTaskVariant,
             id_task: id,
             name: genericTask.name,
             is_composite: true,

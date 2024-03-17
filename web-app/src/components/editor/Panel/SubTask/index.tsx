@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import {
   CategoryType,
   defaultTask,
-  defaultTaskData,
+  defaultTaskVariant,
 } from '../../../../types/task';
 import { TasksResponseType } from '../../../../types/requests';
 import useRequest from '../../../../hooks/useRequest';
@@ -49,7 +49,7 @@ const SubTask = ({ category, setWindow }: SubTaskProps) => {
       currentVariant: id,
       variants: [
         {
-          ...defaultTaskData,
+          ...defaultTaskVariant,
           id_task: id,
           name: task.name,
           is_composite: true,
