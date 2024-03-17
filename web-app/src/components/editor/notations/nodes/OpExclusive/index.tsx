@@ -1,5 +1,10 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
+// import {
+//   useConfigOperatorPanelStore,
+//   useConfigPanelStore,
+// } from '../../../../../stores/configPanelStore';
+// import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 
 const handleLeftSourceStyle = {
   bottom: '-4px',
@@ -23,10 +28,23 @@ const handleRightTargetStyle = {
 };
 
 const OpExclusive = ({
+  // id,
+  // data,
   isConnectable,
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
+  // const selectedOperatorData = useConfigOperatorPanelStore(
+  //   (state) => state.selectedOperatorData
+  // );
+  // const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
+
+  // useEffect(() => {
+  //   if (id === selectedNodeId) {
+  //     data = { ...selectedOperatorData };
+  //   }
+  // }, [selectedNodeId, selectedOperatorData]);
+
   return (
     <>
       <svg

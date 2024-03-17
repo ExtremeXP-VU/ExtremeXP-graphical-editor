@@ -211,7 +211,7 @@ const Tasks = () => {
           </div>
           <div className="dashboard__common__panel__folders">
             <div className="dashboard__common__panel__folders__header">
-              <span>Project name</span>
+              <span>Category name</span>
             </div>
             <ul className="dashboard__common__panel__folders__list">
               {filteredCategory.map((category, index) => (

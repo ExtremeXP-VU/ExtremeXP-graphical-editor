@@ -1,5 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
-import { CategoryType, defaultTask } from '../../../../types/task';
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  CategoryType,
+  defaultTask,
+  defaultTaskVariant,
+} from '../../../../types/task';
 import { TasksResponseType } from '../../../../types/requests';
 import useRequest from '../../../../hooks/useRequest';
 import { message } from '../../../../utils/message';
@@ -40,11 +44,12 @@ const SubTask = ({ category, setWindow }: SubTaskProps) => {
     task: typeof defaultTask
   ) => {
     setWindow('subflow');
-    const id = nanoid() + '-variant-1';
+    const id = '-variant-1-' + nanoid();
     const data = {
       currentVariant: id,
       variants: [
         {
+          ...defaultTaskVariant,
           id_task: id,
           name: task.name,
           is_composite: true,

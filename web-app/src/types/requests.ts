@@ -67,15 +67,6 @@ export type DeleteExperimentResponseType = {
   message: string;
 };
 
-// FIXME: Temporary Execution Demo
-export type ExecutionResponseType = {
-  message: string;
-  data: {
-    file: string;
-    result: string;
-  };
-};
-
 export type CategoriesResponseType = {
   message: string;
   data: {
@@ -125,4 +116,12 @@ export type UpdateTaskInfoResponseType = {
 
 export type DeleteTaskResponseType = {
   message: string;
+};
+
+export type ConvertorResponseType = {
+  message: string;
+  data: {
+    json: object;
+    xmi: string;
+  };
 };

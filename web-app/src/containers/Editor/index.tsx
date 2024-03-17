@@ -17,7 +17,10 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
-import { useConfigPanelStore } from '../../stores/configPanelStore';
+import {
+  useConfigPanelStore,
+  useConfigOperatorPanelStore,
+} from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -34,7 +37,7 @@ import {
   GraphicalModelType,
 } from '../../types/experiment';
 
-import { TaskType, TaskDataType } from '../../types/task';
+import { TaskType, TaskVariantType } from '../../types/task';
 
 import {
   TaskResponseType,
@@ -42,22 +45,24 @@ import {
   UpdateGraphicalModelResponseType,
   CreateExperimentResponseType,
   CreateTaskResponseType,
-  ExecutionResponseType,
+  // ExecutionResponseType,
 } from '../../types/requests';
 
 import Markers from '../../components/editor/notations/edges/Markers';
 import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
-import SideBar from '../../components/editor/SideBar';
+import ConfigPanel from '../../components/editor/ConfigPanel';
+import { OperatorDataType } from '../../types/operator';
 
 const selector = (state: RFState) => ({
-  selectedLink: state.selectedLink,
-  setSelectedLink: state.setSelectedLink,
   nodes: state.nodes,
   edges: state.edges,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
+  setSelectedNode: state.setSelectedNode,
+  selectedLink: state.selectedLinkType,
+  setSelectedLink: state.setSelectedLinkType,
   addNode: state.addNode,
   onConnect: state.onConnect,
   onNodesChange: state.onNodesChange,
@@ -66,7 +71,6 @@ const selector = (state: RFState) => ({
 });
 
 const Editor = () => {
-  // const reactFlowWrapper = useRef(null);
   const { request: specificationRequest } = useRequest<
     ExperimentResponseType | TaskResponseType
   >();
@@ -78,13 +82,11 @@ const Editor = () => {
     CreateExperimentResponseType | CreateTaskResponseType
   >();
 
-  // FIXME: Temporary Execution Demo
-  const { request: executionRequest } = useRequest<ExecutionResponseType>();
-
   const {
     selectedLink,
     nodes,
     edges,
+    setSelectedNode,
     onNodesChange,
     onEdgesChange,
     setSelectedLink,
@@ -96,42 +98,19 @@ const Editor = () => {
   } = useReactFlowInstanceStore(selector, shallow);
 
   const navigate = useNavigate();
+  const specificationType = useLocation().pathname.split('/')[2];
+  const projID = useLocation().pathname.split('/')[3];
+  const experimentID = useLocation().pathname.split('/')[4];
 
   const [experiment, setExperiment] = useState<ExperimentType | TaskType>(
     defaultExperiment
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
-  const specificationType = useLocation().pathname.split('/')[2];
-  const projID = useLocation().pathname.split('/')[3];
-  const experimentID = useLocation().pathname.split('/')[4];
-
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>(Object);
 
-  const [showPopover, setShowPopover] = useState(false);
-  const [newExpName, setNewExpName] = useState('');
-
-  const tabs = useTabStore((state) => state.tabs);
-  const selectedTab = useTabStore((state) => state.selectedTab);
-
-  function traverseGraphicalModel(
-    graphicalModel: GraphicalModelType,
-    callback: (node: Node) => void
-  ) {
-    graphicalModel.nodes.forEach((node) => {
-      callback(node as unknown as Node);
-      if (node.type === 'task') {
-        const task = node.data.variants.find(
-          (t: TaskDataType) => t.id_task === node.data.currentVariant
-        );
-        if (task.is_composite && task.graphical_model) {
-          traverseGraphicalModel(task.graphical_model, callback);
-        }
-      }
-    });
-  }
-
+  // Fetch the experiment or task
   useEffect(() => {
     let url = '';
     specificationType === 'experiment'
@@ -170,6 +149,32 @@ const Editor = () => {
     setEdges(graphicalModel.edges);
   }, [graphicalModel]);
 
+  // Tabs management
+  const tabs = useTabStore((state) => state.tabs);
+  const selectedTab = useTabStore((state) => state.selectedTab);
+
+  function traverseGraphicalModel(
+    graphicalModel: GraphicalModelType,
+    callback: (node: Node) => void
+  ) {
+    graphicalModel.nodes.forEach((node) => {
+      callback(node as unknown as Node);
+      if (node.type === 'task') {
+        const task = node.data.variants.find(
+          (t: TaskVariantType) => t.id_task === node.data.currentVariant
+        );
+        if (task.is_composite && task.graphical_model) {
+          traverseGraphicalModel(task.graphical_model, callback);
+        }
+      }
+    });
+  }
+
+  const handleSelectTab = (id: string) => {
+    handleSave();
+    setSelectedTab(id);
+  };
+
   useEffect(() => {
     if (selectedTab === 'main') {
       setNodes(graphicalModel.nodes);
@@ -179,7 +184,7 @@ const Editor = () => {
       traverseGraphicalModel(graphicalModel, (node) => {
         if (node.type === 'task') {
           const task = node.data.variants.find(
-            (t: TaskDataType) => t.id_task === node.data.currentVariant
+            (t: TaskVariantType) => t.id_task === node.data.currentVariant
           );
           if (task.id_task === selectedTab) {
             newGraph = task.graphical_model;
@@ -197,21 +202,7 @@ const Editor = () => {
     }
   }, [selectedTab, tabs]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-        event.preventDefault();
-        handleSave();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [nodes, edges]);
-
+  // Node Drag and Drop
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
@@ -240,7 +231,7 @@ const Editor = () => {
       traverseGraphicalModel({ nodes: deleted, edges }, (node) => {
         if (node.type === 'task') {
           const task = node.data.variants.find(
-            (t: TaskDataType) => t.id_task === node.data.currentVariant
+            (t: TaskVariantType) => t.id_task === node.data.currentVariant
           );
           tabs.forEach((tab) => {
             if (tab.id === task.id_task) {
@@ -252,6 +243,26 @@ const Editor = () => {
     },
     [nodes, edges]
   );
+
+  // Save and Save As
+
+  const [showPopover, setShowPopover] = useState(false);
+  const [newExpName, setNewExpName] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        handleSave();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [nodes, edges]);
 
   const updateGraphicalModel = (graph: GraphicalModelType) => {
     let url = '';
@@ -283,7 +294,7 @@ const Editor = () => {
       traverseGraphicalModel(graphicalModel, (node) => {
         if (node.type === 'task') {
           const task = node.data.variants.find(
-            (t: TaskDataType) => t.id_task === node.data.currentVariant
+            (t: TaskVariantType) => t.id_task === node.data.currentVariant
           );
           if (task.id_task === selectedTab) {
             task.graphical_model = { nodes, edges };
@@ -357,80 +368,59 @@ const Editor = () => {
       });
   }
 
-  // FIXEME: duplicated code
-  function handleExecution() {
-    const graphicalModel = { nodes, edges };
-    executionRequest({
-      url: `/exp/experiments/${projID}/specifications/${experimentID}/execution`,
-      method: 'POST',
-      data: {
-        graphical_model: graphicalModel,
-      },
-    })
-      .then((data) => {
-        if (data.data.result) {
-          alert(`The execution result is: ${data.data.result}`);
-        }
-      })
-      .catch((error) => {
-        if (error.response.data.message) {
-          message(error.response.data.message);
-        } else if (error.message) {
-          message(error.message);
-        }
-      });
-  }
-
-  const handleSelectTab = (id: string) => {
-    handleSave();
-    setSelectedTab(id);
-  };
-
   // Config Panel
-
   const isOpenConfig = useConfigPanelStore((state) => state.isOpenConfig);
 
   const updateConfigPanel = () => {
-    useConfigPanelStore.setState({ isOpenConfig: false }); // Close the panel
+    useConfigPanelStore.setState({ isOpenConfig: false });
     setTimeout(() => {
       useConfigPanelStore.setState({ isOpenConfig: true }); // Re-open the panel
     }, 0);
   };
 
-  const handleInitConfigPanel = (event: React.MouseEvent, node: Node) => {
-    event.preventDefault();
-
-    useConfigPanelStore.setState({ selectedNodeId: node.id });
-
-    const currentVariant = node.data.currentVariant; // Accessing the current variant of the clicked node
-    useConfigPanelStore.setState({ selectedVariant: currentVariant });
-
-    const variantData: TaskDataType = node.data.variants.find(
-      (t: TaskDataType) => t.id_task === node.data.currentVariant
-    ); // Accessing the name of the current variant
-    useConfigPanelStore.setState({ selectedTaskData: variantData });
-
-    updateConfigPanel();
+  const initOperatorNodeConfig = (node: Node) => {
+    const operatorData: OperatorDataType = node.data;
+    useConfigOperatorPanelStore.setState({
+      selectedOperatorData: operatorData,
+    });
   };
 
-  useEffect(() => {
-    const handleUrlChange = () => {
-      useConfigPanelStore.setState({ isOpenConfig: false });
-    };
-    window.addEventListener('popstate', handleUrlChange);
-    return () => {
-      window.removeEventListener('popstate', handleUrlChange);
-    };
-  }, []);
+  const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
+    event.preventDefault();
+
+    setSelectedNode(node.id); // Set the selected node in the reactFlowInstanceStore
+    useConfigPanelStore.getState().setOutgoingLinks(node, edges); // Set the outgoing links of the selected node
+    useConfigPanelStore.setState({ selectedNodeType: node.type });
+    useConfigPanelStore.setState({ selectedNodeId: node.id });
+
+    switch (node.type) {
+      case 'opExclusive':
+        initOperatorNodeConfig(node);
+        break;
+      case 'opInclusive':
+        initOperatorNodeConfig(node);
+        break;
+      default:
+        return;
+    }
+
+    if (isOpenConfig) {
+      updateConfigPanel();
+    }
+  };
+
+  const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
+    handleSwitchSelectedNode(event, node);
+
+    if (node.type !== 'start' && node.type !== 'end') {
+      updateConfigPanel();
+    }
+  };
 
   return (
     <div className="editor">
       <div className="editor__top">
-        <Header
-          onExecution={handleExecution}
-          onSave={handleSave}
-          onSaveAs={handleShowPopover}
-        />
+        <Header onSave={handleSave} onSaveAs={handleShowPopover} />
       </div>
       <ReactFlowProvider>
         <div className="editor__bottom">
@@ -483,11 +473,12 @@ const Editor = () => {
                   onDrop={onDrop}
                   onDragOver={onDragOver}
                   onNodesDelete={onNodesDelete}
-                  onNodeClick={handleInitConfigPanel}
+                  onNodeDoubleClick={handleOpenConfigPanel}
+                  onNodeClick={handleSwitchSelectedNode}
                   fitView
                 >
                   {isOpenConfig && (
-                    <SideBar updateSideBar={updateConfigPanel} />
+                    <ConfigPanel updateSideBar={updateConfigPanel} />
                   )}
                   <Controls position="top-left" />
                   <Background />

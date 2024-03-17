@@ -6,12 +6,10 @@ import { nanoid } from 'nanoid';
 
 import { nodeImageSrc } from '../../../assets/nodes';
 import { linkImageSrc } from '../../../assets/links';
-import {
-  LinksPropsType,
-  notationList,
-} from '../notations/notationConfigs/linkProps';
+import { LinksPropsType } from '../notations/notationConfigs/linkProps';
+import { notationList } from '../notations/notationConfigs/notationList';
 
-import { genericTask } from '../../../types/task';
+import { genericTask, defaultTaskVariant } from '../../../types/task';
 
 import SubTask from './SubTask';
 import { useCategoryStore, setCategories } from '../../../stores/categoryStore';
@@ -59,16 +57,14 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   ) => {
     setWindowNode(nodeType);
     let data = {};
-    const id = nanoid() + '-variant-1';
+    const id = 'variant-1-' + nanoid();
     if (nodeType === 'task') {
       data = {
         currentVariant: id,
         variants: [
           {
+            ...defaultTaskVariant,
             id_task: id,
-            name: 'task',
-            is_composite: false,
-            variant: 1,
           },
         ],
       };
@@ -79,11 +75,11 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
         currentVariant: id,
         variants: [
           {
+            ...defaultTaskVariant,
             id_task: id,
             name: genericTask.name,
             is_composite: true,
             graphical_model: genericTask.graphical_model,
-            variant: 1,
           },
         ],
       };

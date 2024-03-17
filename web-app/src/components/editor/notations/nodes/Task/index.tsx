@@ -1,64 +1,34 @@
 import './style.scss';
-import { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { TabType, addTab } from '../../../../../stores/tabStore';
-import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
-import { TaskDataType } from '../../../../../types/task';
+import { TaskVariantType } from '../../../../../types/task';
 
 const handleSourceStyle = { top: 40, background: '#c3c3c3' };
 const handleTargetStyle = { top: 5, background: '#c3c3c3' };
 
 const Task = ({
-  id,
   data,
+  selected,
   isConnectable,
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
-  const selectedTaskData = useConfigPanelStore(
-    (state) => state.selectedTaskData
-  );
-  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedVariant = useConfigPanelStore((state) => state.selectedVariant);
-
-  const [currentTask, setCurrentTask] = useState<TaskDataType>(
+  const [currentTask, setCurrentTask] = useState<TaskVariantType>(
     data.variants[0]
   );
-
   const [taskName, setTaskName] = useState<string>(currentTask.name);
-  const [properties, setProperties] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (id === selectedNodeId) {
-      const variant = data.variants.find(
-        (variant: TaskDataType) => variant.id_task === selectedVariant
-      );
-      variant.name = selectedTaskData.name;
-    }
-  }, [selectedNodeId, selectedTaskData]);
-
-  useEffect(() => {
-    if (id === selectedNodeId && currentTask.id_task !== selectedVariant) {
-      data.currentVariant = selectedVariant;
-    }
-  }, [selectedNodeId, selectedVariant]);
 
   useEffect(() => {
     const task = data.variants.find(
-      (t: TaskDataType) => t.id_task === data.currentVariant
+      (t: TaskVariantType) => t.id_task === data.currentVariant
     );
     setCurrentTask(task);
-  }, [data.currentVariant, selectedTaskData]);
+  }, [data.currentVariant, data.variants]);
 
   useEffect(() => {
     setTaskName(currentTask.name);
-  }, [selectedTaskData, currentTask]);
-
-  // useEffect(() => {
-  //   const description = data.variants.find(
-  //     (t: TaskDataType) => t.id_task === data.currentVariant
-  //   ).description;
-  // }, [selectedTaskData, data.currentVariant, data.variants]);
+  }, [currentTask]);
 
   const handleAddTab = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -74,34 +44,20 @@ const Task = ({
   return (
     <>
       <div
-        className={`node-task ${
-          selectedNodeId === id ? 'node-task-selected' : ''
-        } ${currentTask.is_composite ? 'node-task-composite' : ''}`}
-        onContextMenu={handleAddTab}
+        className={`node-task ${selected ? 'node-task-selected' : ''} ${
+          currentTask.is_composite ? 'node-task-composite' : ''
+        }`}
       >
-        <div
-          className={`node-task__name ${
-            properties.length === 0 ? 'higher-task-name' : ''
-          }`}
-        >
+        <div className={`node-task__name ${'higher-task-name'}`}>
           {taskName}
         </div>
-        {properties.length > 0 && (
-          <div className="node-task__properties">
-            {properties.map((property, index) => (
-              <div key={index} className="node-task__property">
-                {property}
-              </div>
-            ))}
-          </div>
-        )}
-        {/* {currentTask.is_composite && (
+        {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>
               <span className="iconfont">&#xe601;</span>
             </div>
           </div>
-        )} */}
+        )}
         <Handle
           type="source"
           position={sourcePosition}
@@ -150,4 +106,3 @@ const Task = ({
 };
 
 export default memo(Task);
-// export default Task;
