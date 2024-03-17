@@ -2,63 +2,33 @@ import './style.scss';
 import React, { memo, useEffect, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { TabType, addTab } from '../../../../../stores/tabStore';
-import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
 import { TaskVariantType } from '../../../../../types/task';
 
 const handleSourceStyle = { top: 40, background: '#c3c3c3' };
 const handleTargetStyle = { top: 5, background: '#c3c3c3' };
 
 const Task = ({
-  id,
   data,
+  selected,
   isConnectable,
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
-  const selectedTaskData = useConfigPanelStore(
-    (state) => state.selectedTaskData
-  );
-
-  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedVariant = useConfigPanelStore(
-    (state) => state.selectedTaskVariant
-  );
-
-  // console.log('data now', data);
   const [currentTask, setCurrentTask] = useState<TaskVariantType>(
     data.variants[0]
   );
-
   const [taskName, setTaskName] = useState<string>(currentTask.name);
-
-  useEffect(() => {
-    if (id === selectedNodeId) {
-      const variantIndex = data.variants.findIndex(
-        (variant: TaskVariantType) => variant.id_task === selectedVariant
-      );
-
-      if (variantIndex !== -1) {
-        data.variants[variantIndex] = { ...selectedTaskData };
-      }
-    }
-  }, [selectedNodeId, selectedTaskData]);
-
-  useEffect(() => {
-    if (id === selectedNodeId && currentTask.id_task !== selectedVariant) {
-      data.currentVariant = selectedVariant;
-    }
-  }, [selectedNodeId, selectedVariant]);
 
   useEffect(() => {
     const task = data.variants.find(
       (t: TaskVariantType) => t.id_task === data.currentVariant
     );
     setCurrentTask(task);
-  }, [data.currentVariant, selectedTaskData]);
+  }, [data.currentVariant, data.variants]);
 
   useEffect(() => {
     setTaskName(currentTask.name);
-  }, [selectedTaskData, currentTask]);
+  }, [currentTask]);
 
   const handleAddTab = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -74,9 +44,9 @@ const Task = ({
   return (
     <>
       <div
-        className={`node-task ${
-          selectedNodeId === id ? 'node-task-selected' : ''
-        } ${currentTask.is_composite ? 'node-task-composite' : ''}`}
+        className={`node-task ${selected ? 'node-task-selected' : ''} ${
+          currentTask.is_composite ? 'node-task-composite' : ''
+        }`}
       >
         <div className={`node-task__name ${'higher-task-name'}`}>
           {taskName}
@@ -136,4 +106,3 @@ const Task = ({
 };
 
 export default memo(Task);
-// export default Task;

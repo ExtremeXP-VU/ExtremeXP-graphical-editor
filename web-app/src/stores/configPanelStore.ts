@@ -17,13 +17,17 @@ type ConfigPanelState = {
   // This is originally for the TaskConfigPanel, but it is also used for the overall control
   // of the ConfigPanel
   isOpenConfig: boolean;
+
+  // For Node in general
   selectedNodeType: string;
   selectedNodeId: string;
-  selectedTaskData: TaskVariantType;
-  selectedTaskVariant: string;
   outgoingLinks: OutgoingLinkType[];
-  setSelectedTaskData: (newData: TaskVariantType) => void;
   clearConfigStore: () => void;
+
+  // For Task Node
+  selectedTaskVariant: TaskVariantType;
+  selectedTaskVariantID: string;
+  setSelectedTaskData: (newData: TaskVariantType) => void;
 };
 
 type ConfigOperatorPanelState = {
@@ -52,25 +56,25 @@ export const useConfigOperatorPanelStore = create<ConfigOperatorPanelState>(
 export const useConfigPanelStore = create<ConfigPanelState>((set) => ({
   isOpenConfig: false,
   setIsOpenConfig: (newState: boolean) => set({ isOpenConfig: newState }),
-  selectedTaskData: defaultTaskVariant,
+  selectedTaskVariant: defaultTaskVariant,
   setSelectedTaskData: (newData: TaskVariantType) =>
-    set({ selectedTaskData: newData }),
+    set({ selectedTaskVariant: newData }),
   selectedNodeId: '',
   setSelectedNodeId: (newId: string) => set({ selectedNodeId: newId }),
   selectedNodeType: '',
   setSelectedNodeType: (newType: string) => set({ selectedNodeType: newType }),
-  selectedTaskVariant: '',
+  selectedTaskVariantID: '',
   setSelectedTaskVariant: (newVariant: string) =>
-    set({ selectedTaskVariant: newVariant }),
+    set({ selectedTaskVariantID: newVariant }),
   outgoingLinks: [],
   setOutgoingLinks: (newLinks: OutgoingLinkType[]) =>
     set({ outgoingLinks: newLinks }),
   clearConfigStore: () => {
     set({
       isOpenConfig: false,
-      selectedTaskData: defaultTaskVariant,
+      selectedTaskVariant: defaultTaskVariant,
       selectedNodeId: '',
-      selectedTaskVariant: '',
+      selectedTaskVariantID: '',
     });
   },
 }));

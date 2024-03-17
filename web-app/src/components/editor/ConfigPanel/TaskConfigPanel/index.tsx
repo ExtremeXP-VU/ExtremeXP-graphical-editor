@@ -55,11 +55,11 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
   const selectedTaskData = useConfigPanelStore(
-    (state) => state.selectedTaskData
+    (state) => state.selectedTaskVariant
   );
 
   const selectedVariant = useConfigPanelStore(
-    (state) => state.selectedTaskVariant
+    (state) => state.selectedTaskVariantID
   );
 
   const variantIndex = selectedNode?.data.variants.findIndex(
@@ -84,7 +84,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   }
 
   useEffect(() => {
-    useConfigPanelStore.setState({ selectedTaskData: taskState });
+    useConfigPanelStore.setState({ selectedTaskVariant: taskState });
     updateSelectedNodeData(taskState);
   }, [taskState]);
 
@@ -200,13 +200,13 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const handleSetCurrentVariant = (id: string) => {
     selectedNode?.data && (selectedNode.data.currentVariant = id);
-    useConfigPanelStore.setState({ selectedTaskVariant: id });
+    useConfigPanelStore.setState({ selectedTaskVariantID: id });
 
     if (selectedNode?.data) {
       const variantData: TaskVariantType = selectedNode.data.variants.find(
         (t: TaskVariantType) => t.id_task === selectedNode.data.currentVariant
       );
-      useConfigPanelStore.setState({ selectedTaskData: variantData });
+      useConfigPanelStore.setState({ selectedTaskVariant: variantData });
 
       removeRedundantTabs(selectedVariant);
     }

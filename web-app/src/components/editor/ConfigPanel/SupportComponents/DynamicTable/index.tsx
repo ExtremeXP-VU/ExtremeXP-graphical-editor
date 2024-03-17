@@ -29,7 +29,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
   const nodes = useReactFlowInstanceStore((state) => state.nodes);
   const currentNode = nodes.find((node) => node.id === selectedNodeId);
   const selectedVariant = useConfigPanelStore(
-    (state) => state.selectedTaskVariant
+    (state) => state.selectedTaskVariantID
   );
 
   const variantIndex = currentNode?.data.variants.findIndex(
