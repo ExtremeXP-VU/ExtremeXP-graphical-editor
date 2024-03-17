@@ -176,7 +176,18 @@ export interface ParameterType {
   name: string;
   type: string;
   abstract: boolean;
-  values: (number | string | boolean | { min: number; max: number; step: number; minInclusive: boolean; maxInclusive: boolean })[];
+  values: (
+    | number
+    | string
+    | boolean
+    | {
+        min: number;
+        max: number;
+        step: number;
+        minInclusive: boolean;
+        maxInclusive: boolean;
+      }
+  )[];
   id: string;
 }
 
@@ -186,8 +197,7 @@ export const defaultParameter: ParameterType = {
   abstract: false,
   values: [],
   id: '',
-}
-
+};
 
 export const defaultTaskData: TaskDataType = {
   id_task: 'default',
@@ -200,7 +210,7 @@ export const defaultTaskData: TaskDataType = {
     nodes: [],
     edges: [],
   },
-  parameters: [],
+  parameters: [defaultParameter],
 };
 
 export interface TaskNodeType {

@@ -37,11 +37,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
   );
   const [paramIndex, setParamIndex] = useState<number>(-1);
 
-
   useEffect(() => {
-    const Index = currentNode?.data.variants[
-      variantIndex
-    ].parameters.findIndex(
+    const Index = currentNode?.data.variants[variantIndex].parameters.findIndex(
       (param: ParameterType) => param.id === selectedParamId
     );
     setParamIndex(Index);
@@ -49,7 +46,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
       selectedParamData:
         currentNode?.data?.variants[variantIndex]?.parameters[paramIndex],
     });
-    console.log('selectedParamData', selectedParamData);
+    // console.log('selectedParamData', selectedParamData);
   }, [selectedParamId]);
 
   const [paramState, paramDispatch] = useImmerReducer<ParameterType, Action>(
@@ -80,7 +77,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
   }, [paramState]);
 
   const handleEnterParam = (id: string) => {
-    console.log('entering param', id);
+    // console.log('entering param', id);
     useParamStore.setState({ selectedParamId: id });
   };
 

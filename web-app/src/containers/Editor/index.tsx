@@ -57,12 +57,13 @@ import ConfigPanel from '../../components/editor/ConfigPanel';
 import { OperatorDataType } from '../../types/operator';
 
 const selector = (state: RFState) => ({
-  selectedLink: state.selectedLink,
-  setSelectedLink: state.setSelectedLink,
   nodes: state.nodes,
   edges: state.edges,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
+  setSelectedNode: state.setSelectedNode,
+  selectedLink: state.selectedLinkType,
+  setSelectedLink: state.setSelectedLinkType,
   addNode: state.addNode,
   onConnect: state.onConnect,
   onNodesChange: state.onNodesChange,
@@ -90,6 +91,7 @@ const Editor = () => {
     selectedLink,
     nodes,
     edges,
+    setSelectedNode,
     onNodesChange,
     onEdgesChange,
     setSelectedLink,
@@ -404,14 +406,17 @@ const Editor = () => {
   };
 
   const initOperatorNodeConfig = (node: Node) => {
-    const operatorData:OperatorDataType = node.data;
-    useConfigOperatorPanelStore.setState({ selectedOperatorData: operatorData });
-  }
+    const operatorData: OperatorDataType = node.data;
+    useConfigOperatorPanelStore.setState({
+      selectedOperatorData: operatorData,
+    });
+  };
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
 
-    setOutgoingLinks(node);
+    setSelectedNode(node.id);
+    setOutgoingLinks(node); // Set the outgoing links of the selected node
     useConfigPanelStore.setState({ selectedNodeType: node.type });
 
     switch (node.type) {

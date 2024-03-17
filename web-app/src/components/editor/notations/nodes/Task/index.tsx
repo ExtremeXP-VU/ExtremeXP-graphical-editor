@@ -1,12 +1,9 @@
 import './style.scss';
-import { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { TabType, addTab } from '../../../../../stores/tabStore';
-import {
-  useConfigPanelStore,
-  useParamStore,
-} from '../../../../../stores/configPanelStore';
-import { ParameterType, TaskDataType } from '../../../../../types/task';
+import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
+import { TaskDataType } from '../../../../../types/task';
 
 const handleSourceStyle = { top: 40, background: '#c3c3c3' };
 const handleTargetStyle = { top: 5, background: '#c3c3c3' };
@@ -21,19 +18,10 @@ const Task = ({
   const selectedTaskData = useConfigPanelStore(
     (state) => state.selectedTaskData
   );
-  const selectedParamData = useParamStore((state) => state.selectedParamData);
+
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedParamId = useParamStore((state) => state.selectedParamId);
   const selectedVariant = useConfigPanelStore(
     (state) => state.selectedTaskVariant
-  );
-
-  const variantIndex = data.variants.findIndex(
-    (variant: TaskDataType) => variant.id_task === selectedVariant
-  );
-
-  const paramIndex = data.variants[variantIndex]?.parameters.findIndex(
-    (param: ParameterType) => param.id === selectedParamId
   );
 
   const [currentTask, setCurrentTask] = useState<TaskDataType>(
@@ -41,12 +29,6 @@ const Task = ({
   );
 
   const [taskName, setTaskName] = useState<string>(currentTask.name);
-
-  useEffect(() => {
-    if (variantIndex !== -1 && paramIndex !== -1) {
-      data.variants[variantIndex].parameters[paramIndex] = selectedParamData;
-    }
-  }, [selectedParamData]);
 
   useEffect(() => {
     if (id === selectedNodeId) {
@@ -97,15 +79,6 @@ const Task = ({
         <div className={`node-task__name ${'higher-task-name'}`}>
           {taskName}
         </div>
-        {/* {properties.length > 0 && (
-          <div className="node-task__properties">
-            {properties.map((property, index) => (
-              <div key={index} className="node-task__property">
-                {property}
-              </div>
-            ))}
-          </div>
-        )} */}
         {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>

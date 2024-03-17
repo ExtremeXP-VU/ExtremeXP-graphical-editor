@@ -21,30 +21,31 @@ import {
 export type RFState = {
   nodes: Node[];
   edges: Edge[];
-  selectedLink: LinksPropsType;
-  onNodesChange: OnNodesChange;
-  onEdgesChange: OnEdgesChange;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
+  updateNode: (data: object, nodeId: string) => void;
+  updateEdge: (edge: Edge) => void;
+
+  selectedNode: Node | null;
+  setSelectedNode: (nodeId: string) => void;
+
+  selectedLinkType: LinksPropsType;
+  setSelectedLinkType: (link: LinksPropsType) => void;
+
+  onNodesChange: OnNodesChange;
+  onEdgesChange: OnEdgesChange;
   addNode: (
     type: string,
     position: { x: number; y: number },
     data: object
   ) => void;
   onConnect: (params: Edge | Connection) => void;
-  setSelectedLink: (link: LinksPropsType) => void;
   onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
 };
 
 export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
   nodes: [],
   edges: [],
-  selectedLink: 'regular',
-  setSelectedLink: (link: LinksPropsType) => {
-    set({
-      selectedLink: link,
-    });
-  },
   setNodes: (nodes: Node[]) => {
     set({
       ...get().nodes,
@@ -57,6 +58,31 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
       edges,
     });
   },
+  updateNode: (data: object, nodeId: string) => {
+    const nodes = get().nodes.map((n) =>
+      n.id === nodeId ? { ...n, data } : n
+    );
+    set({ nodes });
+  },
+  updateEdge: (edge: Edge) => {
+    const edges = get().edges.map((e) => (e.id === edge.id ? edge : e));
+    set({ edges });
+  },
+
+  selectedLinkType: 'regular',
+  setSelectedLinkType: (link: LinksPropsType) => {
+    set({
+      selectedLinkType: link,
+    });
+  },
+
+  selectedNode: null,
+  setSelectedNode: (nodeId: string) => {
+    const node = get().nodes.find((n) => n.id === nodeId);
+    set({
+      selectedNode: node || null,
+    });
+  },
   onNodesChange: (changes: NodeChange[]) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),
@@ -67,6 +93,7 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
       edges: applyEdgeChanges(changes, get().edges),
     });
   },
+
   addNode: (type: string, position: { x: number; y: number }, data: object) => {
     const newNode = {
       id: nanoid(),
@@ -86,7 +113,7 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
     });
   },
   onConnect: (params: Edge | Connection) => {
-    const props = linkProps[get().selectedLink];
+    const props = linkProps[get().selectedLinkType];
     const data = { ...params, ...(props as Edge) };
     const edge = {
       ...data,
