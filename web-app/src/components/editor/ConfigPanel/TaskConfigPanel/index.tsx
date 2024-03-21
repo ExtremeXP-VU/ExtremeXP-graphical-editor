@@ -62,7 +62,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const [taskState, dispatch] = useImmerReducer(
     taskConfigReducer,
-    currentTaskVariant || defaultTaskVariant
+    currentTaskVariant
   );
 
   function updateSelectedNodeData(taskData: TaskVariantType) {
