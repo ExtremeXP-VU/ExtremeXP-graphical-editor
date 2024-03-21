@@ -745,6 +745,7 @@ The test cases evaluated the response behaviors of the EMF.cloud server under va
    - Incorrect reference to the meta-model. (_TC02-INCORRECT-REFERENCE_)
    - Incorrect instantiation of an element. (_TC04-INCORRECT-ELEMENT-USEAGE_)
    - Violation of the relationship between two elements in the schema. (_TC06-INCORRECT-RELATION-USEAGE_)
+     <br>
      For these errors, the HTTP request returns a Status Code 200 without any additional information.
 
 It is evident that these types of errors are unlikely to be caused by graphs drawn in the graphical editor but rather by the conversion of the graphical model to the EMF model. Although most of the expected requirements did not pass the tests, developers working on the model conversion can still distinguish between a fully successful model posting, a posting failure, and a posting with flaws. Therefore, **the EMF.cloud server can be considered a powerful tool to verify the correctness of the conversion output**.
