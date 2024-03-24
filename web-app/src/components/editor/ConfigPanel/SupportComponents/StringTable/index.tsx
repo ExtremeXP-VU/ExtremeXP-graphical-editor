@@ -12,6 +12,7 @@ const StringTable: React.FC = () => {
   return (
     <>
       <table className="row">
+        <tbody>
         <tr className="cell">
           <td className="property">value</td>
         </tr>
@@ -27,10 +28,12 @@ const StringTable: React.FC = () => {
 
           </td>
         </tr>
+        </tbody>
       </table>
 
       {Array.from({ length: numString }).map((_, index) => (
         <table className="row sub-row">
+          <tbody>
           <tr className="cell">
             <td className="property">{`string-${index + 1}`}</td>
           </tr>
@@ -39,6 +42,7 @@ const StringTable: React.FC = () => {
               <input type="string"/>
             </td>
           </tr>
+          </tbody>
         </table>
       ))}
     </>
