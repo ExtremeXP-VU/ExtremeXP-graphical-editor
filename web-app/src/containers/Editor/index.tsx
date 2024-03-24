@@ -401,7 +401,7 @@ const Editor = () => {
         initOperatorNodeConfig(node);
         break;
       default:
-        return;
+        break;
     }
 
     if (isOpenConfig) {
