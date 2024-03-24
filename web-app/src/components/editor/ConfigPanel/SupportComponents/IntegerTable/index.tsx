@@ -21,7 +21,6 @@ const IntegerTable: React.FC = () => {
   return (
     <>
       <table className="row">
-        <tbody>
         <tr className="cell">
           <td className="property">value</td>
         </tr>
@@ -53,12 +52,10 @@ const IntegerTable: React.FC = () => {
 
           </td>
         </tr>
-        </tbody>
       </table>
 
       {Array.from({ length: numRange }).map((_, index) => (
         <table className="row sub-row">
-          <tbody>
           <tr className="cell">
             <td className="property">{`range-${index + 1}`}</td>
           </tr>
@@ -67,13 +64,11 @@ const IntegerTable: React.FC = () => {
               <RangeSelector key={index} number={index + 1} />
             </td>
           </tr>
-          </tbody>
         </table>
       ))}
 
       {Array.from({ length: numNumber }).map((_, index) => (
         <table className="row sub-row">
-          <tbody>
           <tr className="cell">
             <td className="property">{`number-${index + 1}`}</td>
           </tr>
@@ -82,7 +77,6 @@ const IntegerTable: React.FC = () => {
               <input type="number" style={{ width: '5em' }} />
             </td>
           </tr>
-          </tbody>
         </table>
       ))}
     </>

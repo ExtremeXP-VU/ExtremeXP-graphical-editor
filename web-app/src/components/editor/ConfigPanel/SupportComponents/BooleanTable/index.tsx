@@ -18,42 +18,38 @@ const BooleanTable: React.FC = () => {
   return (
     <>
       <table className="row">
-        <tbody>
+        <tr className="cell">
+          <td className="property">value</td>
+        </tr>
+        <tr className="cell">
+          <td className="value flexContainer">
+            <DropDown
+              options={['true', 'false']}
+              defaultValue={selectedType}
+              className="normal__dropdown"
+              onOptionSelected={handleSelectedType}
+            />
+            <span className="clickable iconfont" onClick={createString}>
+              &#xed1b;
+            </span>
+          </td>
+        </tr>
+      </table>
+
+      {Array.from({ length: numBool }).map((_, index) => (
+        <table className="row sub-row">
           <tr className="cell">
-            <td className="property">value</td>
+            <td className="property">{`bool-${index + 1}`}</td>
           </tr>
           <tr className="cell">
-            <td className="value flexContainer">
+            <td className="value">
               <DropDown
                 options={['true', 'false']}
                 defaultValue={selectedType}
                 className="normal__dropdown"
-                onOptionSelected={handleSelectedType}
               />
-              <span className="clickable iconfont" onClick={createString}>
-                &#xed1b;
-              </span>
             </td>
           </tr>
-        </tbody>
-      </table>
-
-      {Array.from({ length: numBool }).map((_, index) => (
-        <table className="row sub-row" key={index}>
-          <tbody>
-            <tr className="cell">
-              <td className="property">{`bool-${index + 1}`}</td>
-            </tr>
-            <tr className="cell">
-              <td className="value">
-                <DropDown
-                  options={['true', 'false']}
-                  defaultValue={selectedType}
-                  className="normal__dropdown"
-                />
-              </td>
-            </tr>
-          </tbody>
         </table>
       ))}
     </>

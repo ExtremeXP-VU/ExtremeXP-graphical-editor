@@ -17,7 +17,7 @@ type TableProps = {
   };
 };
 
-const StaticTable: React.FC<TableProps> = ({properties }) => {
+const StaticTable: React.FC<TableProps> = ({ properties }) => {
   const entries = Object.entries(properties); // Convert the properties object to an array of entries
   const selectedNodeType = useConfigPanelStore(
     (state) => state.selectedNodeType

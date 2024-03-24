@@ -75,20 +75,18 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
   return (
     <div className="table-component" onClick={() => handleEnterParam(id)}>
       <div className="header-text">{paramState.name}</div>
+      {/* Header Row */}
       <table className="row header-row">
-        <tbody>
-          <tr className="cell">
-        <th className="property">property</th>
-          </tr>
-          <tr className="cell">
-        <th className="value">value</th>
-          </tr>
-        </tbody>
+        <tr className="cell">
+          <td className="property">property</td>
+        </tr>
+        <tr className="cell">
+          <td className="value">value</td>
+        </tr>
       </table>
 
       {/* Data row */}
       <table className={`row `}>
-        <tbody>
         <tr className="cell">
           <td className="property"> name</td>
         </tr>
@@ -103,10 +101,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
             />
           </td>
         </tr>
-        </tbody>
       </table>
       <table className={`row `}>
-        <tbody>
         <tr className="cell">
           <td className="property"> type</td>
         </tr>
@@ -128,10 +124,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
             />
           </td>
         </tr>
-        </tbody>
       </table>
       <table className={`row `}>
-        <tbody>
         <tr className="cell">
           <td className="property"> abstract</td>
         </tr>
@@ -147,7 +141,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
             />
           </td>
         </tr>
-        </tbody>
       </table>
       {paramState.type === 'integer' && <IntegerTable />}
       {paramState.type === 'real' && <RealTable />}
