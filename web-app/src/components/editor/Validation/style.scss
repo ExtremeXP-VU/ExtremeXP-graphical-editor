@@ -1,0 +1,13 @@
+@import '../../../styles/colors.scss';
+
+.validation {
+  z-index: 4;
+  position: absolute;
+  right: 0.15rem;
+  bottom: 0.15rem;
+
+  width: 2rem;
+  height: 2rem;
+  background-color: $panel-color;
+  border: 1px solid $primary-theme-color;
+}
