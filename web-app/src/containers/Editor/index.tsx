@@ -17,6 +17,7 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
+
 import {
   useConfigPanelStore,
   useConfigOperatorPanelStore,
@@ -402,7 +403,7 @@ const Editor = () => {
         initOperatorNodeConfig(node);
         break;
       default:
-        return;
+        break;
     }
 
     if (isOpenConfig) {

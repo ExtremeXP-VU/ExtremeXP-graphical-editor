@@ -1,0 +1,22 @@
+{
+  "START_EVENT_MISSING": {
+    "message": "A start node is required",
+    "type": "error"
+  },
+  "END_EVENT_MISSING": {
+    "message": "An end node is required",
+    "type": "error"
+  },
+  "MULTIPLE_START_EVENTS": {
+    "message": "Multiple start nodes are not allowed",
+    "type": "error"
+  },
+  "MULTIPLE_END_EVENTS": {
+    "message": "Multiple end nodes are not allowed",
+    "type": "error"
+  },
+  "EXCLUSIVE_OP_MULTIPLE_INPUTS": {
+    "message": "Exclusive operators can only have one input",
+    "type": "error"
+  }
+}
