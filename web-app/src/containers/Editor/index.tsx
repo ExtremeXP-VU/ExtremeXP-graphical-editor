@@ -17,6 +17,7 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
+
 import {
   useConfigPanelStore,
   useConfigOperatorPanelStore,
@@ -29,6 +30,7 @@ import { message } from '../../utils/message';
 import Header from '../../components/editor/Header';
 import Panel from '../../components/editor/Panel';
 import Popover from '../../components/general/Popover';
+import Validation from '../../components/editor/Validation';
 
 import {
   defaultGraphicalModel,
@@ -401,7 +403,7 @@ const Editor = () => {
         initOperatorNodeConfig(node);
         break;
       default:
-        return;
+        break;
     }
 
     if (isOpenConfig) {
@@ -483,6 +485,7 @@ const Editor = () => {
                   <Controls position="top-left" />
                   <Background />
                   <MiniMap nodeColor={'#4fa3bb'} position="bottom-left" />
+                  <Validation />
                 </ReactFlow>
               </div>
             </div>

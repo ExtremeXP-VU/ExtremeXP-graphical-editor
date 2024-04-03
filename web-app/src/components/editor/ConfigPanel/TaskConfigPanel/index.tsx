@@ -69,8 +69,9 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     updateNodeData(
       {
         ...selectedNode?.data,
-        variants: selectedNode?.data?.variants.map((variant) =>
-          variant.id_task === taskData.id_task ? taskData : variant
+        variants: selectedNode?.data?.variants.map(
+          (variant: { id_task: string }) =>
+            variant.id_task === taskData.id_task ? taskData : variant
         ),
       },
       selectedNodeId
