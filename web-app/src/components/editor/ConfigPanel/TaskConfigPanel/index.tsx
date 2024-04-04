@@ -65,11 +65,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   );
 
   function updateSelectedNodeData(taskData: TaskVariantType) {
-    // console.log('taskData', taskData);
-    // selectedNode?.data?.variants.map((variant: TaskVariantType) =>
-    //   console.log(variant.id_task === taskData.id_task)
-    // );
-
     updateNodeData(
       {
         ...selectedNode?.data,
@@ -81,6 +76,10 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       selectedNodeId
     );
   }
+
+  // function updateSelectedEdgeData(edgeData: object) {
+  //   updateEdgeData(edgeData, selectedEdgeId);
+  // }
 
   useEffect(() => {
     updateSelectedNodeData(taskState);

@@ -27,7 +27,7 @@ const EdgeLabel: React.FC<EdgeLabelProps> = ({
 
   const handleAddLabel = () => {
     setEditable(true);
-    setLabelText('condition');
+    setLabelText('label');
   };
 
   return (

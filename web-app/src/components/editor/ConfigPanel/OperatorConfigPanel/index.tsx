@@ -13,6 +13,7 @@ import {
 // import RadioButton from '../SupportComponents/RadioButton';
 import StaticTable from '../SupportComponents/StaticTable';
 import { defaultOperatorData } from '../../../../types/operator';
+import OperatorTable from '../SupportComponents/ConditionTable';
 
 interface TaskConfigPanelProps {
   updateSideBar: () => void;
@@ -64,7 +65,7 @@ const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
       
 
       {selectedNodeType === 'opExclusive' && (
-        <StaticTable
+        <OperatorTable
           properties={{
             condition: (
               <input

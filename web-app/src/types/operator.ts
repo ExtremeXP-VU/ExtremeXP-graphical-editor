@@ -13,7 +13,7 @@ export interface OperatorDataType {
 }
 
 export const defaultOperatorData: OperatorDataType = {
-    condition: 'the condition of the operator',
+    condition: 'x === y',
     conditions: ['condition 1', 'condition 2', 'condition 3'],
     graphical_model: {
         nodes: [],

@@ -1,0 +1,47 @@
+@import '../../../../../styles/colors.scss';
+
+
+.top-padding{
+  margin-top: 0.5rem;
+}
+
+.table-component {
+  // position: absolute;
+  width: 90%;
+  margin-top: 0.5rem;
+  .header-text{
+    color: $primary-theme-color;
+    font-weight: bold;
+    text-align: left;
+    font-size: 12px;
+    padding-bottom: 0.13rem;
+    
+  }
+  .header-row {
+    font-weight: bold;
+}
+    .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+      &:nth-child(even) { // targeting odd rows
+        background-color: $panel-color; // light gray for odd rows
+      }
+      &:nth-child(odd) { // targeting even rows
+        background-color: $board-color; // white for even rows
+      }
+    }
+    .cell{
+      padding: 0.05rem 0.05rem;
+      width: 100%;
+      flex:1;
+      font-size: 12px;
+    }
+    
+  }
+  .value{
+    width: 100%;
+    display: flex;
+  }
+  
