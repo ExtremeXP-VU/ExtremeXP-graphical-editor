@@ -6,7 +6,6 @@ import { taskConfigReducer, Action } from './reducer';
 
 import {
   useConfigPanelStore,
-  useParamStore,
 } from '../../../../stores/configPanelStore';
 import {
   useReactFlowInstanceStore,
@@ -66,10 +65,15 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   );
 
   function updateSelectedNodeData(taskData: TaskVariantType) {
+    // console.log('taskData', taskData);
+    // selectedNode?.data?.variants.map((variant: TaskVariantType) =>
+    //   console.log(variant.id_task === taskData.id_task)
+    // );
+
     updateNodeData(
       {
         ...selectedNode?.data,
-        variants: selectedNode?.data?.variants.map((variant) =>
+        variants: selectedNode?.data?.variants.map((variant: TaskVariantType) =>
           variant.id_task === taskData.id_task ? taskData : variant
         ),
       },
@@ -102,22 +106,41 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   };
 
   // handle add parameter
-  const numParams = useParamStore((state) => state.numParams);
+  // const numParams = useParamStore((state) => state.numParams);
   const handleAddParameter = () => {
-    useParamStore.setState({ numParams: numParams + 1 });
-    const name = 'parameter name';
-    const id = 'parameter-' + '-' + nanoid();
+    // useParamStore.setState({ numParams: numParams + 1 });
+    const id = 'parameter-' + nanoid();
     const newParam: TaskParameterType = {
       ...defaultParameter,
       id: id,
-      name: name,
+      name: 'New Parameter',
       type: 'integer',
       abstract: false,
       values: [],
     };
-    currentTaskVariant?.parameters.push(newParam);
-    useParamStore.setState({ selectedParamData: newParam });
+
+    const action: Action = { type: 'CREATE_PARAM', payload: newParam };
+    dispatch(action);
+
+    // const action: Action = { type: 'CREATE_PARAM', payload: newParam };
+    // dispatch(action);
   };
+
+  //handle parameter change
+  const handleParamUpdate = (id: string, updatedParam: TaskParameterType) => {
+    const action: Action = {
+      type: 'UPDATE_PARAM',
+      payload: { id, updatedParam },
+    };
+    dispatch(action);
+  };
+
+  //handle parameter delete
+  const handleParamDelete = (id: string) => {
+    const action: Action = { type: 'DELETE_PARAM', payload: id };
+    dispatch(action);
+  }
+  
 
   // handle add Task variant
   const [showPopover, setShowPopover] = useState(false);
@@ -282,8 +305,8 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         }}
       />
 
-      {currentTaskVariant.parameters?.map((param: TaskParameterType) => (
-        <DynamicTable id={param.id} key={param.id} />
+      {taskState?.parameters?.map((param: TaskParameterType) => (
+        <DynamicTable currentParam={param} key={param.id} onParamUpdate={handleParamUpdate} onDelete={handleParamDelete} />
       ))}
 
       <CustomButton

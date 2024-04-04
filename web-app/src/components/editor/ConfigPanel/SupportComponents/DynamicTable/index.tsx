@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './style.scss';
 import DropDown from '../DropDown';
 import RadioButton from '../RadioButton';
@@ -10,41 +10,24 @@ import BlobTable from '../BlobTable';
 import { useParamStore } from '../../../../../stores/configPanelStore';
 import { useImmerReducer } from 'use-immer';
 import { paramConfigReducer, Action } from '../../TaskConfigPanel/reducer';
-import { TaskParameterType, TaskVariantType } from '../../../../../types/task';
-import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
+import { TaskParameterType } from '../../../../../types/task';
 
 interface DynamicTableProps {
-  id: string;
+  currentParam: TaskParameterType;
+  onParamUpdate: (id: string, param: TaskParameterType) => void;
+  onDelete: (id: string) => void;
 }
-
-const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
-  const selectedParamId = useParamStore((state) => state.selectedParamId);
-  const selectedParamData = useParamStore((state) => state.selectedParamData);
-
-  const selectedNode = useReactFlowInstanceStore((state) => state.selectedNode);
-  const currentTaskVariantId = selectedNode?.data.currentVariant;
-  const currentTaskVariant: TaskVariantType = selectedNode?.data.variants.find(
-    (variant: TaskVariantType) => variant.id_task === currentTaskVariantId
+const DynamicTable: React.FC<DynamicTableProps> = ({
+  currentParam,
+  onParamUpdate,
+  onDelete,
+}) => {
+  const [paramState, paramDispatch] = useImmerReducer(
+    paramConfigReducer,
+    currentParam
   );
 
-  const [paramIndex, setParamIndex] = useState<number>(-1);
-
-  useEffect(() => {
-    const Index = currentTaskVariant.parameters.findIndex(
-      (param: TaskParameterType) => param.id === selectedParamId
-    );
-    setParamIndex(Index);
-    useParamStore.setState({
-      selectedParamData: currentTaskVariant.parameters[paramIndex],
-    });
-    // console.log('selectedParamData', selectedParamData);
-  }, [selectedParamId]);
-
-  const [paramState, paramDispatch] = useImmerReducer<
-    TaskParameterType,
-    Action
-  >(paramConfigReducer, selectedParamData);
-
+  // 4. at taskconfigpanel, use currentTaskVariant to map params.
   const handleParamNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -63,18 +46,36 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ id }) => {
     paramDispatch(action);
   };
 
-  useEffect(() => {
-    useParamStore.setState({ selectedParamData: paramState });
-  }, [paramState]);
-
   const handleEnterParam = (id: string) => {
-    // console.log('entering param', id);
+    console.log('entering param', id);
     useParamStore.setState({ selectedParamId: id });
   };
 
+  useEffect(() => {
+    // Call the function passed from the parent to update the parameter state there
+    onParamUpdate(currentParam.id, paramState);
+  }, [paramState, currentParam.id, onParamUpdate]);
+
   return (
-    <div className="table-component" onClick={() => handleEnterParam(id)}>
-      <div className="header-text">{paramState.name}</div>
+    <div
+      className="table-component"
+      onClick={() => handleEnterParam(currentParam.id)}
+    >
+      <div
+        className="header-text"
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
+        <span>{paramState.name}</span>
+        <span
+          className="iconfont delete-param"
+          onClick={() => {
+            // Call the function passed from the parent to delete the parameter
+            onDelete(currentParam.id);
+          }}
+        >
+          &#xe600;
+        </span>
+      </div>
       {/* Header Row */}
       <table className="row header-row">
         <tr className="cell">

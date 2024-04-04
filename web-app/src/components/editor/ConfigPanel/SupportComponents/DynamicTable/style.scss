@@ -43,3 +43,12 @@
     }
   }
   
+
+  .delete-param{
+    cursor: pointer;
+    color: $secondary-theme-color;
+  
+    &:hover {
+      color: $alert-background-color;
+    }
+  }
