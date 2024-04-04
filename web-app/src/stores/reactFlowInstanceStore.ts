@@ -18,6 +18,8 @@ import {
   LinksPropsType,
 } from '../components/editor/notations/notationConfigs/linkProps';
 
+import { validateGraphicalModel } from './validationStore';
+
 export type RFState = {
   nodes: Node[];
   edges: Edge[];
@@ -90,11 +92,25 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
     set({
       nodes: applyNodeChanges(changes, get().nodes),
     });
+
+    if (changes[0].type !== 'position' && changes[0].type !== 'select') {
+      validateGraphicalModel({
+        nodes: get().nodes,
+        edges: get().edges,
+      });
+    }
   },
   onEdgesChange: (changes: EdgeChange[]) => {
     set({
       edges: applyEdgeChanges(changes, get().edges),
     });
+
+    if (changes[0].type === 'remove') {
+      validateGraphicalModel({
+        nodes: get().nodes,
+        edges: get().edges,
+      });
+    }
   },
 
   addNode: (type: string, position: { x: number; y: number }, data: object) => {
@@ -125,6 +141,11 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
     };
     set({
       edges: [...get().edges, edge],
+    });
+
+    validateGraphicalModel({
+      nodes: get().nodes,
+      edges: get().edges,
     });
   },
   onDragOver: (event: React.DragEvent<HTMLDivElement>) => {
