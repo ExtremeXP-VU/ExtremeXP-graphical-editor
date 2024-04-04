@@ -46,8 +46,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     paramDispatch(action);
   };
 
+  const handleParamArbitraryChange = (option: boolean) => {
+    const action: Action = {
+      type: 'UPDATE_PARAM_ABSTRACT',
+      payload: option,
+    };
+    paramDispatch(action);
+  };
+
   const handleEnterParam = (id: string) => {
-    console.log('entering param', id);
+    // console.log('entering param', id);
     useParamStore.setState({ selectedParamId: id });
   };
 
@@ -137,7 +145,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                 { label: 'yes', value: 'yes' },
                 { label: 'no', value: 'no' },
               ]}
-              defaultValue="no"
+              defaultValue={paramState.abstract ? 'yes' : 'no'}
+              onOptionSelected={handleParamArbitraryChange}
               name={`abstract-${paramState.id}`}
             />
           </td>

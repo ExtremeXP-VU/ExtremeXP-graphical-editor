@@ -284,6 +284,12 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
               ]}
               defaultValue={taskState.isAbstract ? 'yes' : 'no'}
               name="abstract"
+              onOptionSelected={(value) => {
+                dispatch({
+                  type: 'UPDATE_ABSTRACT',
+                  payload: value,
+                });
+              }}
             />
           ),
           implementation: '<URI>',

@@ -3,6 +3,7 @@ import { TaskParameterType, TaskVariantType } from '../../../../types/task';
 export type Action =
   | { type: 'UPDATE_NAME'; payload: string }
   | { type: 'UPDATE_DESCRIPTION'; payload: string }
+  | { type: 'UPDATE_ABSTRACT'; payload: boolean}
   | { type: 'CREATE_PARAM'; payload: TaskParameterType }
   | { type: 'UPDATE_PARAM'; payload: { id: string; updatedParam: TaskParameterType } }
   | { type: 'DELETE_PARAM'; payload: string }
@@ -17,6 +18,9 @@ export function taskConfigReducer(draft: TaskVariantType, action: Action) {
       return draft;
     case 'UPDATE_DESCRIPTION':
       draft.description = action.payload;
+      return draft;
+    case 'UPDATE_ABSTRACT':
+      draft.isAbstract = action.payload;
       return draft;
     case 'UPDATE_PARAM':{
       const { id, updatedParam } = action.payload;
