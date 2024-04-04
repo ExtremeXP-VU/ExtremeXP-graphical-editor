@@ -7,7 +7,7 @@ export type ValidationCodeType =
   | 'END_EVENT_MISSING'
   | 'MULTIPLE_START_EVENTS'
   | 'MULTIPLE_END_EVENTS'
-  | 'EXCLUSIVE_OP_MULTIPLE_INPUTS';
+  | 'EXCLUSIVE_OP_MULTIPLE_OUTPUTS';
 
 export type ValidationMessageType = {
   code: ValidationCodeType;
@@ -72,10 +72,10 @@ export const validateGraphicalModel = (model: GraphicalModelType): void => {
   }
 
   exclusiveOps.forEach((op) => {
-    const edges = model.edges.filter((edge) => edge.target === op.id);
-    if (edges.length > 1) {
+    const edges = model.edges.filter((edge) => edge.source === op.id);
+    if (edges.length > 2) {
       validationMessages.push(
-        getValidationMessage('EXCLUSIVE_OP_MULTIPLE_INPUTS')
+        getValidationMessage('EXCLUSIVE_OP_MULTIPLE_OUTPUTS')
       );
     }
   });

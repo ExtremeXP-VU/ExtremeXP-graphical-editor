@@ -15,8 +15,8 @@
     "message": "Multiple end nodes are not allowed.",
     "type": "error"
   },
-  "EXCLUSIVE_OP_MULTIPLE_INPUTS": {
-    "message": "Exclusive operators can only have one input.",
+  "EXCLUSIVE_OP_MULTIPLE_OUTPUTS": {
+    "message": "Exclusive operators can only have no more than 2 outputs.",
     "type": "error"
   }
 }
