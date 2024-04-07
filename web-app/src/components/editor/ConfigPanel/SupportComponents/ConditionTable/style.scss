@@ -45,3 +45,6 @@
     display: flex;
   }
   
+  .italic-placeholder::placeholder {
+    font-style: italic;
+  }

@@ -1,25 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './style.scss';
 import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
 import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 import DropDown from '../DropDown';
+import { ConditionType } from '../../../../../types/operator';
+import { useImmerReducer } from 'use-immer';
+import { Action, conditionConfigReducer } from '../../OperatorConfigPanel/reducer';
 
 type TableProps = {
-  properties: {
-    name?: JSX.Element;
-    description?: JSX.Element;
-    abstract?: JSX.Element; // For the radio buttons
-    implementation?: string; // For custom element, like a link
-    category?: JSX.Element; // For dropdown
-    type?: JSX.Element; // For dropdown
-    condition?: JSX.Element; // For the condition input
-    conditions?: JSX.Element; // For the conditions input
-    range?: JSX.Element; // For the range input
-  };
+  currentCondition: ConditionType;
+  opType: string;
+  onUpdateCondition: (condition: ConditionType, condition_id: string) => void;
+  key: string;
 };
 
-const ConditionTable: React.FC<TableProps> = ({ properties }) => {
-  const entries = Object.entries(properties); // Convert the properties object to an array of entries
+const ConditionTable: React.FC<TableProps> = ({ currentCondition,  onUpdateCondition }) => {
+  
   const selectedNodeType = useConfigPanelStore(
     (state) => state.selectedNodeType
   );
@@ -29,67 +25,39 @@ const ConditionTable: React.FC<TableProps> = ({ properties }) => {
   const outgoingEdges = edges.filter((edge) =>
     outgoingLinks.some((link) => link.linkId === edge.id)
   );
+
+  const [conditionState, conditionDispatch] = useImmerReducer(
+    conditionConfigReducer,
+    currentCondition
+  );
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const action: Action = {
+      type: 'UPDATE_CONDITION_NAME',
+      payload: event.target.value,
+    };
+    conditionDispatch(action);
+  }
+
+  const handleConditionContentChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const action: Action = {
+      type: 'UPDATE_CONDITION_CONTENT',
+      payload: {index, content: event.target.value},
+    };
+    conditionDispatch(action);
+  }
+
+
+
+  useEffect(() => {
+    onUpdateCondition(conditionState, currentCondition.condition_id);
+  }, [conditionState]);
+
+
   return (
     <div className="table-component">
-      {selectedNodeType === 'opExclusive' && (
-        <div className="header-text">Condition</div>
-      )}
-      {/* Header Row */}
-      {/* <table className="row header-row">
-        <tr className="cell">
-          <td className="property">property</td>
-        </tr>
-        <tr className="cell">
-          <td className="value">value</td>
-        </tr>
-      </table> */}
 
-      {entries.map(([key, value]) => (
-        <table className={`row `} key={key}>
-          <tr className="cell">
-            <td className="property"> {key}</td>
-          </tr>
-          <tr className="cell">
-            <td className="value"> {value}</td>
-          </tr>
-        </table>
-      ))}
-
-      <table className={`row sub-row`}>
-        <tr className="cell">
-          <td className="property"> True</td>
-        </tr>
-        <tr className="cell">
-          <td className="value"> 
-          <DropDown
-              options= {
-                outgoingEdges.map((_, index) => `Link ${index + 1}`)
-              }
-              defaultValue='please select a type'
-              className="normal__dropdown"
-            />
-          </td>
-        </tr>
-      </table>
-
-      <table className={`row sub-row`}>
-        <tr className="cell">
-          <td className="property"> False</td>
-        </tr>
-        <tr className="cell">
-          <td className="value"> 
-          <DropDown
-              options= {
-                outgoingEdges.map((_, index) => `Link ${index + 1}`)
-              }
-              defaultValue='please select a type'
-              className="normal__dropdown"
-            />
-          </td>
-        </tr>
-      </table>
-
-      <div className="header-text top-padding">Outgoing Links</div>
+<div className="header-text">Outgoing Links</div>
       {outgoingEdges.map((edge, index) => {
         return (
           <table className={`row `}>
@@ -102,6 +70,52 @@ const ConditionTable: React.FC<TableProps> = ({ properties }) => {
           </table>
         );
       })}
+
+
+      {selectedNodeType === 'opExclusive' && (
+        <div className="top-padding">
+          <input
+                type="text"
+                className="transparent-input header-text"
+                value={conditionState.name}
+                onChange={handleNameChange}
+              />
+        </div>
+      )}
+
+      
+
+{outgoingEdges.map((_, index) => {
+        return (
+          <table className={`row `}>
+            <tr className="cell">
+              <td className="property"> {`Case ${index + 1}`} </td>
+            </tr>
+            <tr className="cell">
+              <td className="value"> 
+              <input
+                type="text"
+                className="transparent-input italic-placeholder"
+                placeholder="e.g., x == y"
+                value={conditionState?.cases[index]?.condition}
+                onChange={(event) => handleConditionContentChange(index, event)}
+              />
+              </td>
+            </tr>
+            <DropDown
+              options= {
+                outgoingEdges.map((_, index) => `Link ${index + 1}`)
+              }
+              defaultValue='please select a type'
+              className="normal__dropdown"
+            />
+          </table>
+          
+          
+        );
+      })}
+
+
     </div>
   );
 };

@@ -19,8 +19,8 @@ import {
 } from '../../stores/reactFlowInstanceStore';
 
 import {
-  useConfigPanelStore,
   useConfigOperatorPanelStore,
+  useConfigPanelStore,
 } from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -55,7 +55,13 @@ import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
 import ConfigPanel from '../../components/editor/ConfigPanel';
-import { OperatorDataType } from '../../types/operator';
+import {
+  ConditionType,
+  defaultCondition,
+  defaultOperatorData,
+  OperatorDataType,
+} from '../../types/operator';
+import { nanoid } from 'nanoid';
 
 const selector = (state: RFState) => ({
   nodes: state.nodes,
@@ -64,6 +70,7 @@ const selector = (state: RFState) => ({
   setEdges: state.setEdges,
   setSelectedNode: state.setSelectedNode,
   selectedLink: state.selectedLinkType,
+  selectedNode: state.selectedNode,
   setSelectedLink: state.setSelectedLinkType,
   addNode: state.addNode,
   onConnect: state.onConnect,
@@ -97,6 +104,7 @@ const Editor = () => {
     addNode,
     onConnect,
     onDragOver,
+    selectedNode,
   } = useReactFlowInstanceStore(selector, shallow);
 
   const navigate = useNavigate();
@@ -380,12 +388,14 @@ const Editor = () => {
     }, 0);
   };
 
-  const initOperatorNodeConfig = (node: Node) => {
-    const operatorData: OperatorDataType = node.data;
-    useConfigOperatorPanelStore.setState({
-      selectedOperatorData: operatorData,
-    });
-  };
+  // function initOperatorNodeConfig(node: Node) {
+  //   const condition_id = 'condition-' + nanoid();
+  //   const newConditionData: ConditionType = {
+  //     ...defaultCondition,
+  //     condition_id: condition_id,
+  //     name: 'Condition',
+  //   };
+  // }
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
@@ -395,20 +405,32 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedNodeType: node.type });
     useConfigPanelStore.setState({ selectedNodeId: node.id });
 
-    switch (node.type) {
-      case 'opExclusive':
-        initOperatorNodeConfig(node);
-        break;
-      case 'opInclusive':
-        initOperatorNodeConfig(node);
-        break;
-      default:
-        break;
-    }
+    // switch (node.type) {
+    //   case 'opExclusive':
+    //     initOperatorNodeConfig(node);
+    //     break;
+    //   case 'opInclusive':
+    //     initOperatorNodeConfig(node);
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     if (isOpenConfig) {
       updateConfigPanel();
     }
+  };
+
+  // add some logic for init operator condition when double clicked
+
+  const currentOperatorData = {
+    conditions: [
+      {
+        ...defaultCondition,
+        condition_id: 'condition-' + nanoid(),
+        name: 'New Condition',
+      },
+    ],
   };
 
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
@@ -416,6 +438,15 @@ const Editor = () => {
 
     if (node.type !== 'start' && node.type !== 'end') {
       updateConfigPanel();
+    }
+    if (node.type === 'opExclusive' || node.type === 'opInclusive') {
+      console.log('the selectedNode data conditions is ' + selectedNode?.data.conditions);
+      if (selectedNode?.data?.conditions === undefined) {
+          selectedNode && (selectedNode.data = currentOperatorData);
+
+      } else {
+        return;
+      }
     }
   };
 

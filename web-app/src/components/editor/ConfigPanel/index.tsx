@@ -11,7 +11,7 @@ const ConfigPanel:React.FC<ConfigPanelProps> = ({ updateSideBar }) => {
     const selectedNodeType = useConfigPanelStore((state) => state.selectedNodeType);
     return (
         <div>
-            {selectedNodeType === 'task' && <TaskConfigPanel updateSideBar={updateSideBar} />}
+            {selectedNodeType === 'task' &&  <TaskConfigPanel updateSideBar={updateSideBar} />}
             {selectedNodeType === 'opInclusive'  && <OperatorConfigPanel updateSideBar={updateSideBar} />}
             {selectedNodeType === 'opExclusive'  && <OperatorConfigPanel updateSideBar={updateSideBar} />}
         </div>
