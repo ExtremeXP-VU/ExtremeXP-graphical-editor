@@ -58,7 +58,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     useParamStore.setState({ selectedParamId: id });
   };
 
-  const handleValueUpdated = (value: unknown) => {value =0};
+  const handleValueUpdated = (value: unknown) => {
+    if(value === null){
+      return;
+    }
+  };
 
   useEffect(() => {
     // Call the function passed from the parent to update the parameter state there

@@ -408,6 +408,14 @@ const Editor = () => {
     //     break;
     // }
 
+    if (node.type === 'opExclusive' || node.type === 'opInclusive') {
+      if (selectedNode?.data?.conditions === undefined) {
+        selectedNode && (selectedNode.data = currentOperatorData);
+      } else {
+        return;
+      }
+    }
+
     if (isOpenConfig) {
       updateConfigPanel();
     }
@@ -431,13 +439,13 @@ const Editor = () => {
     if (node.type !== 'start' && node.type !== 'end') {
       updateConfigPanel();
     }
-    if (node.type === 'opExclusive' || node.type === 'opInclusive') {
-      if (selectedNode?.data?.conditions === undefined) {
-        selectedNode && (selectedNode.data = currentOperatorData);
-      } else {
-        return;
-      }
-    }
+    // if (node.type === 'opExclusive' || node.type === 'opInclusive') {
+    //   if (selectedNode?.data?.conditions === undefined) {
+    //     selectedNode && (selectedNode.data = currentOperatorData);
+    //   } else {
+    //     return;
+    //   }
+    // }
   };
 
   return (
