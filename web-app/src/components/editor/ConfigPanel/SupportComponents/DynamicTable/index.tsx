@@ -104,7 +104,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
             <input
               type="text"
               className="transparent-input"
-              defaultValue={`click to enter`}
               onChange={handleParamNameChange}
               value={paramState.name}
             />

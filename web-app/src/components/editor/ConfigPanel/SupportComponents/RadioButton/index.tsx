@@ -8,7 +8,7 @@ interface Choice {
 
 interface RadioButtonProps {
   choices: Choice[];
-  defaultValue?: string;
+  defaultValue: string;
   className?: string;
   onOptionSelected: (value: boolean) => void;
   name: string; // Added to ensure radio buttons are grouped together
@@ -38,7 +38,6 @@ const RadioButton: React.FC<RadioButtonProps> = ({
           <input
             type="radio"
             name={name}
-            defaultChecked={defaultValue === choice.value}
             checked={selectedValue === choice.value}
             value={choice.value}
             onChange={(e) => {

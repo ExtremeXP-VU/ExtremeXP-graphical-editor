@@ -4,9 +4,7 @@ import { nanoid } from 'nanoid';
 import { useImmerReducer } from 'use-immer';
 import { taskConfigReducer, Action } from './reducer';
 
-import {
-  useConfigPanelStore,
-} from '../../../../stores/configPanelStore';
+import { useConfigPanelStore } from '../../../../stores/configPanelStore';
 import {
   useReactFlowInstanceStore,
   RFState,
@@ -139,8 +137,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   const handleParamDelete = (id: string) => {
     const action: Action = { type: 'DELETE_PARAM', payload: id };
     dispatch(action);
-  }
-  
+  };
 
   // handle add Task variant
   const [showPopover, setShowPopover] = useState(false);
@@ -312,7 +309,12 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
       />
 
       {taskState?.parameters?.map((param: TaskParameterType) => (
-        <DynamicTable currentParam={param} key={param.id} onParamUpdate={handleParamUpdate} onDelete={handleParamDelete} />
+        <DynamicTable
+          currentParam={param}
+          key={param.id}
+          onParamUpdate={handleParamUpdate}
+          onDelete={handleParamDelete}
+        />
       ))}
 
       <CustomButton
