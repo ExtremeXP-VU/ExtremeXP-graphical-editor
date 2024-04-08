@@ -9,6 +9,7 @@ export interface OperatorDataType {
 
   export interface CaseType {
     condition: string;
+    targetLinkName: string; // outgoinglink name
     targetLinkId: string; // outgoinglink ID
     targetNodeId: string; // target node ID
   }

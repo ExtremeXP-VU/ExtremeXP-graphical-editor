@@ -20,7 +20,7 @@ import {
   useReactFlowInstanceStore,
 } from '../../../../stores/reactFlowInstanceStore';
 
-interface TaskConfigPanelProps {
+interface OperatorConfigPanelProps {
   updateSideBar: () => void;
 }
 
@@ -32,7 +32,7 @@ const selector = (state: RFState) => ({
   updateEdgeData: state.updateEdgeData,
 });
 
-const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
+const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
   const { updateNodeData, selectedNode } = useReactFlowInstanceStore(
     selector,
     shallow

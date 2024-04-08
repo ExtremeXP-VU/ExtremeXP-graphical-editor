@@ -25,7 +25,7 @@ const BooleanTable: React.FC = () => {
           <td className="value flexContainer">
             <DropDown
               options={['true', 'false']}
-              defaultValue={selectedType}
+              value={selectedType}
               className="normal__dropdown"
               onOptionSelected={handleSelectedType}
             />
@@ -45,7 +45,7 @@ const BooleanTable: React.FC = () => {
             <td className="value">
               <DropDown
                 options={['true', 'false']}
-                defaultValue={selectedType}
+                value={selectedType}
                 className="normal__dropdown"
               />
             </td>

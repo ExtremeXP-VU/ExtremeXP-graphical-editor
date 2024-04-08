@@ -28,7 +28,7 @@ const IntegerTable: React.FC = () => {
           <td className="value flexContainer">
             <DropDown
               options={['range', 'number']}
-              defaultValue={selectedType}
+              value={selectedType}
               className="normal__dropdown"
               onOptionSelected={handleSelectedType}
             />

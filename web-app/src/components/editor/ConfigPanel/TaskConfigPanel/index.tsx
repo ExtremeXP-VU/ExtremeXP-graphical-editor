@@ -245,7 +245,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
             }) || []
           }
           onOptionSelected={handleSetCurrentVariant}
-          defaultValue={selectedNode?.data?.currentVariant || 'variant'}
+          value={selectedNode?.data?.currentVariant || 'variant'}
           className="variant__dropdown"
         />
 
@@ -297,14 +297,14 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
               options={['Generic'].concat(
                 categories.map((category) => category.name)
               )}
-              defaultValue={'Generic'}
+              value={'Generic'}
               className="normal__dropdown"
             />
           ),
           type: (
             <DropDown
               options={['type 1', 'type 2', 'type 3']}
-              defaultValue="type 1"
+              value="type 1"
               className="normal__dropdown"
             />
           ),

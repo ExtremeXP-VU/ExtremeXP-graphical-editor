@@ -3,24 +3,30 @@ import './style.scss';
 
 interface DropDownProps {
   options: string[];
-  defaultValue?: string;
+  value?: string;
   className?: string;
-  onOptionSelected?: (option: string) => void; 
+  onOptionSelected?: (option: string) => void;
+  onCaseTargetLinkChange?: (index: number, targetLinkName: string) => void;
+  index?: number;
 }
 
 const DropDown: React.FC<DropDownProps> = ({
   options,
-  defaultValue,
+  value,
   className,
   onOptionSelected,
+  onCaseTargetLinkChange,
+  index,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
-    defaultValue
+    value
   );
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
     onOptionSelected && onOptionSelected(event.target.value); // Call the callback function
+    onCaseTargetLinkChange &&
+      onCaseTargetLinkChange(index!, event.target.value); // Call the callback function
   };
 
   return (

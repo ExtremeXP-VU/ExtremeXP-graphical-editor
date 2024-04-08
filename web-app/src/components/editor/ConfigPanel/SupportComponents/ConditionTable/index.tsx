@@ -5,7 +5,10 @@ import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstan
 import DropDown from '../DropDown';
 import { ConditionType } from '../../../../../types/operator';
 import { useImmerReducer } from 'use-immer';
-import { Action, conditionConfigReducer } from '../../OperatorConfigPanel/reducer';
+import {
+  Action,
+  conditionConfigReducer,
+} from '../../OperatorConfigPanel/reducer';
 
 type TableProps = {
   currentCondition: ConditionType;
@@ -14,8 +17,10 @@ type TableProps = {
   key: string;
 };
 
-const ConditionTable: React.FC<TableProps> = ({ currentCondition,  onUpdateCondition }) => {
-  
+const ConditionTable: React.FC<TableProps> = ({
+  currentCondition,
+  onUpdateCondition,
+}) => {
   const selectedNodeType = useConfigPanelStore(
     (state) => state.selectedNodeType
   );
@@ -37,27 +42,37 @@ const ConditionTable: React.FC<TableProps> = ({ currentCondition,  onUpdateCondi
       payload: event.target.value,
     };
     conditionDispatch(action);
-  }
+  };
 
-  const handleConditionContentChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConditionContentChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const action: Action = {
       type: 'UPDATE_CONDITION_CONTENT',
-      payload: {index, content: event.target.value},
+      payload: { index, content: event.target.value },
     };
     conditionDispatch(action);
-  }
+  };
 
-
+  const handleCaseTargetLinkChange = (
+    index: number,
+    targetLinkName: string
+  ) => {
+    const action: Action = {
+      type: 'UPDATE_CASE_TARGET',
+      payload: { index, targetLinkName, edges: outgoingEdges },
+    };
+    conditionDispatch(action);
+  };
 
   useEffect(() => {
     onUpdateCondition(conditionState, currentCondition.condition_id);
   }, [conditionState]);
 
-
   return (
     <div className="table-component">
-
-<div className="header-text">Outgoing Links</div>
+      <div className="header-text">Outgoing Links</div>
       {outgoingEdges.map((edge, index) => {
         return (
           <table className={`row `}>
@@ -71,51 +86,49 @@ const ConditionTable: React.FC<TableProps> = ({ currentCondition,  onUpdateCondi
         );
       })}
 
-
       {selectedNodeType === 'opExclusive' && (
         <div className="top-padding">
           <input
-                type="text"
-                className="transparent-input header-text"
-                value={conditionState.name}
-                onChange={handleNameChange}
-              />
+            type="text"
+            className="transparent-input header-text"
+            value={conditionState.name}
+            onChange={handleNameChange}
+          />
         </div>
       )}
 
-      
-
-{outgoingEdges.map((_, index) => {
+      {outgoingEdges.map((_, index) => {
         return (
           <table className={`row `}>
             <tr className="cell">
               <td className="property"> {`Case ${index + 1}`} </td>
             </tr>
             <tr className="cell">
-              <td className="value"> 
-              <input
-                type="text"
-                className="transparent-input italic-placeholder"
-                placeholder="e.g., x == y"
-                value={conditionState?.cases[index]?.condition}
-                onChange={(event) => handleConditionContentChange(index, event)}
-              />
+              <td className="value">
+                <input
+                  type="text"
+                  className="transparent-input italic-placeholder"
+                  placeholder="e.g., x == y"
+                  value={conditionState?.cases[index]?.condition}
+                  onChange={(event) =>
+                    handleConditionContentChange(index, event)
+                  }
+                />
               </td>
             </tr>
             <DropDown
-              options= {
-                outgoingEdges.map((_, index) => `Link ${index + 1}`)
-              }
-              defaultValue='please select a type'
+              options={[
+                'Select Target Link',
+                ...outgoingEdges.map((_, index) => `Link ${index + 1}`),
+              ]}
+              value={conditionState?.cases[index]?.targetLinkName}
               className="normal__dropdown"
+              index={index}
+              onCaseTargetLinkChange={handleCaseTargetLinkChange}
             />
           </table>
-          
-          
         );
       })}
-
-
     </div>
   );
 };

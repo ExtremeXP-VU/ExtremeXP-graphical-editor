@@ -127,7 +127,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                 'array',
                 'boolean',
               ]}
-              defaultValue={paramState.type}
+              value={paramState.type}
               className="normal__dropdown"
               onOptionSelected={handleParamTypeChange}
             />
