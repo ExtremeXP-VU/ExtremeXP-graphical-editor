@@ -139,6 +139,12 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     dispatch(action);
   };
 
+  // handle abstract change
+  const hanldeAbstractChange = (value: boolean) => {
+    const action: Action = { type: 'UPDATE_ABSTRACT', payload: value };
+    dispatch(action);
+  };
+
   // handle add Task variant
   const [showPopover, setShowPopover] = useState(false);
   const { request: tasksRequest } = useRequest<TasksResponseType>();
@@ -280,12 +286,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
               ]}
               defaultValue={taskState.isAbstract ? 'yes' : 'no'}
               name="abstract"
-              onOptionSelected={(value) => {
-                dispatch({
-                  type: 'UPDATE_ABSTRACT',
-                  payload: value,
-                });
-              }}
+              onOptionSelected={hanldeAbstractChange}
             />
           ),
           implementation: '<URI>',
