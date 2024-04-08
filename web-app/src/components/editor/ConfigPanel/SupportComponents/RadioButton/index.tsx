@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './style.scss';
 
 interface Choice {
@@ -10,7 +10,7 @@ interface RadioButtonProps {
   choices: Choice[];
   defaultValue: string;
   className?: string;
-  onOptionSelected: (value: boolean) => void;
+  onOptionSelected?: (value: boolean) => void;
   name: string; // Added to ensure radio buttons are grouped together
 }
 
@@ -21,15 +21,17 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   defaultValue,
   onOptionSelected,
 }) => {
-  const [selectedValue, setSelectedValue] = React.useState<string>(defaultValue);
+  const [selectedValue, setSelectedValue] =
+    React.useState<string>(defaultValue);
 
-  useEffect(() => {
+  const handleOptionSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedValue(e.target.value);
     if (selectedValue === 'yes') {
-      onOptionSelected(true);
+      onOptionSelected && onOptionSelected(true);
     } else {
-      onOptionSelected(false);
+      onOptionSelected && onOptionSelected(false);
     }
-  }, [selectedValue]);
+  };
 
   return (
     <div className={`radio-button-group ${className}`}>
@@ -40,11 +42,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
             name={name}
             checked={selectedValue === choice.value}
             value={choice.value}
-            onChange={(e) => {
-              setSelectedValue(e.target.value);
-              console.log('e.target.value' + e.target.value);
-              
-            }}
+            onChange={handleOptionSelected}
             className="radio-button-input"
           />
           {choice.label}
