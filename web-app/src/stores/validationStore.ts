@@ -1,13 +1,16 @@
 import { create } from 'zustand';
 import ValidationText from '../assets/texts/validation.json';
 import { GraphicalModelType } from '../types/experiment';
+import { Node } from 'reactflow';
 
 export type ValidationCodeType =
   | 'START_EVENT_MISSING'
   | 'END_EVENT_MISSING'
   | 'MULTIPLE_START_EVENTS'
   | 'MULTIPLE_END_EVENTS'
-  | 'EXCLUSIVE_OP_MULTIPLE_OUTPUTS';
+  | 'START_EVENT_OUTPUT_MISSING'
+  | 'END_EVENT_INPUT_MISSING'
+  | 'JOINT_OP_MULTIPLE_OUTPUTS';
 
 export type ValidationMessageType = {
   code: ValidationCodeType;
@@ -49,11 +52,41 @@ export const clearValidation = () => {
 
 export const validateGraphicalModel = (model: GraphicalModelType): void => {
   const validationMessages: ValidationMessageType[] = [];
+
   const startEvents = model.nodes.filter((node) => node.type === 'start');
   const endEvents = model.nodes.filter((node) => node.type === 'end');
+  const parallelOps = model.nodes.filter((node) => node.type === 'opParallel');
   const exclusiveOps = model.nodes.filter(
     (node) => node.type === 'opExclusive'
   );
+  const inclusiveOps = model.nodes.filter(
+    (node) => node.type === 'opInclusive'
+  );
+  const complexOps = model.nodes.filter((node) => node.type === 'opComplex');
+
+  function nrOfincomingLinks(nodeID: string) {
+    const edges = model.edges.filter((edge) => edge.target === nodeID);
+    return edges.length;
+  }
+
+  function nrOfoutgoingLinks(nodeID: string) {
+    const edges = model.edges.filter((edge) => edge.source === nodeID);
+    return edges.length;
+  }
+
+  function isJointOperator(opID: string) {
+    return nrOfincomingLinks(opID) > 1;
+  }
+
+  function checkJointOperatorsOutgoingLinks(operators: Node[]) {
+    operators.forEach((op) => {
+      if (isJointOperator(op.id) && nrOfoutgoingLinks(op.id) > 1) {
+        validationMessages.push(
+          getValidationMessage('JOINT_OP_MULTIPLE_OUTPUTS')
+        );
+      }
+    });
+  }
 
   if (startEvents.length === 0) {
     validationMessages.push(getValidationMessage('START_EVENT_MISSING'));
@@ -71,14 +104,24 @@ export const validateGraphicalModel = (model: GraphicalModelType): void => {
     validationMessages.push(getValidationMessage('MULTIPLE_END_EVENTS'));
   }
 
-  exclusiveOps.forEach((op) => {
-    const edges = model.edges.filter((edge) => edge.source === op.id);
-    if (edges.length > 2) {
+  startEvents.forEach((event) => {
+    if (nrOfoutgoingLinks(event.id) < 1) {
       validationMessages.push(
-        getValidationMessage('EXCLUSIVE_OP_MULTIPLE_OUTPUTS')
+        getValidationMessage('START_EVENT_OUTPUT_MISSING')
       );
     }
   });
+
+  endEvents.forEach((event) => {
+    if (nrOfincomingLinks(event.id) < 1) {
+      validationMessages.push(getValidationMessage('END_EVENT_INPUT_MISSING'));
+    }
+  });
+
+  checkJointOperatorsOutgoingLinks(exclusiveOps);
+  checkJointOperatorsOutgoingLinks(parallelOps);
+  checkJointOperatorsOutgoingLinks(inclusiveOps);
+  checkJointOperatorsOutgoingLinks(complexOps);
 
   if (validationMessages.length > 0) {
     setValidationStatus(false);
