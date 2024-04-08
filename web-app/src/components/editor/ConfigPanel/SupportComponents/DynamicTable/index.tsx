@@ -58,6 +58,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     useParamStore.setState({ selectedParamId: id });
   };
 
+  const handleValueUpdated = (value: unknown) => {value =0};
+
   useEffect(() => {
     // Call the function passed from the parent to update the parameter state there
     onParamUpdate(currentParam.id, paramState);
@@ -150,7 +152,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
           </td>
         </tr>
       </table>
-      {paramState.type === 'integer' && <IntegerTable />}
+      {paramState.type === 'integer' && <IntegerTable numbers={paramState.values.filter((value) => typeof value === 'number')} onValueUpdated={handleValueUpdated} />}
       {paramState.type === 'real' && <RealTable />}
       {paramState.type === 'blob' && <BlobTable />}
       {paramState.type === 'string' && <StringTable />}
