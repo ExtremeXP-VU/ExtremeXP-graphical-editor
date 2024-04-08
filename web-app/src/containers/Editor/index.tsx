@@ -380,14 +380,22 @@ const Editor = () => {
     }, 0);
   };
 
-  // function initOperatorNodeConfig(node: Node) {
-  //   const condition_id = 'condition-' + nanoid();
-  //   const newConditionData: ConditionType = {
-  //     ...defaultCondition,
-  //     condition_id: condition_id,
-  //     name: 'Condition',
-  //   };
-  // }
+  // initiate Operator Conditions
+  const initOperatorConditions = () => {
+    const initialOperatorData = {
+      conditions: [
+        {
+          ...defaultCondition,
+          condition_id: 'condition-' + nanoid(),
+          name: 'New Condition',
+        },
+      ],
+    };
+
+    if (selectedNode?.data?.conditions === undefined) {
+      selectedNode && (selectedNode.data = initialOperatorData);
+    }
+  };
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
@@ -397,40 +405,13 @@ const Editor = () => {
     useConfigPanelStore.setState({ selectedNodeType: node.type });
     useConfigPanelStore.setState({ selectedNodeId: node.id });
 
-    // switch (node.type) {
-    //   case 'opExclusive':
-    //     initOperatorNodeConfig(node);
-    //     break;
-    //   case 'opInclusive':
-    //     initOperatorNodeConfig(node);
-    //     break;
-    //   default:
-    //     break;
-    // }
-
     if (node.type === 'opExclusive' || node.type === 'opInclusive') {
-      if (selectedNode?.data?.conditions === undefined) {
-        selectedNode && (selectedNode.data = currentOperatorData);
-      } else {
-        return;
-      }
+      initOperatorConditions();
     }
 
     if (isOpenConfig) {
       updateConfigPanel();
     }
-  };
-
-  // add some logic for init operator condition when double clicked
-
-  const currentOperatorData = {
-    conditions: [
-      {
-        ...defaultCondition,
-        condition_id: 'condition-' + nanoid(),
-        name: 'New Condition',
-      },
-    ],
   };
 
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
@@ -439,13 +420,6 @@ const Editor = () => {
     if (node.type !== 'start' && node.type !== 'end') {
       updateConfigPanel();
     }
-    // if (node.type === 'opExclusive' || node.type === 'opInclusive') {
-    //   if (selectedNode?.data?.conditions === undefined) {
-    //     selectedNode && (selectedNode.data = currentOperatorData);
-    //   } else {
-    //     return;
-    //   }
-    // }
   };
 
   return (
