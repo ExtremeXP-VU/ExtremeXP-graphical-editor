@@ -19,7 +19,6 @@ import {
 } from '../../stores/reactFlowInstanceStore';
 
 import {
-  useConfigOperatorPanelStore,
   useConfigPanelStore,
 } from '../../stores/configPanelStore';
 
@@ -56,10 +55,7 @@ import { nodeTypes, edgeTypes } from './notationTypes';
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
 import ConfigPanel from '../../components/editor/ConfigPanel';
 import {
-  ConditionType,
   defaultCondition,
-  defaultOperatorData,
-  OperatorDataType,
 } from '../../types/operator';
 import { nanoid } from 'nanoid';
 
