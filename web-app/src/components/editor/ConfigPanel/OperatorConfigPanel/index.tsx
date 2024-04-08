@@ -90,7 +90,6 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
       payload: newCondition,
     };
     dispatch(action);
-    console.log('New Condition Added');
   };
 
   const selectedNodeType = useConfigPanelStore(
@@ -131,10 +130,12 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
         />
       ))}
 
-      <CustomButton
-        buttonText="add condition"
-        handleClick={handleAddCondition}
-      />
+      {selectedNodeType === 'opInclusive'  && (
+        <CustomButton
+          buttonText="add condition"
+          handleClick={handleAddCondition}
+        />
+      )}
     </div>
   );
 };

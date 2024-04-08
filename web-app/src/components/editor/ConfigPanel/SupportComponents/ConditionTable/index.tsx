@@ -64,6 +64,8 @@ const ConditionTable: React.FC<TableProps> = ({
     conditionDispatch(action);
   };
 
+  const validConditionalOperator =  outgoingEdges.length > 1
+
 
 
   useEffect(() => {
@@ -72,16 +74,16 @@ const ConditionTable: React.FC<TableProps> = ({
 
   return (
     <div className="table-component">
-        <div>
+        {validConditionalOperator && <div>
           <input
             type="text"
             className="transparent-input header-text"
             value={conditionState.name}
             onChange={handleNameChange}
           />
-        </div>
+        </div>}
 
-      {outgoingEdges.map((_, index) => {
+      {validConditionalOperator && outgoingEdges.map((_, index) => {
         return (
           <table className={`row `}>
             <tr className="cell">

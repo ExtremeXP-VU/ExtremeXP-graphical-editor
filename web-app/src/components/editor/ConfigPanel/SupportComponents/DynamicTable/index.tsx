@@ -55,7 +55,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   };
 
   const handleEnterParam = (id: string) => {
-    // console.log('entering param', id);
     useParamStore.setState({ selectedParamId: id });
   };
 
@@ -156,6 +155,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
       {paramState.type === 'blob' && <BlobTable />}
       {paramState.type === 'string' && <StringTable />}
       {paramState.type === 'array' && <div>array</div>}
+      {/* The array type is to be finished */}
       {paramState.type === 'boolean' && <BooleanTable />}
     </div>
   );

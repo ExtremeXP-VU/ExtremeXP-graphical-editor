@@ -61,7 +61,6 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
     });
   },
   updateNodeData: (data: object, nodeId: string) => {
-    // console.log('updateNodeData', data);
     const nodes = get().nodes.map((n) =>
       n.id === nodeId ? { ...n, data } : n
     );

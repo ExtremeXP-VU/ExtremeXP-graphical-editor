@@ -18,9 +18,7 @@ import {
   RFState,
 } from '../../stores/reactFlowInstanceStore';
 
-import {
-  useConfigPanelStore,
-} from '../../stores/configPanelStore';
+import { useConfigPanelStore } from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -54,9 +52,7 @@ import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
 import ConfigPanel from '../../components/editor/ConfigPanel';
-import {
-  defaultCondition,
-} from '../../types/operator';
+import { defaultCondition } from '../../types/operator';
 import { nanoid } from 'nanoid';
 
 const selector = (state: RFState) => ({
@@ -436,10 +432,8 @@ const Editor = () => {
       updateConfigPanel();
     }
     if (node.type === 'opExclusive' || node.type === 'opInclusive') {
-      console.log('the selectedNode data conditions is ' + selectedNode?.data.conditions);
       if (selectedNode?.data?.conditions === undefined) {
-          selectedNode && (selectedNode.data = currentOperatorData);
-
+        selectedNode && (selectedNode.data = currentOperatorData);
       } else {
         return;
       }
