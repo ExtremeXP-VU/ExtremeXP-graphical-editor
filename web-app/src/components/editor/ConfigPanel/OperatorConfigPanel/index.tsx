@@ -1,17 +1,16 @@
 import './style.scss';
 import React, { useEffect } from 'react';
 import { useImmerReducer } from 'use-immer';
-import {operatorConfigReducer,  Action } from './reducer';
+import { operatorConfigReducer, Action } from './reducer';
 import { shallow } from 'zustand/shallow';
-import {
-  useConfigPanelStore,
-} from '../../../../stores/configPanelStore';
+import { useConfigPanelStore } from '../../../../stores/configPanelStore';
 // import { useReactFlowInstanceStore } from '../../../../stores/reactFlowInstanceStore';
 
 // import DropDown from '../SupportComponents/DropDown';
 // import RadioButton from '../SupportComponents/RadioButton';
 import {
   ConditionType,
+  defaultCondition,
   OperatorDataType,
 } from '../../../../types/operator';
 import ConditionTable from '../SupportComponents/ConditionTable';
@@ -19,6 +18,8 @@ import {
   RFState,
   useReactFlowInstanceStore,
 } from '../../../../stores/reactFlowInstanceStore';
+import CustomButton from '../SupportComponents/CustomButton';
+import { nanoid } from 'nanoid';
 
 interface OperatorConfigPanelProps {
   updateSideBar: () => void;
@@ -39,7 +40,14 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
   );
 
   const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-  const selectedOperatorData : OperatorDataType = selectedNode?.data as OperatorDataType;
+  const selectedOperatorData: OperatorDataType =
+    selectedNode?.data as OperatorDataType;
+
+  const edges = useReactFlowInstanceStore((state) => state.edges);
+  const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
+  const outgoingEdges = edges.filter((edge) =>
+    outgoingLinks.some((link) => link.linkId === edge.id)
+  );
 
   const [operatorState, dispatch] = useImmerReducer(
     operatorConfigReducer,
@@ -50,7 +58,7 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
     updateNodeData(
       {
         ...selectedNode?.data,
-        conditions : operatorData.conditions,
+        conditions: operatorData.conditions,
       },
       selectedNodeId
     );
@@ -60,15 +68,30 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
     updateSelectedNodeData(operatorState);
   }, [operatorState]);
 
-  const handleUpdateCondition = (updatedCondition: ConditionType, condition_id: string) => {
+  const handleUpdateCondition = (
+    updatedCondition: ConditionType,
+    condition_id: string
+  ) => {
     const action: Action = {
       type: 'UPDATE_CONDITION',
-      payload: { condition_id, updatedCondition},
+      payload: { condition_id, updatedCondition },
     };
     dispatch(action);
-  }
+  };
 
-
+  const handleAddCondition = () => {
+    const newCondition = {
+      ...defaultCondition,
+      condition_id: 'condition-' + nanoid(),
+      name: 'New Condition',
+    };
+    const action: Action = {
+      type: 'ADD_CONDITION',
+      payload: newCondition,
+    };
+    dispatch(action);
+    console.log('New Condition Added');
+  };
 
   const selectedNodeType = useConfigPanelStore(
     (state) => state.selectedNodeType
@@ -83,6 +106,21 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
       <span className="iconfont close-button" onClick={handleClosePanel}>
         &#xe600;
       </span>
+<div className='table-component'>
+      <div className="header-text">Outgoing Links</div>
+      {outgoingEdges.map((edge, index) => {
+        return (
+          <table className={`row `}>
+            <tr className="cell">
+              <td className="property"> {`Link ${index + 1}`} </td>
+            </tr>
+            <tr className="cell">
+              <td className="value"> {edge.data.label}</td>
+            </tr>
+          </table>
+        );
+      })}
+      </div>
 
       {operatorState?.conditions?.map((condition: ConditionType) => (
         <ConditionTable
@@ -92,6 +130,11 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
           onUpdateCondition={handleUpdateCondition}
         />
       ))}
+
+      <CustomButton
+        buttonText="add condition"
+        handleClick={handleAddCondition}
+      />
     </div>
   );
 };

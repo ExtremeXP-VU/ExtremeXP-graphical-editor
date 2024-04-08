@@ -3,7 +3,7 @@ import './style.scss';
 import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
 import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 import DropDown from '../DropDown';
-import { ConditionType } from '../../../../../types/operator';
+import { ConditionType} from '../../../../../types/operator';
 import { useImmerReducer } from 'use-immer';
 import {
   Action,
@@ -21,9 +21,7 @@ const ConditionTable: React.FC<TableProps> = ({
   currentCondition,
   onUpdateCondition,
 }) => {
-  const selectedNodeType = useConfigPanelStore(
-    (state) => state.selectedNodeType
-  );
+
 
   const edges = useReactFlowInstanceStore((state) => state.edges);
   const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
@@ -66,28 +64,15 @@ const ConditionTable: React.FC<TableProps> = ({
     conditionDispatch(action);
   };
 
+
+
   useEffect(() => {
     onUpdateCondition(conditionState, currentCondition.condition_id);
   }, [conditionState]);
 
   return (
     <div className="table-component">
-      <div className="header-text">Outgoing Links</div>
-      {outgoingEdges.map((edge, index) => {
-        return (
-          <table className={`row `}>
-            <tr className="cell">
-              <td className="property"> {`Link ${index + 1}`} </td>
-            </tr>
-            <tr className="cell">
-              <td className="value"> {edge.data.label}</td>
-            </tr>
-          </table>
-        );
-      })}
-
-      {selectedNodeType === 'opExclusive' && (
-        <div className="top-padding">
+        <div>
           <input
             type="text"
             className="transparent-input header-text"
@@ -95,7 +80,6 @@ const ConditionTable: React.FC<TableProps> = ({
             onChange={handleNameChange}
           />
         </div>
-      )}
 
       {outgoingEdges.map((_, index) => {
         return (
@@ -129,6 +113,7 @@ const ConditionTable: React.FC<TableProps> = ({
           </table>
         );
       })}
+
     </div>
   );
 };
