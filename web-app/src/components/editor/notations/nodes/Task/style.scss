@@ -66,8 +66,7 @@
 
 .node-task-selected {
   border: 1px ridge $secondary-theme-color;
-  background-color: lighten($color: $secondary-theme-color, $amount: 30);
-  // color: darken($color: $secondary-theme-color, $amount: 10);
+  background-color: lighten($color: $secondary-theme-color, $amount: 40);
 }
 
 .higher-task-name {
