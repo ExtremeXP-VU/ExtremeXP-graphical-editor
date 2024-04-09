@@ -9,6 +9,12 @@ In the root folder (i.e. the folder contains `docker-compose.yaml` file):
 docker-compose up -d
 ```
 
+Or, if you need everything re-built before running:
+```shell
+docker-compose up --build
+```
+
+
 To access the app: http://localhost:7001/
 
 ## Demo
