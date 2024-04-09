@@ -62,13 +62,13 @@ const selector = (state: RFState) => ({
   setEdges: state.setEdges,
   setSelectedNode: state.setSelectedNode,
   selectedLink: state.selectedLinkType,
-  selectedNode: state.selectedNode,
   setSelectedLink: state.setSelectedLinkType,
   addNode: state.addNode,
   onConnect: state.onConnect,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onDragOver: state.onDragOver,
+  updateNodeData: state.updateNodeData,
 });
 
 const Editor = () => {
@@ -96,7 +96,7 @@ const Editor = () => {
     addNode,
     onConnect,
     onDragOver,
-    selectedNode,
+    updateNodeData,
   } = useReactFlowInstanceStore(selector, shallow);
 
   const navigate = useNavigate();
@@ -381,38 +381,47 @@ const Editor = () => {
   };
 
   // initiate Operator Conditions
-  const initOperatorConditions = () => {
-    const initialOperatorData = {
-      conditions: [
-        {
-          ...defaultCondition,
-          condition_id: 'condition-' + nanoid(),
-          name: 'New Condition',
-        },
-      ],
-    };
 
-    if (selectedNode?.data?.conditions === undefined) {
-      selectedNode && (selectedNode.data = initialOperatorData);
-    }
+  const initOperatorConditions = (id: string) => {
+    updateNodeData(
+      {
+        conditions: [
+      {
+        ...defaultCondition,
+        condition_id: 'condition-' + nanoid(),
+        name: 'New Condition',
+      },
+    ],
+      },
+      id
+    );
   };
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
+    if (isOpenConfig) {
+      updateConfigPanel();
+    }
 
     setSelectedNode(node.id); // Set the selected node in the reactFlowInstanceStore
     useConfigPanelStore.getState().setOutgoingLinks(node, edges); // Set the outgoing links of the selected node
     useConfigPanelStore.setState({ selectedNodeType: node.type });
     useConfigPanelStore.setState({ selectedNodeId: node.id });
 
+    // make sure the conditions are initiated after the node is selected
     if (node.type === 'opExclusive' || node.type === 'opInclusive') {
-      initOperatorConditions();
+      if (node.data.conditions === undefined) {
+        initOperatorConditions(node.id);
+      }
+
     }
+
 
     if (isOpenConfig) {
       updateConfigPanel();
     }
   };
+
 
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
     handleSwitchSelectedNode(event, node);

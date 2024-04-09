@@ -32,8 +32,8 @@ const DropDown: React.FC<DropDownProps> = ({
   return (
     <div className={className}>
       <select value={selectedOption} onChange={handleOptionChange}>
-        {options.map((option) => (
-          <option key={option} value={option}>
+        {options.map((option, idx) => (
+          <option key={idx} value={option}>
             {option}
           </option>
         ))}

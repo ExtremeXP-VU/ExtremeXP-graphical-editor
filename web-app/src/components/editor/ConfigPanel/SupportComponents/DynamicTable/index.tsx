@@ -59,8 +59,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   };
 
   const handleValueUpdated = (value: unknown) => {
-    if(value === null){
+    if (value === null) {
       return;
+      // To be implemented
     }
   };
 
@@ -91,78 +92,112 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
       </div>
       {/* Header Row */}
       <table className="row header-row">
-        <tr className="cell">
-          <td className="property">property</td>
-        </tr>
-        <tr className="cell">
-          <td className="value">value</td>
-        </tr>
+        <thead className="cell">
+          <tr>
+            <td className="property">property</td>
+          </tr>
+        </thead>
+        <thead className="cell">
+          <tr>
+            <td className="value">value</td>
+          </tr>
+        </thead>
       </table>
 
       {/* Data row */}
       <table className={`row `}>
-        <tr className="cell">
-          <td className="property"> name</td>
-        </tr>
-        <tr className="cell">
-          <td className="value">
-            <input
-              type="text"
-              className="transparent-input"
-              onChange={handleParamNameChange}
-              value={paramState.name}
-            />
-          </td>
-        </tr>
+        <tbody className="cell">
+          <tr>
+            <td className="property"> name</td>
+          </tr>
+        </tbody>
+        <tbody className="cell">
+          <tr>
+            <td className="value">
+              <input
+                type="text"
+                className="transparent-input"
+                onChange={handleParamNameChange}
+                value={paramState.name}
+              />
+            </td>
+          </tr>
+        </tbody>
       </table>
       <table className={`row `}>
-        <tr className="cell">
-          <td className="property"> type</td>
-        </tr>
-        <tr className="cell">
-          <td className="value">
-            <DropDown
-              options={[
-                'please select a type',
-                'integer',
-                'real',
-                'blob',
-                'string',
-                'array',
-                'boolean',
-              ]}
-              value={paramState.type}
-              className="normal__dropdown"
-              onOptionSelected={handleParamTypeChange}
-            />
-          </td>
-        </tr>
+        <tbody className="cell">
+          <tr>
+            <td className="property"> type</td>
+          </tr>
+        </tbody>
+        <tbody className="cell">
+          <tr>
+            <td className="value">
+              <DropDown
+                options={[
+                  'please select a type',
+                  'integer',
+                  'real',
+                  'blob',
+                  'string',
+                  'array',
+                  'boolean',
+                ]}
+                value={paramState.type}
+                className="normal__dropdown"
+                onOptionSelected={handleParamTypeChange}
+              />
+            </td>
+          </tr>
+        </tbody>
       </table>
       <table className={`row `}>
-        <tr className="cell">
-          <td className="property"> abstract</td>
-        </tr>
-        <tr className="cell">
-          <td className="value">
-            <RadioButton
-              choices={[
-                { label: 'yes', value: 'yes' },
-                { label: 'no', value: 'no' },
-              ]}
-              defaultValue={paramState.abstract ? 'yes' : 'no'}
-              onOptionSelected={handleParamArbitraryChange}
-              name={`abstract-${paramState.id}`}
-            />
-          </td>
-        </tr>
+        <tbody className="cell">
+          <tr>
+            <td className="property"> abstract</td>
+          </tr>
+        </tbody>
+        <tbody className="cell">
+          <tr>
+            <td className="value">
+              <RadioButton
+              key={`abstract-${paramState.id}`}
+                choices={[
+                  { label: 'yes', value: 'yes' },
+                  { label: 'no', value: 'no' },
+                ]}
+                defaultValue={paramState.abstract ? 'yes' : 'no'}
+                onOptionSelected={handleParamArbitraryChange}
+                name={`abstract-${paramState.id}`}
+              />
+            </td>
+          </tr>
+        </tbody>
       </table>
-      {paramState.type === 'integer' && <IntegerTable numbers={paramState.values.filter((value) => typeof value === 'number')} onValueUpdated={handleValueUpdated} />}
-      {paramState.type === 'real' && <RealTable />}
-      {paramState.type === 'blob' && <BlobTable />}
-      {paramState.type === 'string' && <StringTable />}
-      {paramState.type === 'array' && <div>array</div>}
-      {/* The array type is to be finished */}
-      {paramState.type === 'boolean' && <BooleanTable />}
+      {paramState.type === 'integer' && (
+        <IntegerTable
+          numbers={paramState.values.filter(
+            (value) => typeof value === 'number'
+          )}
+          key={`integer-${currentParam.id}`}
+          onValueUpdated={handleValueUpdated}
+        />
+      )}
+      {paramState.type === 'real' && (
+        <RealTable key={`real-${currentParam.id}`} />
+      )}
+      {paramState.type === 'blob' && (
+        <BlobTable key={`blob-${currentParam.id}`} />
+      )}
+      {paramState.type === 'string' && (
+        <StringTable key={`string-${currentParam.id}`} />
+      )}
+      {paramState.type === 'array' && (
+        <div key={`array-${currentParam.id}`}>array</div>
+      )}
+      {paramState.type === 'boolean' && (
+        <BooleanTable key={`boolean-${currentParam.id}`} />
+      )}
     </div>
   );
 };

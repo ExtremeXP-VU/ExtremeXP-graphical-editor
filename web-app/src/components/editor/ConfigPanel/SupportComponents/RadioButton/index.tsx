@@ -36,7 +36,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   return (
     <div className={`radio-button-group ${className}`}>
       {choices.map((choice, index) => (
-        <label key={index} className="radio-button-label">
+        <label key={index} className="radio-button-label" >
           <input
             type="radio"
             name={name}

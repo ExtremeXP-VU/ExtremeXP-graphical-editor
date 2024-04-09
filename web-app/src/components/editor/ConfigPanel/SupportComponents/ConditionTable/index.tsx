@@ -3,7 +3,7 @@ import './style.scss';
 import { useConfigPanelStore } from '../../../../../stores/configPanelStore';
 import { useReactFlowInstanceStore } from '../../../../../stores/reactFlowInstanceStore';
 import DropDown from '../DropDown';
-import { ConditionType} from '../../../../../types/operator';
+import { ConditionType } from '../../../../../types/operator';
 import { useImmerReducer } from 'use-immer';
 import {
   Action,
@@ -15,14 +15,14 @@ type TableProps = {
   opType: string;
   onUpdateCondition: (condition: ConditionType, condition_id: string) => void;
   key: string;
+  onDelete: (condition_id: string) => void;
 };
 
 const ConditionTable: React.FC<TableProps> = ({
   currentCondition,
   onUpdateCondition,
+  onDelete,
 }) => {
-
-
   const edges = useReactFlowInstanceStore((state) => state.edges);
   const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
   const outgoingEdges = edges.filter((edge) =>
@@ -63,10 +63,7 @@ const ConditionTable: React.FC<TableProps> = ({
     };
     conditionDispatch(action);
   };
-
-  const validConditionalOperator =  outgoingEdges.length > 1
-
-
+  const validConditionalOperator = outgoingEdges.length > 1;
 
   useEffect(() => {
     onUpdateCondition(conditionState, currentCondition.condition_id);
@@ -74,48 +71,68 @@ const ConditionTable: React.FC<TableProps> = ({
 
   return (
     <div className="table-component">
-        {validConditionalOperator && <div>
+      {validConditionalOperator && (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <input
             type="text"
             className="transparent-input header-text"
-            value={conditionState.name}
+            value={conditionState.name || ''}
             onChange={handleNameChange}
           />
-        </div>}
+          <span
+          className="iconfont delete-param"
+          onClick={() => {
+            onDelete(conditionState.condition_id);
+          }}
+        >
+          &#xe600;
+        </span>
+        </div>
+      )}
 
-      {validConditionalOperator && outgoingEdges.map((_, index) => {
-        return (
-          <table className={`row `}>
-            <tr className="cell">
-              <td className="property"> {`Case ${index + 1}`} </td>
-            </tr>
-            <tr className="cell">
-              <td className="value">
-                <input
-                  type="text"
-                  className="transparent-input italic-placeholder"
-                  placeholder="e.g., x == y"
-                  value={conditionState?.cases[index]?.condition}
-                  onChange={(event) =>
-                    handleConditionContentChange(index, event)
-                  }
-                />
-              </td>
-            </tr>
-            <DropDown
-              options={[
-                'Select Target Link',
-                ...outgoingEdges.map((_, index) => `Link ${index + 1}`),
-              ]}
-              value={conditionState?.cases[index]?.targetLinkName}
-              className="normal__dropdown"
-              index={index}
-              onCaseTargetLinkChange={handleCaseTargetLinkChange}
-            />
-          </table>
-        );
-      })}
-
+      {validConditionalOperator &&
+        outgoingEdges.map((_, index) => {
+          return (
+            <table className={`row `} key={index}>
+              <tbody className="cell">
+                <tr>
+                  <td className="property"> {`Case ${index + 1}`} </td>
+                </tr>
+              </tbody>
+              <tbody className="cell">
+                <tr>
+                  <td className="value">
+                    <input
+                      type="text"
+                      className="transparent-input italic-placeholder"
+                      placeholder="e.g., x == y"
+                      value={conditionState?.cases[index]?.condition || ''}
+                      onChange={(event) =>
+                        handleConditionContentChange(index, event)
+                      }
+                    />
+                  </td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr>
+                  <td>
+                    <DropDown
+                      key={index}
+                      options={[
+                        ...outgoingEdges.map((_, index) => `Link ${index + 1}`),
+                      ]}
+                      value={conditionState?.cases[index]?.targetLinkName}
+                      className="normal__dropdown"
+                      index={index}
+                      onCaseTargetLinkChange={handleCaseTargetLinkChange}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          );
+        })}
     </div>
   );
 };

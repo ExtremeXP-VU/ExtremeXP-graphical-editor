@@ -7,6 +7,7 @@ export type Action =
       type: 'UPDATE_CONDITION';
       payload: { condition_id: string; updatedCondition: ConditionType };
     }
+  | { type: 'DELETE_CONDITION'; payload: string }
   | { type: 'UPDATE_CONDITION_NAME'; payload: string }
   | {
       type: 'UPDATE_CONDITION_CONTENT';
@@ -28,6 +29,15 @@ export function operatorConfigReducer(draft: OperatorDataType, action: Action) {
       );
       if (index !== -1) {
         draft.conditions[index] = action.payload.updatedCondition;
+      }
+      return draft;
+    }
+    case 'DELETE_CONDITION':{
+      const index = draft.conditions.findIndex(
+        (condition) => condition.condition_id === action.payload
+      );
+      if (index !== -1) {
+        draft.conditions.splice(index, 1);
       }
       return draft;
     }
@@ -77,8 +87,8 @@ export function conditionConfigReducer(draft: ConditionType, action: Action) {
       const targetLinkName = action.payload.targetLinkName;
       const Link_index: string = targetLinkName.split(' ')[1];
       const id = Number(Link_index);
-      draft.cases[index].targetLinkId = edges[id-1].id;
-      draft.cases[index].targetNodeId = edges[id-1].target;
+      draft.cases[index].targetLinkId = edges[id - 1].id;
+      draft.cases[index].targetNodeId = edges[id - 1].target;
       return draft;
     }
 

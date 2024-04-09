@@ -49,6 +49,8 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
     outgoingLinks.some((link) => link.linkId === edge.id)
   );
 
+  const validConditionalOperator = outgoingEdges.length > 1;
+
   const [operatorState, dispatch] = useImmerReducer(
     operatorConfigReducer,
     selectedOperatorData
@@ -92,6 +94,11 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
     dispatch(action);
   };
 
+  const onDelete = (condition_id: string) => {
+    const action: Action = { type: 'DELETE_CONDITION', payload: condition_id };
+    dispatch(action);
+  };
+
   const selectedNodeType = useConfigPanelStore(
     (state) => state.selectedNodeType
   );
@@ -105,20 +112,24 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
       <span className="iconfont close-button" onClick={handleClosePanel}>
         &#xe600;
       </span>
-<div className='table-component'>
-      <div className="header-text">Outgoing Links</div>
-      {outgoingEdges.map((edge, index) => {
-        return (
-          <table className={`row `}>
-            <tr className="cell">
-              <td className="property"> {`Link ${index + 1}`} </td>
-            </tr>
-            <tr className="cell">
-              <td className="value"> {edge.data.label}</td>
-            </tr>
-          </table>
-        );
-      })}
+      <div className="table-component">
+        <div className="header-text">Outgoing Links</div>
+        {outgoingEdges.map((edge, index) => {
+          return (
+            <table className={`row `} key={index}>
+              <tbody className="cell">
+                <tr>
+                  <td className="property"> {`Link ${index + 1}`} </td>
+                </tr>
+              </tbody>
+              <tbody className="cell">
+                <tr>
+                  <td className="value"> {edge.data.label}</td>
+                </tr>
+              </tbody>
+            </table>
+          );
+        })}
       </div>
 
       {operatorState?.conditions?.map((condition: ConditionType) => (
@@ -127,10 +138,11 @@ const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
           key={condition.condition_id}
           opType={selectedNodeType}
           onUpdateCondition={handleUpdateCondition}
+          onDelete={onDelete}
         />
       ))}
 
-      {selectedNodeType === 'opInclusive'  && (
+      {selectedNodeType === 'opInclusive' && validConditionalOperator && (
         <CustomButton
           buttonText="add condition"
           handleClick={handleAddCondition}
