@@ -1,0 +1,115 @@
+@import '../../../styles/colors.scss';
+
+.validation {
+  z-index: 4;
+  position: absolute;
+  right: 0.15rem;
+  bottom: 0.15rem;
+
+  width: 2.5rem;
+  height: 2rem;
+}
+
+.validation__window {
+  width: 100%;
+  height: 100%;
+  background-color: $primary-background-color;
+  border: 1px solid $primary-theme-color;
+
+  &__header {
+    width: 100%;
+    height: 0.2rem;
+    background-color: $secondary-theme-color;
+
+    span {
+      color: $primary-button-text-color;
+      font-size: 1.1em;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: darken($color: $secondary-theme-color, $amount: 20);
+      font-size: 1.2em;
+    }
+  }
+
+  &__content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    height: calc(100% - 0.2rem);
+    white-space: pre-wrap;
+  }
+}
+
+.validation__message {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.05rem 0.05rem;
+
+  &__type {
+    width: 0.5rem;
+    height: 0.2rem;
+    background-color: $alert-background-color;
+    border-radius: 0.1rem;
+    margin-right: 0.1rem;
+    color: $primary-button-text-color;
+    font-size: 1.1em;
+    font-weight: 700;
+  }
+
+  &__code {
+    color: $primary-theme-color;
+    font-size: 1.1em;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  &__text {
+    color: $primary-theme-color;
+    font-size: 1.1em;
+    font-weight: 700;
+    text-align: left;
+  }
+}
+
+.validation__ball {
+  position: absolute;
+  top: 80%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: $primary-background-color;
+  border: 1px solid $cancel-background-color;
+  border-radius: 50%;
+
+  &__content {
+    width: 0.44rem;
+    height: 0.44rem;
+    background-color: $primary-theme-color;
+    border-radius: 50%;
+
+    p {
+      color: $primary-button-text-color;
+      font-size: 2.5em;
+      font-weight: 700;
+    }
+
+    &--invalid {
+      background-color: $alert-background-color;
+
+      &:hover {
+        cursor: pointer;
+        background-color: darken($color: $alert-background-color, $amount: 20);
+        box-shadow: inset 0 0 0.1rem $primary-background-color;
+      }
+    }
+  }
+}

@@ -1,56 +1,107 @@
 import './style.scss';
 import React, { useEffect } from 'react';
 import { useImmerReducer } from 'use-immer';
-import operatorConfigReducer, { Action } from './reducer';
-
-import {
-  useConfigOperatorPanelStore,
-  useConfigPanelStore,
-} from '../../../../stores/configPanelStore';
+import { operatorConfigReducer, Action } from './reducer';
+import { shallow } from 'zustand/shallow';
+import { useConfigPanelStore } from '../../../../stores/configPanelStore';
 // import { useReactFlowInstanceStore } from '../../../../stores/reactFlowInstanceStore';
 
 // import DropDown from '../SupportComponents/DropDown';
 // import RadioButton from '../SupportComponents/RadioButton';
-import StaticTable from '../SupportComponents/StaticTable';
-import { defaultOperatorData } from '../../../../types/operator';
+import {
+  ConditionType,
+  defaultCondition,
+  OperatorDataType,
+} from '../../../../types/operator';
+import ConditionTable from '../SupportComponents/ConditionTable';
+import {
+  RFState,
+  useReactFlowInstanceStore,
+} from '../../../../stores/reactFlowInstanceStore';
+import CustomButton from '../SupportComponents/CustomButton';
+import { nanoid } from 'nanoid';
 
-interface TaskConfigPanelProps {
+interface OperatorConfigPanelProps {
   updateSideBar: () => void;
 }
 
-const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
-  const selectedOperatorData = useConfigOperatorPanelStore(
-    (state) => state.selectedOperatorData
+const selector = (state: RFState) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  updateNodeData: state.updateNodeData,
+  selectedNode: state.selectedNode,
+  updateEdgeData: state.updateEdgeData,
+});
+
+const OperatorConfigPanel: React.FC<OperatorConfigPanelProps> = () => {
+  const { updateNodeData, selectedNode } = useReactFlowInstanceStore(
+    selector,
+    shallow
   );
+
+  const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
+  const selectedOperatorData: OperatorDataType =
+    selectedNode?.data as OperatorDataType;
+
+  const edges = useReactFlowInstanceStore((state) => state.edges);
+  const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
+  const outgoingEdges = edges.filter((edge) =>
+    outgoingLinks.some((link) => link.linkId === edge.id)
+  );
+
+  const validConditionalOperator = outgoingEdges.length > 1;
 
   const [operatorState, dispatch] = useImmerReducer(
     operatorConfigReducer,
     selectedOperatorData
   );
 
-  const handleSetCondition = (event: React.ChangeEvent<HTMLInputElement>) => {
+  function updateSelectedNodeData(operatorData: OperatorDataType) {
+    updateNodeData(
+      {
+        ...selectedNode?.data,
+        conditions: operatorData.conditions,
+      },
+      selectedNodeId
+    );
+  }
+
+  useEffect(() => {
+    updateSelectedNodeData(operatorState);
+  }, [operatorState]);
+
+  const handleUpdateCondition = (
+    updatedCondition: ConditionType,
+    condition_id: string
+  ) => {
     const action: Action = {
       type: 'UPDATE_CONDITION',
-      payload: event.target.value,
+      payload: { condition_id, updatedCondition },
     };
     dispatch(action);
   };
 
-  const handleSetConditions = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddCondition = () => {
+    const newCondition = {
+      ...defaultCondition,
+      condition_id: 'condition-' + nanoid(),
+      name: 'New Condition',
+    };
     const action: Action = {
-      type: 'UPDATE_CONDITIONS',
-      payload: event.target.value.split('||'),
+      type: 'ADD_CONDITION',
+      payload: newCondition,
     };
     dispatch(action);
-  }
+  };
 
-  useEffect(() => {
-    useConfigOperatorPanelStore.setState({
-      selectedOperatorData: operatorState,
-    });
-  }, [operatorState]);
+  const onDelete = (condition_id: string) => {
+    const action: Action = { type: 'DELETE_CONDITION', payload: condition_id };
+    dispatch(action);
+  };
 
-  const selectedNodeType = useConfigPanelStore((state) => state.selectedNodeType);
+  const selectedNodeType = useConfigPanelStore(
+    (state) => state.selectedNodeType
+  );
 
   const handleClosePanel = () => {
     useConfigPanelStore.getState().clearConfigStore();
@@ -61,41 +112,40 @@ const OperatorConfigPanel: React.FC<TaskConfigPanelProps> = () => {
       <span className="iconfont close-button" onClick={handleClosePanel}>
         &#xe600;
       </span>
-      
+      <div className="table-component">
+        <div className="header-text">Outgoing Links</div>
+        {outgoingEdges.map((edge, index) => {
+          return (
+            <table className={`row `} key={index}>
+              <tbody className="cell">
+                <tr>
+                  <td className="property"> {`Link ${index + 1}`} </td>
+                </tr>
+              </tbody>
+              <tbody className="cell">
+                <tr>
+                  <td className="value"> {edge.data.label}</td>
+                </tr>
+              </tbody>
+            </table>
+          );
+        })}
+      </div>
 
-      {selectedNodeType === 'opExclusive' && (
-        <StaticTable
-          properties={{
-            condition: (
-              <input
-                type="text"
-                className="transparent-input"
-                defaultValue={defaultOperatorData.condition}
-                onChange={handleSetCondition}
-                value={operatorState.condition}
-              />
-            ),
-          }
-        
-        }
+      {operatorState?.conditions?.map((condition: ConditionType) => (
+        <ConditionTable
+          currentCondition={condition}
+          key={condition.condition_id}
+          opType={selectedNodeType}
+          onUpdateCondition={handleUpdateCondition}
+          onDelete={onDelete}
         />
-      )}
+      ))}
 
-{selectedNodeType === 'opInclusive' && (
-        <StaticTable
-          properties={{
-            conditions: (
-              <input
-                type="text"
-                className="transparent-input"
-                defaultValue={defaultOperatorData.conditions}
-                onChange={handleSetConditions}
-                value={operatorState.conditions}
-              />
-            ),
-          }
-        
-        }
+      {selectedNodeType === 'opInclusive' && validConditionalOperator && (
+        <CustomButton
+          buttonText="add condition"
+          handleClick={handleAddCondition}
         />
       )}
     </div>

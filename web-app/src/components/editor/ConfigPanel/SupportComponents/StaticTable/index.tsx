@@ -25,7 +25,9 @@ const StaticTable: React.FC<TableProps> = ({ properties }) => {
 
   const edges = useReactFlowInstanceStore((state) => state.edges);
   const outgoingLinks = useConfigPanelStore((state) => state.outgoingLinks);
-  const outgoingEdges = edges.filter((edge) => outgoingLinks.some((link) => link.linkId === edge.id));
+  const outgoingEdges = edges.filter((edge) =>
+    outgoingLinks.some((link) => link.linkId === edge.id)
+  );
   return (
     <div className="table-component">
       {selectedNodeType === 'task' && (
@@ -33,37 +35,49 @@ const StaticTable: React.FC<TableProps> = ({ properties }) => {
       )}
       {/* Header Row */}
       <table className="row header-row">
-        <tr className="cell">
-          <td className="property">property</td>
-        </tr>
-        <tr className="cell">
-          <td className="value">value</td>
-        </tr>
+        <thead className="cell">
+          <tr>
+            <td className="property">property</td>
+          </tr>
+        </thead>
+        <thead className="cell">
+          <tr>
+            <td className="value">value</td>
+          </tr>
+        </thead>
       </table>
 
       {/* Data row */}
       {entries.map(([key, value]) => (
         <table className={`row `} key={key}>
-          <tr className="cell">
-            <td className="property"> {key}</td>
-          </tr>
-          <tr className="cell">
-            <td className="value"> {value}</td>
-          </tr>
+          <tbody className="cell">
+            <tr>
+              <td className="property"> {key}</td>
+            </tr>
+          </tbody>
+          <tbody className="cell">
+            <tr>
+              <td className="value"> {value}</td>
+            </tr>
+          </tbody>
         </table>
       ))}
       <div className="header-text top-padding">Outgoing Links</div>
       {outgoingEdges.map((edge, index) => {
         return (
-          <table className={`row `} >
-          <tr className="cell">
-            <td className="property"> {`Link ${index+1}`} </td>
-          </tr>
-          <tr className="cell">
-            <td className="value"> {edge.data.label}</td>
-          </tr>
-        </table>
-        )
+          <table className={`row `}>
+            <tbody className="cell">
+              <tr>
+                <td className="property"> {`Link ${index + 1}`} </td>
+              </tr>
+            </tbody>
+            <tbody className="cell">
+              <tr>
+                <td className="value"> {edge.data.label}</td>
+              </tr>
+            </tbody>
+          </table>
+        );
       })}
     </div>
   );

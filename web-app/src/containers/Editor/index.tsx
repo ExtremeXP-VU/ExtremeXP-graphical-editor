@@ -17,10 +17,8 @@ import {
   useReactFlowInstanceStore,
   RFState,
 } from '../../stores/reactFlowInstanceStore';
-import {
-  useConfigPanelStore,
-  useConfigOperatorPanelStore,
-} from '../../stores/configPanelStore';
+
+import { useConfigPanelStore } from '../../stores/configPanelStore';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import useRequest from '../../hooks/useRequest';
@@ -29,6 +27,7 @@ import { message } from '../../utils/message';
 import Header from '../../components/editor/Header';
 import Panel from '../../components/editor/Panel';
 import Popover from '../../components/general/Popover';
+import Validation from '../../components/editor/Validation';
 
 import {
   defaultGraphicalModel,
@@ -53,7 +52,8 @@ import { nodeTypes, edgeTypes } from './notationTypes';
 
 import { removeTab, setSelectedTab, useTabStore } from '../../stores/tabStore';
 import ConfigPanel from '../../components/editor/ConfigPanel';
-import { OperatorDataType } from '../../types/operator';
+import { defaultCondition } from '../../types/operator';
+import { nanoid } from 'nanoid';
 
 const selector = (state: RFState) => ({
   nodes: state.nodes,
@@ -68,6 +68,7 @@ const selector = (state: RFState) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onDragOver: state.onDragOver,
+  updateNodeData: state.updateNodeData,
 });
 
 const Editor = () => {
@@ -95,6 +96,7 @@ const Editor = () => {
     addNode,
     onConnect,
     onDragOver,
+    updateNodeData,
   } = useReactFlowInstanceStore(selector, shallow);
 
   const navigate = useNavigate();
@@ -378,36 +380,48 @@ const Editor = () => {
     }, 0);
   };
 
-  const initOperatorNodeConfig = (node: Node) => {
-    const operatorData: OperatorDataType = node.data;
-    useConfigOperatorPanelStore.setState({
-      selectedOperatorData: operatorData,
-    });
+  // initiate Operator Conditions
+
+  const initOperatorConditions = (id: string) => {
+    updateNodeData(
+      {
+        conditions: [
+      {
+        ...defaultCondition,
+        condition_id: 'condition-' + nanoid(),
+        name: 'New Condition',
+      },
+    ],
+      },
+      id
+    );
   };
 
   const handleSwitchSelectedNode = (event: React.MouseEvent, node: Node) => {
     event.preventDefault();
+    if (isOpenConfig) {
+      updateConfigPanel();
+    }
 
     setSelectedNode(node.id); // Set the selected node in the reactFlowInstanceStore
     useConfigPanelStore.getState().setOutgoingLinks(node, edges); // Set the outgoing links of the selected node
     useConfigPanelStore.setState({ selectedNodeType: node.type });
     useConfigPanelStore.setState({ selectedNodeId: node.id });
 
-    switch (node.type) {
-      case 'opExclusive':
-        initOperatorNodeConfig(node);
-        break;
-      case 'opInclusive':
-        initOperatorNodeConfig(node);
-        break;
-      default:
-        break;
+    // make sure the conditions are initiated after the node is selected
+    if (node.type === 'opExclusive' || node.type === 'opInclusive') {
+      if (node.data.conditions === undefined) {
+        initOperatorConditions(node.id);
+      }
+
     }
+
 
     if (isOpenConfig) {
       updateConfigPanel();
     }
   };
+
 
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
     handleSwitchSelectedNode(event, node);
@@ -483,6 +497,7 @@ const Editor = () => {
                   <Controls position="top-left" />
                   <Background />
                   <MiniMap nodeColor={'#4fa3bb'} position="bottom-left" />
+                  <Validation />
                 </ReactFlow>
               </div>
             </div>

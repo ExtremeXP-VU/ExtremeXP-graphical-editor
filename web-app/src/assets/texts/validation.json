@@ -1,0 +1,30 @@
+{
+  "START_EVENT_MISSING": {
+    "message": "A start node is required.",
+    "type": "error"
+  },
+  "END_EVENT_MISSING": {
+    "message": "An end node is required.",
+    "type": "error"
+  },
+  "MULTIPLE_START_EVENTS": {
+    "message": "Multiple start nodes are not allowed.",
+    "type": "error"
+  },
+  "MULTIPLE_END_EVENTS": {
+    "message": "Multiple end nodes are not allowed.",
+    "type": "error"
+  },
+  "START_EVENT_OUTPUT_MISSING": {
+    "message": "A start node should have at least 1 output.",
+    "type": "error"
+  },
+  "END_EVENT_INPUT_MISSING": {
+    "message": "An end node should have at least 1 input.",
+    "type": "error"
+  },
+  "JOINT_OP_MULTIPLE_OUTPUTS": {
+    "message": "Each joint operator can only have 1 output.",
+    "type": "error"
+  }
+}

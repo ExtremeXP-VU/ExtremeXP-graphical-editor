@@ -1,12 +1,8 @@
 @import '../../../../../styles/colors.scss';
 
-.transparent-input {
-  border: none;
-  background-color: transparent;
-  width: 100%;
-  &:focus {
-    outline: 1px dashed $secondary-theme-color;
-  }
+
+.top-padding{
+  margin-top: 0.5rem;
 }
 
 .table-component {
@@ -38,17 +34,17 @@
     }
     .cell{
       padding: 0.05rem 0.05rem;
+      width: 100%;
       flex:1;
       font-size: 12px;
     }
+    
+  }
+  .value{
+    width: 100%;
+    display: flex;
   }
   
-
-  .delete-param{
-    cursor: pointer;
-    color: $secondary-theme-color;
-  
-    &:hover {
-      color: $alert-background-color;
-    }
+  .italic-placeholder::placeholder {
+    font-style: italic;
   }

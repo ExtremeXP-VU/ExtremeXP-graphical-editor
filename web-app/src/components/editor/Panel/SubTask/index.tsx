@@ -44,7 +44,7 @@ const SubTask = ({ category, setWindow }: SubTaskProps) => {
     task: typeof defaultTask
   ) => {
     setWindow('subflow');
-    const id = '-variant-1-' + nanoid();
+    const id = 'variant-1-' + nanoid();
     const data = {
       currentVariant: id,
       variants: [
