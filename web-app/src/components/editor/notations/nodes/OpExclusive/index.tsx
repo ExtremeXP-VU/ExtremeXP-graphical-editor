@@ -29,22 +29,12 @@ const handleRightTargetStyle = {
 
 const OpExclusive = ({
   // id,
-  // data,
+  data,
   isConnectable,
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: NodeProps) => {
-  // const selectedOperatorData = useConfigOperatorPanelStore(
-  //   (state) => state.selectedOperatorData
-  // );
-  // const selectedNodeId = useConfigPanelStore((state) => state.selectedNodeId);
-
-  // useEffect(() => {
-  //   if (id === selectedNodeId) {
-  //     data = { ...selectedOperatorData };
-  //   }
-  // }, [selectedNodeId, selectedOperatorData]);
-
+  data.condition = [];
   return (
     <>
       <svg
