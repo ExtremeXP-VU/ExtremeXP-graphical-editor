@@ -62,7 +62,7 @@ const StaticTable: React.FC<TableProps> = ({ properties }) => {
           </tbody>
         </table>
       ))}
-      <div className="header-text top-padding">Outgoing Links</div>
+      {outgoingEdges.length>0 && <div className="header-text top-padding">Outgoing Links</div> }
       {outgoingEdges.map((edge, index) => {
         return (
           <table className={`row `}>
