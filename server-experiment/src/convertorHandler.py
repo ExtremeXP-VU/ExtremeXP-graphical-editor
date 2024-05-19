@@ -34,9 +34,18 @@ class ConvertorHandler:
         location = response.json()["data"]["$type"].split("#//")[0]
         return f"{location}#//"
 
+    def __clear_maps(self):
+        """Clear the maps for the next conversion."""
+        self.workflow = []
+        self.workflow_tasks_dict = {}
+        self.task_variant_map = {}
+        self.experiment_space = []
+        self.primitive_types = []
+
     def convert(self, exp):
         """Convert the graphical model to the EMF model."""
 
+        self.__clear_maps()
         self.workflow = [{"$id": "workflow-0", "name": "main", "node": [], "link": []}]
         self.workflow[0] = self.__convert_workflow(
             exp["graphical_model"], self.workflow[0]
@@ -53,9 +62,6 @@ class ConvertorHandler:
             "deployedworkflow": deployed_workflows,
             "experimentspace": self.experiment_space,
         }
-
-        with open("json_model.json", "w", encoding="utf-8") as f:
-            json.dump(emf_model, f, ensure_ascii=False, indent=4)
 
         data = json.dumps({"data": emf_model})
 

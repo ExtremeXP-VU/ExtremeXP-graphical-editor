@@ -317,10 +317,7 @@ def convert_to_source_model(exp_id):
 
     if not convert_res["success"]:
         return {"error": "Error converting model", "message": convert_res["error"]}, 500
-    return {
-        "message": "source model converted",
-        "data": convert_res["data"],
-    }, 200
+    return {"message": "source model converted", "data": convert_res["data"]}, 200
 
 
 # 406: Not Acceptable
