@@ -60,6 +60,7 @@ export interface TaskVariantType {
   is_composite: boolean;
   description: string;
   isAbstract: boolean;
+  implementationRef: string;
   graphical_model: GraphicalModelType | null;
   parameters: TaskParameterType[];
 }
@@ -95,6 +96,7 @@ export const defaultTaskVariant: TaskVariantType = {
   id_task: 'default',
   name: 'task',
   description: 'no description',
+  implementationRef: '',
   variant: 1,
   isAbstract: true,
   is_composite: false,

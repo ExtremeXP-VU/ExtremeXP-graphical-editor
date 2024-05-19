@@ -315,7 +315,7 @@ def convert_to_source_model(exp_id):
     exp = experimentHandler.get_experiment(exp_id)
     convert_res = convertorHandler.convert(exp)
 
-    if not convert_res["verified"]:
+    if not convert_res["success"]:
         return {"error": "Error converting model", "message": convert_res["error"]}, 500
     return {
         "message": "source model converted",

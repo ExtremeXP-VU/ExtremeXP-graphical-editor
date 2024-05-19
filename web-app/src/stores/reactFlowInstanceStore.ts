@@ -114,7 +114,7 @@ export const useReactFlowInstanceStore = create<RFState>((set, get) => ({
 
   addNode: (type: string, position: { x: number; y: number }, data: object) => {
     const newNode = {
-      id: nanoid(),
+      id: type + '-' + nanoid(),
       type,
       position,
       data: data,
