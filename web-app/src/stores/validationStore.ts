@@ -10,7 +10,9 @@ export type ValidationCodeType =
   | 'MULTIPLE_END_EVENTS'
   | 'START_EVENT_OUTPUT_MISSING'
   | 'END_EVENT_INPUT_MISSING'
-  | 'JOINT_OP_MULTIPLE_OUTPUTS';
+  | 'JOINT_OP_MULTIPLE_OUTPUTS'
+  | 'DATAFLOW_LINK_MISUSAGE'
+  | 'DATAFLOW_LINK_USAGE';
 
 export type ValidationMessageType = {
   code: ValidationCodeType;
@@ -55,6 +57,7 @@ export const validateGraphicalModel = (model: GraphicalModelType): void => {
 
   const startEvents = model.nodes.filter((node) => node.type === 'start');
   const endEvents = model.nodes.filter((node) => node.type === 'end');
+  const dataNodes = model.nodes.filter((node) => node.type === 'data');
   const parallelOps = model.nodes.filter((node) => node.type === 'opParallel');
   const exclusiveOps = model.nodes.filter(
     (node) => node.type === 'opExclusive'
@@ -64,14 +67,20 @@ export const validateGraphicalModel = (model: GraphicalModelType): void => {
   );
   const complexOps = model.nodes.filter((node) => node.type === 'opComplex');
 
+  function outGoingLinks(nodeID: string) {
+    return model.edges.filter((edge) => edge.source === nodeID);
+  }
+
+  function inComingLinks(nodeID: string) {
+    return model.edges.filter((edge) => edge.target === nodeID);
+  }
+
   function nrOfincomingLinks(nodeID: string) {
-    const edges = model.edges.filter((edge) => edge.target === nodeID);
-    return edges.length;
+    return inComingLinks(nodeID).length;
   }
 
   function nrOfoutgoingLinks(nodeID: string) {
-    const edges = model.edges.filter((edge) => edge.source === nodeID);
-    return edges.length;
+    return outGoingLinks(nodeID).length;
   }
 
   function isJointOperator(opID: string) {
@@ -84,6 +93,30 @@ export const validateGraphicalModel = (model: GraphicalModelType): void => {
         validationMessages.push(
           getValidationMessage('JOINT_OP_MULTIPLE_OUTPUTS')
         );
+      }
+    });
+  }
+
+  function checkDataflowLinkMisUsage() {
+    // in dataNodes there does not exist a data node that has id equal to source or target of a dataflow edge
+    model.edges.forEach((edge) => {
+      if (edge.type !== 'dataflow') return;
+      if (
+        !dataNodes.some((node) => node.id === edge.source) &&
+        !dataNodes.some((node) => node.id === edge.target)
+      ) {
+        validationMessages.push(getValidationMessage('DATAFLOW_LINK_MISUSAGE'));
+      }
+    });
+  }
+
+  function checkDataflowLinkUsage() {
+    dataNodes.forEach((node) => {
+      if (
+        outGoingLinks(node.id).some((edge) => edge.type !== 'dataflow') ||
+        inComingLinks(node.id).some((edge) => edge.type !== 'dataflow')
+      ) {
+        validationMessages.push(getValidationMessage('DATAFLOW_LINK_USAGE'));
       }
     });
   }
@@ -122,6 +155,8 @@ export const validateGraphicalModel = (model: GraphicalModelType): void => {
   checkJointOperatorsOutgoingLinks(parallelOps);
   checkJointOperatorsOutgoingLinks(inclusiveOps);
   checkJointOperatorsOutgoingLinks(complexOps);
+  checkDataflowLinkMisUsage();
+  checkDataflowLinkUsage();
 
   if (validationMessages.length > 0) {
     setValidationStatus(false);

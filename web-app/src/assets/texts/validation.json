@@ -26,5 +26,13 @@
   "JOINT_OP_MULTIPLE_OUTPUTS": {
     "message": "Each joint operator can only have 1 output.",
     "type": "error"
+  },
+  "DATAFLOW_LINK_MISUSAGE": {
+    "message": "Dataflow links can only be used in connecting data nodes and task nodes.",
+    "type": "error"
+  },
+  "DATAFLOW_LINK_USAGE": {
+    "message": "A Dataflow link must be used to connect data node and task node.",
+    "type": "error"
   }
 }
