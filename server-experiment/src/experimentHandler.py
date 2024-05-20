@@ -1,4 +1,3 @@
-import requests
 import pymongo
 import json
 import time
