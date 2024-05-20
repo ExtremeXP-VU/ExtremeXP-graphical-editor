@@ -20,7 +20,8 @@ export const setSelectedTab = (id: string) => {
 
 export const addTab = (tab: TabType) => {
   if (useTabStore.getState().tabs.some((t) => t.id === tab.id)) {
-    setSelectedTab(tab.id);
+    // setSelectedTab before save the model and reset config panel may cause bugs
+    // setSelectedTab(tab.id);
     return;
   }
   useTabStore.setState({ tabs: [...useTabStore.getState().tabs, tab] });
