@@ -75,10 +75,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     );
   }
 
-  // function updateSelectedEdgeData(edgeData: object) {
-  //   updateEdgeData(edgeData, selectedEdgeId);
-  // }
-
   useEffect(() => {
     updateSelectedNodeData(taskState);
   }, [taskState]);
@@ -183,6 +179,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     if (selectedNode?.data) {
       removeTab(prevId);
     }
+
     updateSideBar();
   };
 
@@ -328,7 +325,9 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         blankClickCallback={() => setShowPopover(false)}
       >
         <div className="popover__variant">
-          <button onClick={() => handleAddTask(false)}>Add Normal Task</button>
+          <button onClick={() => handleAddTask(false)}>
+            Add an Atomic Task
+          </button>
           <select name="" id="" onChange={handleSelectTask}>
             {taskList.map((task) => (
               <option key={task.id_task} value={task.id_task}>
@@ -337,7 +336,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
             ))}
           </select>
           <button onClick={() => handleAddTask(true)}>
-            Add Composite Task
+            Add a Composite Task
           </button>
         </div>
       </Popover>

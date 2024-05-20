@@ -58,12 +58,37 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     useParamStore.setState({ selectedParamId: id });
   };
 
-  const handleValueUpdated = (value: unknown) => {
-    if (value === null) {
-      return;
-      // To be implemented
-    }
+  const handleIntegerValueUpdated = (updatedValue: number[] ) => {
+    const action: Action = {
+      type: 'UPDATE_INTEGER_VALUE',
+      payload: updatedValue,
+    };
+    paramDispatch(action);
   };
+
+  const handleBlobValueUpdated = (updatedValue: string[]) => {
+    const action: Action = {
+      type: 'UPDATE_BLOB_VALUE',
+      payload: updatedValue,
+    };
+    paramDispatch(action);
+  }
+
+  const handleStringValueUpdated = (updatedValue: string[]) => {
+    const action: Action = {
+      type: 'UPDATE_STRING_VALUE',
+      payload: updatedValue,
+    };
+    paramDispatch(action);
+  }
+
+  const handleBooleanValueUpdated = (updatedValue: boolean[]) => {
+    const action: Action = {
+      type: 'UPDATE_BOOLEAN_VALUE',
+      payload: updatedValue,
+    };
+    paramDispatch(action);
+  }
 
   useEffect(() => {
     // Call the function passed from the parent to update the parameter state there
@@ -180,23 +205,41 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
             (value) => typeof value === 'number'
           )}
           key={`integer-${currentParam.id}`}
-          onValueUpdated={handleValueUpdated}
+          onValueUpdated={handleIntegerValueUpdated}
         />
       )}
       {paramState.type === 'real' && (
         <RealTable key={`real-${currentParam.id}`} />
       )}
       {paramState.type === 'blob' && (
-        <BlobTable key={`blob-${currentParam.id}`} />
+        <BlobTable 
+        blobs = {paramState.values.filter(
+          (value) => typeof value === 'string'
+        )
+        }
+        key={`blob-${currentParam.id}`} 
+        onBlobsUpdated={handleBlobValueUpdated}
+        />
       )}
       {paramState.type === 'string' && (
-        <StringTable key={`string-${currentParam.id}`} />
+        <StringTable 
+        key={`string-${currentParam.id}`}
+        strings = {paramState.values.filter(
+          (value) => typeof value === 'string'
+        )
+        }
+        onStringsUpdated={handleStringValueUpdated} />
       )}
       {paramState.type === 'array' && (
         <div key={`array-${currentParam.id}`}>array</div>
       )}
       {paramState.type === 'boolean' && (
-        <BooleanTable key={`boolean-${currentParam.id}`} />
+        <BooleanTable 
+        key={`boolean-${currentParam.id}`}
+        booleans={paramState.values.filter(
+          (value) => typeof value === 'boolean'
+        )}
+        onValueUpdated={handleBooleanValueUpdated} />
       )}
     </div>
   );

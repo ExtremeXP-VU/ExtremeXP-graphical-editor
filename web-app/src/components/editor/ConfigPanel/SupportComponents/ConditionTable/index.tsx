@@ -20,6 +20,7 @@ type TableProps = {
 
 const ConditionTable: React.FC<TableProps> = ({
   currentCondition,
+  opType,
   onUpdateCondition,
   onDelete,
 }) => {
@@ -79,14 +80,16 @@ const ConditionTable: React.FC<TableProps> = ({
             value={conditionState.name || ''}
             onChange={handleNameChange}
           />
-          <span
-          className="iconfont delete-param"
-          onClick={() => {
-            onDelete(conditionState.condition_id);
-          }}
-        >
-          &#xe600;
-        </span>
+          {opType === 'opInclusive' && (
+            <span
+              className="iconfont delete-param"
+              onClick={() => {
+                onDelete(conditionState.condition_id);
+              }}
+            >
+              &#xe600;
+            </span>
+          )}
         </div>
       )}
 

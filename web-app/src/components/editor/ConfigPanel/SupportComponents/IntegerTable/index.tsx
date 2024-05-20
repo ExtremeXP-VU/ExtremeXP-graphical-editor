@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import DropDown from '../DropDown';
 import RangeSelector from '../RangeSelector';
@@ -6,20 +6,17 @@ import { useImmerReducer } from 'use-immer';
 import { Action, IntegerReducer } from './reducer';
 
 type TableProps = {
-  onValueUpdated: (value: unknown) => void;
+  onValueUpdated: (value: number[]) => void;
   numbers: number[];
 };
 
-const IntegerTable: React.FC<TableProps> = ({ numbers }) => {
+const IntegerTable: React.FC<TableProps> = ({ numbers, onValueUpdated }) => {
   const [numRange, setNumRange] = useState(0);
   const [integerState, integerDispatch] = useImmerReducer(
     IntegerReducer,
     numbers
   );
 
-  // if(numbers){
-  //   console.log(numbers);
-  // }
 
   const createRange = () => {
     setNumRange(numRange + 1);
@@ -31,7 +28,7 @@ const IntegerTable: React.FC<TableProps> = ({ numbers }) => {
     };
     integerDispatch(action);
   };
-  const [selectedType, setSelectedType] = useState<string>('range');
+  const [selectedType, setSelectedType] = useState<string>('integer');
   const handleSelectedType = (selectedType: string) => {
     setSelectedType(selectedType);
   };
@@ -45,8 +42,11 @@ const IntegerTable: React.FC<TableProps> = ({ numbers }) => {
       payload: { index: index, value: parseInt(event.target.value) },
     };
     integerDispatch(action);
-    console.log('integerState: ', integerState);
   };
+
+  useEffect(() => {
+    onValueUpdated(integerState);
+  }, [integerState]);
 
   return (
     <>

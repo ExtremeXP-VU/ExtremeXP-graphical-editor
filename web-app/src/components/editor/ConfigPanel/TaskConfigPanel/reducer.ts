@@ -9,7 +9,11 @@ export type Action =
   | { type: 'DELETE_PARAM'; payload: string }
   | { type: 'UPDATE_PARAM_NAME'; payload: string }
   | { type: 'UPDATE_PARAM_TYPE'; payload: string }
-  | { type: 'UPDATE_PARAM_ABSTRACT'; payload: boolean };
+  | { type: 'UPDATE_PARAM_ABSTRACT'; payload: boolean }
+  | { type: 'UPDATE_INTEGER_VALUE'; payload: number[] }
+  | { type: 'UPDATE_BLOB_VALUE'; payload: string[] }
+  | { type: 'UPDATE_STRING_VALUE'; payload: string[] }
+  | { type: 'UPDATE_BOOLEAN_VALUE'; payload: boolean[] }
 
 export function taskConfigReducer(draft: TaskVariantType, action: Action) {
   switch (action.type) {
@@ -57,6 +61,18 @@ export function paramConfigReducer(draft: TaskParameterType, action: Action) {
       return draft;
     case 'UPDATE_PARAM_ABSTRACT':
       draft.abstract = action.payload;
+      return draft;
+    case 'UPDATE_INTEGER_VALUE':
+      draft.values = action.payload;
+      return draft;
+    case 'UPDATE_BLOB_VALUE':
+      draft.values = action.payload;
+      return draft;
+    case 'UPDATE_STRING_VALUE':
+      draft.values = action.payload;
+      return draft;
+    case 'UPDATE_BOOLEAN_VALUE':
+      draft.values = action.payload;
       return draft;
     default:
       return draft;
