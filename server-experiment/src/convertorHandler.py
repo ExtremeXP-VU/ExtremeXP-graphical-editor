@@ -8,7 +8,6 @@ class ConvertorHandler:
     """ConvertorHandler class is responsible for converting the graphical model to the EMF model."""
 
     def __init__(self):
-        # self.url = "http://localhost:8081/api/v2"
         self.url = "http://emf-cloud-service:8081/api/v2"
         self.meta_model_loc = self.__init_meta_model_location()
         self.root_type = "Specification"
@@ -116,6 +115,8 @@ class ConvertorHandler:
                 }
             elif node_type == "task":
                 emf_node = self.__convert_task_node_to_emf(workflow["$id"], node)
+            elif node_type in ("opParallel", "opExclusive", "opInclusive", "opComplex"):
+                emf_node = self.__convert_operator_node_to_emf(node, nodes, links)
 
             if emf_node:
                 workflow["node"].append(emf_node)
@@ -128,7 +129,7 @@ class ConvertorHandler:
 
             emf_link = {}
 
-            if link_type == "regular":
+            if link_type in ("regular", "conditional", "exceptional"):
                 emf_link = {
                     "$type": f"{self.meta_model_loc}RegularLink",
                     "$id": link["id"],
@@ -173,6 +174,65 @@ class ConvertorHandler:
                 )
 
         return emf_node
+
+    def __convert_operator_node_to_emf(self, node, nodes, links):
+        """Convert the operator node structure"""
+
+        # find number of incoming links:
+        incoming_links = [link for link in links if link["target"] == node["id"]]
+        if len(incoming_links) > 1:
+            return {
+                "$type": f"{self.meta_model_loc}{node['type'][2:].capitalize()}Join",
+                "$id": node["id"],
+            }
+
+        if node["type"] == "opParallel":
+            return {
+                "$type": f"{self.meta_model_loc}Parallel",
+                "$id": node["id"],
+            }
+        if node["type"] == "opComplex":
+            return {
+                "$type": f"{self.meta_model_loc}Complex",
+                "$id": node["id"],
+            }
+        if node["type"] == "opExclusive":
+            cases = []
+            if len(node["data"]["conditions"]) > 0:
+                cases = self.__convert_cases(node["data"]["conditions"][0], nodes)
+            return {
+                "$type": f"{self.meta_model_loc}Exclusive",
+                "$id": node["id"],
+                "condition": {
+                    "$id": f"condition-{generate(size=5)}",
+                    "cases": cases,
+                },
+            }
+        return {
+            "$type": f"{self.meta_model_loc}Inclusive",
+            "$id": node["id"],
+            "conditions": [
+                {
+                    "$id": f"condition-{generate(size=5)}",
+                    "cases": self.__convert_cases(condition, nodes),
+                }
+                for condition in node["data"]["conditions"]
+            ],
+        }
+
+    def __convert_cases(self, condition, nodes):
+        """Convert the cases of the operator node."""
+        return [
+            {
+                "$id": f"case-{generate(size=5)}",
+                "case": case["condition"],
+                "target": {
+                    "$type": self.__find_node_emf_type(case["targetNodeId"], nodes),
+                    "$ref": case["targetNodeId"],
+                },
+            }
+            for case in condition["cases"]
+        ]
 
     def __compute_deployed_workflow_combinations(self):
         """Compute all the possible combinations of the deployed workflows."""
@@ -321,6 +381,24 @@ class ConvertorHandler:
             f"{self.url}/models?modeluri={exp_name}.workflow", timeout=5
         )
         return response.status_code == 200
+
+    def __find_node_emf_type(self, node_id, nodes):
+        """Convert the model type to the EMF type."""
+        # find node from the nodes
+        if not node_id:
+            return ""
+        node = next((node for node in nodes if node["id"] == node_id), None)
+        type_map = {
+            "start": "EventNode",
+            "end": "EventNode",
+            "task": "Task",
+            "opParallel": "Parallel",
+            "opExclusive": "Exclusive",
+            "opInclusive": "Inclusive",
+            "opComplex": "Complex",
+        }
+
+        return self.__emf_object_type(type_map.get(node["type"], None))
 
 
 convertorHandler = ConvertorHandler()
