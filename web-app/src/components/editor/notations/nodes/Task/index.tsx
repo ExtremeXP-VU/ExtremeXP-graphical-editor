@@ -18,6 +18,7 @@ const Task = ({
     data.variants[0]
   );
   const [taskName, setTaskName] = useState<string>(currentTask.name);
+  const [taskParameter, setTaskParameters] = useState<string[]>([]);
 
   useEffect(() => {
     const task = data.variants.find(
@@ -28,6 +29,11 @@ const Task = ({
 
   useEffect(() => {
     setTaskName(currentTask.name);
+    const parameters: string[] = [];
+    currentTask.parameters.forEach((p) => {
+      parameters.push(p.name);
+    });
+    setTaskParameters(parameters);
   }, [currentTask]);
 
   const handleAddTab = (event: React.MouseEvent) => {
@@ -48,9 +54,16 @@ const Task = ({
           currentTask.is_composite ? 'node-task-composite' : ''
         }`}
       >
-        <div className={`node-task__name ${'higher-task-name'}`}>
-          {taskName}
-        </div>
+        <div className={`node-task__name `}>{taskName}</div>
+        {taskParameter.length > 0 && (
+          <div className="node-task__properties ">
+            {taskParameter.map((p, index) => (
+              <div key={index} className="node-task__properties__property">
+                {`- ${p}`}
+              </div>
+            ))}
+          </div>
+        )}
         {currentTask.is_composite && (
           <div className="node-task__icon">
             <div className="node-task__icon__wrapper" onClick={handleAddTab}>
