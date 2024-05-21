@@ -99,10 +99,19 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
     dispatch(action);
   };
 
+  const handleImplementationRefChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const action: Action = {
+      type: 'UPDATE_IMPLEMENTATION_REF',
+      payload: event.target.value,
+    };
+    dispatch(action);
+  };
+
   // handle add parameter
-  // const numParams = useParamStore((state) => state.numParams);
+
   const handleAddParameter = () => {
-    // useParamStore.setState({ numParams: numParams + 1 });
     const id = 'parameter-' + nanoid();
     const newParam: TaskParameterType = {
       ...defaultParameter,
@@ -115,9 +124,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
     const action: Action = { type: 'CREATE_PARAM', payload: newParam };
     dispatch(action);
-
-    // const action: Action = { type: 'CREATE_PARAM', payload: newParam };
-    // dispatch(action);
   };
 
   //handle parameter change
@@ -253,6 +259,10 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
           &#xe601;
         </span>
       </div>
+      <div className="sidebar__save-info">
+        Please click the current selected task node to save the changes before
+        variant selection or addition.
+      </div>
       <StaticTable
         properties={{
           name: (
@@ -286,7 +296,15 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
               onOptionSelected={hanldeAbstractChange}
             />
           ),
-          implementation: '<URI>',
+          implementation: (
+            <input
+              type="text"
+              className="transparent-input"
+              placeholder="<URI>"
+              defaultValue={taskState.implementationRef}
+              onChange={handleImplementationRefChange}
+            />
+          ),
           category: (
             <DropDown
               options={['Generic'].concat(

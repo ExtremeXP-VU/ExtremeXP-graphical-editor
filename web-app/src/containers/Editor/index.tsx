@@ -386,12 +386,12 @@ const Editor = () => {
     updateNodeData(
       {
         conditions: [
-      {
-        ...defaultCondition,
-        condition_id: 'condition-' + nanoid(),
-        name: 'New Condition',
-      },
-    ],
+          {
+            ...defaultCondition,
+            condition_id: 'condition-' + nanoid(),
+            name: 'New Condition',
+          },
+        ],
       },
       id
     );
@@ -413,15 +413,12 @@ const Editor = () => {
       if (node.data.conditions === undefined) {
         initOperatorConditions(node.id);
       }
-
     }
-
 
     if (isOpenConfig) {
       updateConfigPanel();
     }
   };
-
 
   const handleOpenConfigPanel = (event: React.MouseEvent, node: Node) => {
     handleSwitchSelectedNode(event, node);

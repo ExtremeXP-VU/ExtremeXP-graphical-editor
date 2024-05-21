@@ -15,7 +15,7 @@ const Data = ({
     <>
       <div className="node-data">
         <label className="node-data__name">
-          <p className="node-data__title">Name</p>
+          <p className="node-data__title">URI</p>
           <input
             className="node-data__input nodrag"
             type="text"
@@ -27,10 +27,11 @@ const Data = ({
           />
         </label>
         <label className="node-data__field">
-          <p className="node-data__title">Field</p>
+          <p className="node-data__title">Fields</p>
           <input
             className="node-data__input nodrag"
             type="text"
+            placeholder='use "," to separate fields'
             value={field}
             onChange={(e) => {
               setField(e.target.value);

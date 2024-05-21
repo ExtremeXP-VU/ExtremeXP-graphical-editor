@@ -8,7 +8,7 @@ type TableProps = {
     name?: JSX.Element;
     description?: JSX.Element;
     abstract?: JSX.Element; // For the radio buttons
-    implementation?: string; // For custom element, like a link
+    implementation?: JSX.Element; // For custom element, like a link
     category?: JSX.Element; // For dropdown
     type?: JSX.Element; // For dropdown
     condition?: JSX.Element; // For the condition input
@@ -62,7 +62,9 @@ const StaticTable: React.FC<TableProps> = ({ properties }) => {
           </tbody>
         </table>
       ))}
-      {outgoingEdges.length>0 && <div className="header-text top-padding">Outgoing Links</div> }
+      {outgoingEdges.length > 0 && (
+        <div className="header-text top-padding">Outgoing Links</div>
+      )}
       {outgoingEdges.map((edge, index) => {
         return (
           <table className={`row `}>

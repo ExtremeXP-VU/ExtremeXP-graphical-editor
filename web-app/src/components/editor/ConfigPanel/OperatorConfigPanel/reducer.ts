@@ -32,7 +32,7 @@ export function operatorConfigReducer(draft: OperatorDataType, action: Action) {
       }
       return draft;
     }
-    case 'DELETE_CONDITION':{
+    case 'DELETE_CONDITION': {
       const index = draft.conditions.findIndex(
         (condition) => condition.condition_id === action.payload
       );

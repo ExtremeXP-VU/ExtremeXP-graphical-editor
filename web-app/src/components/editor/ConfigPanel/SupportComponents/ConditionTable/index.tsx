@@ -58,12 +58,17 @@ const ConditionTable: React.FC<TableProps> = ({
     index: number,
     targetLinkName: string
   ) => {
+    console.log(index);
+    if (targetLinkName === 'select a link') {
+      return;
+    }
     const action: Action = {
       type: 'UPDATE_CASE_TARGET',
       payload: { index, targetLinkName, edges: outgoingEdges },
     };
     conditionDispatch(action);
   };
+
   const validConditionalOperator = outgoingEdges.length > 1;
 
   useEffect(() => {
@@ -123,6 +128,7 @@ const ConditionTable: React.FC<TableProps> = ({
                     <DropDown
                       key={index}
                       options={[
+                        'select a link',
                         ...outgoingEdges.map((_, index) => `Link ${index + 1}`),
                       ]}
                       value={conditionState?.cases[index]?.targetLinkName}
