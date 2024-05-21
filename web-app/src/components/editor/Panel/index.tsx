@@ -18,6 +18,8 @@ import useRequest from '../../../hooks/useRequest';
 import { message } from '../../../utils/message';
 import { CategoriesResponseType } from '../../../types/requests';
 
+import NodeDescription from '../../../assets/texts/node_description.json';
+
 interface PanelProps {
   selectedLink: string;
   onLinkSelection: (linkType: LinksPropsType) => void;
@@ -25,6 +27,17 @@ interface PanelProps {
 
 const nodesList = notationList.nodes;
 const edgesList = notationList.edges;
+
+type WindowNodeType =
+  | 'start'
+  | 'end'
+  | 'data'
+  | 'task'
+  | 'subflow'
+  | 'opParallel'
+  | 'opExclusive'
+  | 'opInclusive'
+  | 'opComplex';
 
 const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
   const [windowNode, setWindowNode] = useState('start');
@@ -110,7 +123,12 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           </div>
         </div>
         <div className="panel__info__description">
-          <p>{windowNode} node description:</p>
+          <p className="panel__info__description__description">
+            {NodeDescription[windowNode as WindowNodeType].description}{' '}
+          </p>
+          <p className="panel__info__description__usage">
+            {NodeDescription[windowNode as WindowNodeType].usage}
+          </p>
         </div>
       </div>
       <div className="panel__nodes">
@@ -172,6 +190,7 @@ const Panel: React.FC<PanelProps> = ({ selectedLink, onLinkSelection }) => {
           <div
             className="panel__subtasks__content__generic__task"
             onDragStart={(event) => onDragStart(event, 'subflow')}
+            onClick={() => setWindowNode('subflow')}
             draggable
           >
             <span className="iconfont">&#xe608;</span>

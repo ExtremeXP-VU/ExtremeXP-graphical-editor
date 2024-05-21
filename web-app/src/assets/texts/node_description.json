@@ -1,0 +1,38 @@
+{
+  "start": {
+    "description": "Indicates the start of the workflow",
+    "usage": "A workflow should at least have one and only one start node"
+  },
+  "end": {
+    "description": "Indicates the end of the workflow",
+    "usage": "A workflow should at least have one and only one end node"
+  },
+  "task": {
+    "description": "A task node.",
+    "usage": "The config panel can be opened by double clicking on a task node. You can configure and add variants to a task. "
+  },
+  "data": {
+    "description": "A data node. It can indicate either input or output data of a task.",
+    "usage": "Dataflow link must be used to connect data nodes."
+  },
+  "subflow": {
+    "description": "A subflow node is used to present a composite task.",
+    "usage": "Click on the plus icon on the node to add a subflow editor tab."
+  },
+  "opParallel": {
+    "description": "Parallel operator node: ",
+    "usage": "creates parallel paths of execution. All the paths are executed potentially simultaneously."
+  },
+  "opExclusive": {
+    "description": "Execlusive operator node:",
+    "usage": "creates alternative paths of execution. Only a single path is executed."
+  },
+  "opInclusive": {
+    "description": "Inclusive operator node:",
+    "usage": "creates alternative paths of execution. It represents a combination of parallel and exclusive operators."
+  },
+  "opComplex": {
+    "description": "Complex operator node:",
+    "usage": "creates alternative paths of execution with specification of complex conditions."
+  }
+}

@@ -79,6 +79,7 @@ const SubTask = ({ category, setWindow }: SubTaskProps) => {
                 className="panel__subtasks__content__categories__category__tasks__task"
                 draggable
                 onDragStart={(e) => onDragStart(e, task)}
+                onClick={() => setWindow('subflow')}
               >
                 <span className="iconfont">&#xe608;</span>
                 <p>{task.name}</p>
