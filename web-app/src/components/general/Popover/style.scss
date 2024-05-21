@@ -22,17 +22,39 @@
 // Side bar popover for adding variant
 .popover__variant {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-around;
-  align-items: center;
-  width: 2.5rem;
+  align-items: flex-end;
+  width: 4.5rem;
   height: 1.5rem;
   border-radius: 0.5rem;
   background-color: $primary-button-text-color;
 
   button {
-    width: 2rem;
+    width: 1.8rem;
     background-color: $secondary-theme-color;
     color: $primary-button-text-color;
+  }
+
+  &__line {
+    width: 0.03rem;
+    height: 1.5rem;
+    background-color: $primary-theme-color;
+  }
+
+  &__atomic {
+    padding-bottom: 0.6rem;
+  }
+
+  &__composite {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 0.6rem;
+
+    select {
+      margin-bottom: 0.2rem;
+    }
   }
 }

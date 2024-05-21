@@ -32,7 +32,7 @@ const Execution = () => {
         setXmlData(response.data.xmi);
       })
       .catch((error) => {
-        message(error);
+        message(error.message || 'Failed to convert the model');
       });
   }, [convertRequest]);
 

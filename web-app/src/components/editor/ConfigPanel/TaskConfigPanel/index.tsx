@@ -343,19 +343,24 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         blankClickCallback={() => setShowPopover(false)}
       >
         <div className="popover__variant">
-          <button onClick={() => handleAddTask(false)}>
-            Add an Atomic Task
-          </button>
-          <select name="" id="" onChange={handleSelectTask}>
-            {taskList.map((task) => (
-              <option key={task.id_task} value={task.id_task}>
-                {task.name}
-              </option>
-            ))}
-          </select>
-          <button onClick={() => handleAddTask(true)}>
-            Add a Composite Task
-          </button>
+          <div className="popover__variant__atomic">
+            <button onClick={() => handleAddTask(false)}>
+              Add an Atomic Task
+            </button>
+          </div>
+          <div className="popover__variant__line"></div>
+          <div className="popover__variant__composite">
+            <select name="" id="" onChange={handleSelectTask}>
+              {taskList.map((task) => (
+                <option key={task.id_task} value={task.id_task}>
+                  {task.name}
+                </option>
+              ))}
+            </select>
+            <button onClick={() => handleAddTask(true)}>
+              Add a Composite Task
+            </button>
+          </div>
         </div>
       </Popover>
     </div>
