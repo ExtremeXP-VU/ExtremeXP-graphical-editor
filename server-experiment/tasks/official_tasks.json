@@ -55,38 +55,111 @@
       "create_at": 1706986320,
       "update_at": 1706986320,
       "graphical_model": {
-        "nodes": [],
-        "edges": []
-      }
-    },
-    {
-      "id_task": "task-official-02",
-      "name": "drop columns",
-      "category_id": "category-official-02",
-      "is_user_defined": false,
-      "owner": "ExtremeXP",
-      "provider": "ExtremeXP",
-      "description": "Drop columns from a dataframe",
-      "create_at": 1706986320,
-      "update_at": 1706986320,
-      "graphical_model": {
-        "nodes": [],
-        "edges": []
-      }
-    },
-    {
-      "id_task": "task-official-03",
-      "name": "fill NaNs",
-      "category_id": "category-official-02",
-      "is_user_defined": false,
-      "owner": "ExtremeXP",
-      "provider": "ExtremeXP",
-      "description": "Fill NaNs in a dataframe",
-      "create_at": 1706986320,
-      "update_at": 1706986320,
-      "graphical_model": {
-        "nodes": [],
-        "edges": []
+        "edges": [
+          {
+            "data": {},
+            "id": "n9rgUYrI3v4MIdxqlmL5X",
+            "markerEnd": {
+              "color": "#000",
+              "height": 20,
+              "type": "arrow",
+              "width": 20
+            },
+            "source": "start-ByGL5VPXc-nt1FCFvfR9p",
+            "sourceHandle": null,
+            "style": {
+              "stroke": "#000",
+              "strokeWidth": 1.5
+            },
+            "target": "task-mDtzBp0thidem7mN7l1Tn",
+            "targetHandle": "t-top",
+            "type": "regular"
+          },
+          {
+            "data": {},
+            "id": "BtI37llMQ9KCeqNC0Tsks",
+            "markerEnd": {
+              "color": "#000",
+              "height": 20,
+              "type": "arrow",
+              "width": 20
+            },
+            "source": "task-mDtzBp0thidem7mN7l1Tn",
+            "sourceHandle": "s-bottom",
+            "style": {
+              "stroke": "#000",
+              "strokeWidth": 1.5
+            },
+            "target": "end-O5OF6FMQ6k5IPrxJVb6zl",
+            "targetHandle": null,
+            "type": "regular"
+          }
+        ],
+        "nodes": [
+          {
+            "data": {},
+            "height": 36,
+            "id": "start-ByGL5VPXc-nt1FCFvfR9p",
+            "position": {
+              "x": 358,
+              "y": 134
+            },
+            "type": "start",
+            "width": 31
+          },
+          {
+            "data": {
+              "currentVariant": "variant-1-5p7Af-UByzwnGdS7CSDsW",
+              "variants": [
+                {
+                  "description": "no description",
+                  "graphical_model": {
+                    "edges": [],
+                    "nodes": []
+                  },
+                  "id_task": "variant-1-5p7Af-UByzwnGdS7CSDsW",
+                  "implementationRef": "",
+                  "isAbstract": true,
+                  "is_composite": false,
+                  "name": "task",
+                  "parameters": [],
+                  "variant": 1
+                }
+              ]
+            },
+            "dragging": false,
+            "height": 44,
+            "id": "task-mDtzBp0thidem7mN7l1Tn",
+            "position": {
+              "x": 322.2776598454062,
+              "y": 249.78988658918223
+            },
+            "positionAbsolute": {
+              "x": 322.2776598454062,
+              "y": 249.78988658918223
+            },
+            "selected": true,
+            "type": "task",
+            "width": 102
+          },
+          {
+            "data": {},
+            "dragging": false,
+            "height": 37,
+            "id": "end-O5OF6FMQ6k5IPrxJVb6zl",
+            "position": {
+              "x": 357.1145489851613,
+              "y": 397.100160665861
+            },
+            "positionAbsolute": {
+              "x": 357.1145489851613,
+              "y": 397.100160665861
+            },
+            "selected": false,
+            "type": "end",
+            "width": 32
+          }
+        ]
       }
     }
   ]
