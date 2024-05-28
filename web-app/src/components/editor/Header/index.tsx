@@ -48,7 +48,9 @@ const Header: React.FC<HeaderProps> = ({ onSave, onSaveAs }) => {
     }
 
     onSave();
-    navigate(`/execution/convert/${projID}/${experimentID}`);
+    setTimeout(() => {
+      navigate(`/execution/convert/${projID}/${experimentID}`);
+    }, 500);
   };
 
   return (

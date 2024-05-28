@@ -282,7 +282,7 @@ const Editor = () => {
       },
     })
       .then(() => {
-        message('Saved');
+        message('Saved', 500);
       })
       .catch((error) => {
         if (error.message) {
