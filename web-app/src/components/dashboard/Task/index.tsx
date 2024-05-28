@@ -184,7 +184,7 @@ const Category = () => {
           className="specification__functions__new"
           onClick={handleNewTask}
         >
-          new task
+          new template
         </button>
       </div>
       <div className="specification__contents">
