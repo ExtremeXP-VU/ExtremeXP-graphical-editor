@@ -15,6 +15,22 @@
   box-sizing: border-box;
   border-left: 2px solid $primary-theme-color;
   scrollbar-width: none;
+
+  &__close {
+    position: absolute;
+    top: 0.1rem;
+    right: 6.5rem;
+    cursor: pointer;
+
+    .iconfont {
+      color: $secondary-theme-color;
+      font-size: 1.3em;
+    }
+
+    &:hover {
+      color: $alert-background-color;
+    }
+  }
 }
 
 .sidebar__variants {
@@ -44,17 +60,6 @@
   background-color: $background;
   border: 1px solid $border-color;
   // Other styles you want to include in the mixin
-}
-.close-button {
-  position: absolute;
-  top: 0.1rem;
-  right: 6.5rem;
-  cursor: pointer;
-  color: $secondary-theme-color;
-
-  &:hover {
-    color: $alert-background-color;
-  }
 }
 
 .select-bar {

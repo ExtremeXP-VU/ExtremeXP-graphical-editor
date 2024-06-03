@@ -239,9 +239,11 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   return (
     <div className="sidebar">
-      <span className="iconfont close-button" onClick={handleClosePanel}>
-        &#xe600;
-      </span>
+      <div className="sidebar__close">
+        <span className="iconfont" onClick={handleClosePanel}>
+          &#xe600;
+        </span>
+      </div>
       <div className="sidebar__variants">
         <DropDown
           options={
