@@ -193,8 +193,16 @@ class ConvertorHandler:
                 "$type": f"{self.meta_model_loc}Complex",
                 "$id": node["id"],
             }
+
         if node["type"] == "opExclusive":
             cases = []
+
+            if "conditions" not in node["data"]:
+                return {
+                    "$type": f"{self.meta_model_loc}Exclusive",
+                    "$id": node["id"],
+                }
+
             if len(node["data"]["conditions"]) > 0:
                 cases = self.__convert_cases(node["data"]["conditions"][0], nodes)
             return {
@@ -205,16 +213,22 @@ class ConvertorHandler:
                     "cases": cases,
                 },
             }
+
         return {
             "$type": f"{self.meta_model_loc}Inclusive",
             "$id": node["id"],
-            "conditions": [
-                {
-                    "$id": f"condition-{generate(size=5)}",
-                    "cases": self.__convert_cases(condition, nodes),
-                }
-                for condition in node["data"]["conditions"]
-            ],
+            # if there are no conditions, return an empty condition
+            "conditions": (
+                [
+                    {
+                        "$id": f"condition-{generate(size=5)}",
+                        "cases": self.__convert_cases(condition, nodes),
+                    }
+                    for condition in node["data"]["conditions"]
+                ]
+                if "conditions" in node["data"]
+                else []
+            ),
         }
 
     def __convert_cases(self, condition, nodes):
