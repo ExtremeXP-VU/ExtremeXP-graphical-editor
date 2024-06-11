@@ -45,6 +45,16 @@ const selector = (state: RFState) => ({
 });
 
 const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
+  // TODO: fetch task implementation references from the server
+  const taskImpReferences: string[] = [
+    'NoReference',
+    'ReadData',
+    'AddPadding',
+    'SplitData',
+    'TrainModel',
+    'EvaluateModel',
+  ];
+
   const { updateNodeData, selectedNode } = useReactFlowInstanceStore(
     selector,
     shallow
@@ -100,13 +110,19 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
   };
 
   const handleImplementationRefChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const action: Action = {
       type: 'UPDATE_IMPLEMENTATION_REF',
       payload: event.target.value,
     };
     dispatch(action);
+
+    const actionName: Action = {
+      type: 'UPDATE_NAME',
+      payload: event.target.value,
+    };
+    dispatch(actionName);
   };
 
   // handle add parameter
@@ -299,13 +315,17 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
             />
           ),
           implementation: (
-            <input
-              type="text"
-              className="transparent-input"
-              placeholder="<URI>"
-              defaultValue={taskState.implementationRef}
+            <select
+              id="taskSelector"
+              value={taskState.implementationRef}
               onChange={handleImplementationRefChange}
-            />
+            >
+              {taskImpReferences.map((task, index) => (
+                <option key={index} value={task}>
+                  {task}
+                </option>
+              ))}
+            </select>
           ),
           category: (
             <DropDown
