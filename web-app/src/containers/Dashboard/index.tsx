@@ -39,7 +39,7 @@ const Repository = () => {
               className={`repository__panel__items__item ${taskSelectedClass}`}
             >
               <span className="iconfont">&#xe610;</span>
-              <p>Tasks</p>
+              <p>Templates</p>
             </div>
           </Link>
           <Link to={'/dashboard/user'}>

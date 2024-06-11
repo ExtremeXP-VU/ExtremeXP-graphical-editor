@@ -64,11 +64,8 @@ class ConvertorHandler:
 
         data = json.dumps({"data": emf_model})
 
-        exp_name = (
-            f"{exp['name']}-{generate(size=3)}.workflow"
-            if self.__is_model_exists(exp["name"])
-            else f"{exp['name']}.workflow"
-        )
+        # avoid name conflicts
+        exp_name = f"{exp['name']}-{generate(size=3)}.workflow"
 
         post_response = requests.post(
             f"{self.url}/models",
@@ -196,8 +193,16 @@ class ConvertorHandler:
                 "$type": f"{self.meta_model_loc}Complex",
                 "$id": node["id"],
             }
+
         if node["type"] == "opExclusive":
             cases = []
+
+            if "conditions" not in node["data"]:
+                return {
+                    "$type": f"{self.meta_model_loc}Exclusive",
+                    "$id": node["id"],
+                }
+
             if len(node["data"]["conditions"]) > 0:
                 cases = self.__convert_cases(node["data"]["conditions"][0], nodes)
             return {
@@ -208,16 +213,22 @@ class ConvertorHandler:
                     "cases": cases,
                 },
             }
+
         return {
             "$type": f"{self.meta_model_loc}Inclusive",
             "$id": node["id"],
-            "conditions": [
-                {
-                    "$id": f"condition-{generate(size=5)}",
-                    "cases": self.__convert_cases(condition, nodes),
-                }
-                for condition in node["data"]["conditions"]
-            ],
+            # if there are no conditions, return an empty condition
+            "conditions": (
+                [
+                    {
+                        "$id": f"condition-{generate(size=5)}",
+                        "cases": self.__convert_cases(condition, nodes),
+                    }
+                    for condition in node["data"]["conditions"]
+                ]
+                if "conditions" in node["data"]
+                else []
+            ),
         }
 
     def __convert_cases(self, condition, nodes):
@@ -374,13 +385,11 @@ class ConvertorHandler:
         )
         return {"success": response.status_code == 200, "data": response.json()["data"]}
 
-    def __is_model_exists(self, exp_name):
-        """Check if the model already exists in the server."""
-
-        response = requests.get(
-            f"{self.url}/models?modeluri={exp_name}.workflow", timeout=5
-        )
-        return response.status_code == 200
+    # def __is_model_exists(self, exp_name):
+    #     """Check if the model already exists in the server."""
+    #     response = requests.get(f"{self.url}/modeluris", timeout=5)
+    #     uri_list = response.json()["data"]
+    #     return exp_name in uri_list
 
     def __find_node_emf_type(self, node_id, nodes):
         """Convert the model type to the EMF type."""

@@ -173,6 +173,9 @@ const Editor = () => {
   }
 
   const handleSelectTab = (id: string) => {
+    if (isOpenConfig) {
+      useConfigPanelStore.setState({ isOpenConfig: false });
+    }
     handleSave();
     setSelectedTab(id);
   };
@@ -279,7 +282,7 @@ const Editor = () => {
       },
     })
       .then(() => {
-        message('Saved');
+        message('Saved', 500);
       })
       .catch((error) => {
         if (error.message) {
@@ -504,7 +507,9 @@ const Editor = () => {
       <Popover show={showPopover} blankClickCallback={closeMask}>
         <div className="popover__save">
           <div className="popover__save__text">
-            {` Save the current specification as a new ${specificationType}`}
+            {` Save the current specification as a new ${
+              specificationType === 'experiment' ? 'experiment' : 'template'
+            }`}
           </div>
           <input
             type="text"

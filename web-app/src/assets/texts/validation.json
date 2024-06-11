@@ -24,7 +24,7 @@
     "type": "error"
   },
   "JOINT_OP_MULTIPLE_OUTPUTS": {
-    "message": "Each joint operator can only have 1 output.",
+    "message": "Each joint operator can only have 1 output. A joint operator is an operator that has multiple inputs and a single output.",
     "type": "error"
   },
   "DATAFLOW_LINK_MISUSAGE": {
