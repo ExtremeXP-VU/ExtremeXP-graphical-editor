@@ -1,0 +1,98 @@
+.account {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.account__banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10vh;
+  padding-bottom: 5vh;
+  width: 100%;
+  height: 20vh;
+}
+.account__banner__title {
+  font-size: 5em;
+  font-weight: 700;
+  color: #4fa3bb;
+}
+
+.account__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 4rem;
+  border-bottom: 2px solid #54637a;
+}
+
+.account__content__tabs {
+  width: 100%;
+  height: 0.4rem;
+  margin-bottom: 0.2rem;
+  border-bottom: 2px solid #54637a;
+}
+.account__content__tabs button {
+  width: 50%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  border-radius: 0%;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #4fa3bb;
+}
+.account__content__tabs button:hover {
+  cursor: pointer;
+  background-color: #e2f0f4;
+  color: #4fa3bb;
+}
+.account__content__tabs button.selected {
+  background-color: #54637a;
+  color: #ffffff;
+}
+
+.account__content__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.login__form {
+  width: 100%;
+  padding: 0 0.15rem;
+  box-sizing: border-box;
+}
+
+.login__form__item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.15rem;
+  color: #3f4a5c;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.login__submit {
+  width: 45%;
+  height: 0.4rem;
+  margin: 0.25rem 0rem;
+  border-radius: 0.2rem;
+  background-color: #4fa3bb;
+  color: #ffffff;
+  font-size: 1.2em;
+  font-weight: 700;
+}
+.login__submit:hover {
+  cursor: pointer;
+  background-color: #2e6676;
+}
+.login__submit:active {
+  background-color: #99c9d7;
+}/*# sourceMappingURL=style.css.map */

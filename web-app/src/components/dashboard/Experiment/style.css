@@ -1,0 +1,151 @@
+.specification {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.2rem;
+  box-sizing: border-box;
+}
+
+.specification__functions {
+  margin-bottom: 0.15rem;
+  width: 3.4rem;
+  height: 0.35rem;
+}
+.specification__functions button {
+  width: 1.6rem;
+  height: 0.35rem;
+  background-color: #4fa3bb;
+  color: #ffffff;
+  font-size: 1.15em;
+  font-weight: bold;
+}
+.specification__functions button:hover {
+  cursor: pointer;
+  background-color: #2e6676;
+}
+.specification__functions button:active {
+  background-color: #bddde6;
+  color: #ffffff;
+}
+.specification__functions__new {
+  margin-right: 0.2rem;
+}
+
+.specification__contents {
+  width: 100%;
+  height: calc(100% - 0.5rem);
+}
+.specification__contents__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 0.2rem;
+  border-bottom: 2px solid #e0e0e0;
+  color: gray;
+  font-size: 0.9em;
+  font-weight: bold;
+  text-align: left;
+}
+.specification__contents__header__title {
+  width: 45%;
+}
+.specification__contents__header__create {
+  width: 15%;
+}
+.specification__contents__header__update {
+  width: 15%;
+}
+.specification__contents__header__operations {
+  width: 25%;
+}
+.specification__contents__empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100% - 0.2rem);
+  color: #b9b8b8;
+  font-size: 2.5em;
+  font-weight: bold;
+}
+.specification__contents__list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: calc(100% - 0.2rem);
+}
+.specification__contents__list__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+.specification__contents__list__item__title {
+  display: flex;
+  width: 45%;
+  font-weight: bold;
+  padding-right: 0.2rem;
+  box-sizing: border-box;
+}
+.specification__contents__list__item__title .iconfont {
+  margin-right: 0.1rem;
+  color: gray;
+}
+.specification__contents__list__item__title .editable {
+  color: #4fa3bb;
+}
+.specification__contents__list__item__title .editable:hover {
+  cursor: pointer;
+  color: #c97e7e;
+}
+.specification__contents__list__item__title input {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid #888888;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+.specification__contents__list__item__title input:focus {
+  outline: none;
+}
+.specification__contents__list__item__create {
+  width: 15%;
+  color: gray;
+}
+.specification__contents__list__item__update {
+  width: 15%;
+  color: gray;
+}
+.specification__contents__list__item__operations {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 25%;
+}
+.specification__contents__list__item__operations .iconfont {
+  margin-right: 0.2rem;
+  color: gray;
+}
+.specification__contents__list__item__operations .editable {
+  color: #4fa3bb;
+}
+.specification__contents__list__item__operations .editable:hover {
+  cursor: pointer;
+  color: #c97e7e;
+}
+.specification__contents__list__item__operations button {
+  width: 0.9rem;
+  background-color: #4fa3bb;
+  color: #ffffff;
+  font-size: 1em;
+  font-weight: bold;
+}/*# sourceMappingURL=style.css.map */

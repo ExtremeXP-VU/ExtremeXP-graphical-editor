@@ -1,0 +1,19 @@
+.range-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.range-selector label {
+  display: flex;
+  align-items: center;
+  margin: 0 0.1rem;
+}
+.range-selector label input[type=number] {
+  margin: 0 0.05rem;
+  width: 5em;
+}
+.range-selector label input[type=checkbox] {
+  accent-color: black;
+  margin: 0 0.05rem;
+}/*# sourceMappingURL=style.css.map */

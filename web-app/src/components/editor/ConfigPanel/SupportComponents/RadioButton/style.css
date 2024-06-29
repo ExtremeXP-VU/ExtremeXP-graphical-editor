@@ -1,0 +1,15 @@
+.radio-button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  accent-color: black;
+}
+.radio-button-group .radio-button-label {
+  margin-right: 0.1rem;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.radio-button-group .radio-button-input {
+  margin-right: 0.05rem;
+}/*# sourceMappingURL=style.css.map */

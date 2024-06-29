@@ -1,0 +1,43 @@
+.edge__label__text {
+  z-index: 3;
+  position: absolute;
+  height: 0.14rem;
+  line-height: 0.14rem;
+  background: #ffffff;
+  color: #3c869b;
+  font-size: 1.1em;
+  font-weight: 500;
+  pointer-events: all;
+}
+.edge__label__text input {
+  width: 0.7rem;
+  height: 0.16rem;
+  font-size: 1em;
+}
+
+.edge__label__icon {
+  z-index: 3;
+  position: absolute;
+  width: 0.14rem;
+  height: 0.14rem;
+  line-height: 0.14rem;
+  background: #ffffff;
+  color: #3c869b;
+  font-size: 1.2em;
+  font-weight: 500;
+  pointer-events: all;
+}
+.edge__label__icon:hover {
+  cursor: pointer;
+  font-size: 1.3em;
+}
+
+.edge__label__marker {
+  z-index: 4;
+  position: absolute;
+  width: 0.16rem;
+  height: 0.16rem;
+  border-radius: 0.08rem;
+  background: #c97e7e;
+  color: #ffffff;
+}/*# sourceMappingURL=style.css.map */

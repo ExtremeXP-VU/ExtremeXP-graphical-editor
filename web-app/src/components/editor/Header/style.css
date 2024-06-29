@@ -1,0 +1,124 @@
+.header {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.header__left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.2rem;
+  height: 100%;
+}
+.header__left__back {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1.5rem;
+  height: 0.4rem;
+  border-radius: 0.05rem;
+  background-color: #54637a;
+  color: #4fa3bb;
+  font-size: 1.2em;
+  font-weight: 800;
+}
+.header__left__back .iconfont {
+  font-size: 1.4em;
+}
+.header__left__back__arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 0.15rem;
+  background-color: #4fa3bb;
+  color: #ffffff;
+}
+.header__left__back__arrow:hover {
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #4fa3bb;
+}
+.header__left__back__arrow:active {
+  background-color: #2e6676;
+}
+
+.header__middle {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  min-width: 3rem;
+  height: 100%;
+}
+
+.header__right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3rem;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header__right__files {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  margin-right: 0.2rem;
+}
+.header__right__files button {
+  margin: 0.05rem;
+  width: 0.85rem;
+  height: 0.32rem;
+  background-color: #4fa3bb;
+  border-radius: 0.05rem;
+  color: white;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.header__right__files button:hover {
+  cursor: pointer;
+  border: none;
+  background-color: #ffffff;
+  color: #4fa3bb;
+}
+.header__right__files button:active {
+  background-color: #2e6676;
+  border: 2px inset #2e6676;
+}
+.header__right__execution {
+  width: 0.36rem;
+  height: 0.36rem;
+  margin-right: 0.4rem;
+}
+.header__right__execution__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0.36rem;
+  height: 0.36rem;
+  border-radius: 0.18rem;
+  background-color: #4fa3bb;
+}
+.header__right__execution__button .iconfont {
+  font-size: 2.5em;
+  color: #ffffff;
+}
+.header__right__execution__button:hover {
+  cursor: pointer;
+  background-color: #ffffff;
+}
+.header__right__execution__button:hover .iconfont {
+  color: #4fa3bb;
+}
+.header__right__execution__button:active {
+  background-color: #2e6676;
+}/*# sourceMappingURL=style.css.map */

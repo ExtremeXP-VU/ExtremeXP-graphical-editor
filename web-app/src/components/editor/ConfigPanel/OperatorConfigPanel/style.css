@@ -1,0 +1,52 @@
+.sidebar {
+  z-index: 5;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 6.8rem;
+  height: 100%;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  border-left: 2px solid #54637a;
+}
+
+.sidebar__variants {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.1rem;
+  width: 100%;
+  height: 0.2rem;
+}
+.sidebar__variants .iconfont {
+  margin-left: 0.05rem;
+  margin-top: 0.05rem;
+  color: #4fa3bb;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.1rem;
+  right: 6.5rem;
+  cursor: pointer;
+  color: #4fa3bb;
+}
+.close-button:hover {
+  color: #c97e7e;
+}
+
+.select-bar {
+  position: absolute;
+  width: 100%;
+}
+.select-bar select {
+  color: #ffffff;
+  background-color: #4fa3bb;
+  border: 1px solid #54637a;
+}/*# sourceMappingURL=style.css.map */

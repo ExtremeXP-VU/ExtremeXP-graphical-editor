@@ -1,0 +1,101 @@
+.validation {
+  z-index: 4;
+  position: absolute;
+  right: 0.15rem;
+  bottom: 0.15rem;
+  width: 2.5rem;
+  height: 2rem;
+}
+
+.validation__window {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #54637a;
+}
+.validation__window__header {
+  width: 100%;
+  height: 0.2rem;
+  background-color: #4fa3bb;
+}
+.validation__window__header span {
+  color: #ffffff;
+  font-size: 1.1em;
+}
+.validation__window__header:hover {
+  cursor: pointer;
+  background-color: #2e6676;
+  font-size: 1.2em;
+}
+.validation__window__content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: calc(100% - 0.2rem);
+  white-space: pre-wrap;
+}
+
+.validation__message {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.05rem 0.05rem;
+}
+.validation__message__type {
+  width: 0.5rem;
+  height: 0.2rem;
+  background-color: #c97e7e;
+  border-radius: 0.1rem;
+  margin-right: 0.1rem;
+  color: #ffffff;
+  font-size: 1.1em;
+  font-weight: 700;
+}
+.validation__message__code {
+  color: #54637a;
+  font-size: 1.1em;
+  font-weight: 700;
+  text-align: left;
+}
+.validation__message__text {
+  color: #54637a;
+  font-size: 1.1em;
+  font-weight: 700;
+  text-align: left;
+}
+
+.validation__ball {
+  position: absolute;
+  top: 80%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #ffffff;
+  border: 1px solid #adadad;
+  border-radius: 50%;
+}
+.validation__ball__content {
+  width: 0.44rem;
+  height: 0.44rem;
+  background-color: #54637a;
+  border-radius: 50%;
+}
+.validation__ball__content p {
+  color: #ffffff;
+  font-size: 2.5em;
+  font-weight: 700;
+}
+.validation__ball__content--invalid {
+  background-color: #c97e7e;
+}
+.validation__ball__content--invalid:hover {
+  cursor: pointer;
+  background-color: #9f4242;
+  box-shadow: inset 0 0 0.1rem #ffffff;
+}/*# sourceMappingURL=style.css.map */

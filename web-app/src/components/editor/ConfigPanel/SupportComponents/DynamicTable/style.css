@@ -1,0 +1,47 @@
+.transparent-input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+.transparent-input:focus {
+  outline: 1px dashed #4fa3bb;
+}
+
+.table-component {
+  width: 90%;
+  margin-top: 0.5rem;
+}
+.table-component .header-text {
+  color: #54637a;
+  font-weight: bold;
+  text-align: left;
+  font-size: 12px;
+  padding-bottom: 0.13rem;
+}
+.table-component .header-row {
+  font-weight: bold;
+}
+.table-component .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-component .row:nth-child(even) {
+  background-color: rgba(233, 233, 233, 0.3960784314);
+}
+.table-component .row:nth-child(odd) {
+  background-color: #ffffff;
+}
+.table-component .cell {
+  padding: 0.05rem 0.05rem;
+  flex: 1;
+  font-size: 12px;
+}
+
+.delete-param {
+  cursor: pointer;
+  color: #4fa3bb;
+}
+.delete-param:hover {
+  color: #c97e7e;
+}/*# sourceMappingURL=style.css.map */

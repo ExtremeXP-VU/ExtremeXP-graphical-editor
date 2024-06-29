@@ -1,0 +1,15 @@
+.variant__dropdown {
+  min-width: 1rem;
+  height: 0.15rem;
+}
+.variant__dropdown select {
+  color: #ffffff;
+  background-color: #4fa3bb;
+  border: 1px solid #54637a;
+}
+
+.normal__dropdown select {
+  color: #000000;
+  background-color: #eef0f3;
+  border: 1px solid #54637a;
+}/*# sourceMappingURL=style.css.map */

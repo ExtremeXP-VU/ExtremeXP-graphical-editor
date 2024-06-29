@@ -1,0 +1,55 @@
+.node-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100px;
+  height: auto;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-bottom: none;
+  color: #333;
+  -webkit-clip-path: polygon(-10% -10%, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 110%);
+          clip-path: polygon(-10% -10%, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 110%);
+}
+.node-data__title {
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #000;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+.node-data__input {
+  width: 100%;
+  height: 15px;
+  padding: 0.01rem;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid #000;
+  font-size: 0.8em;
+}
+
+.node-data::before {
+  content: "";
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background-color: #dddddd;
+}
+
+.node-data::after {
+  content: "";
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 17px;
+  height: 17px;
+  background-color: #000;
+}/*# sourceMappingURL=style.css.map */
