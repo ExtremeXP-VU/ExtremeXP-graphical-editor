@@ -37,7 +37,7 @@ services:
     build: ./web-app
     container_name: web-app
     ports:
-      - '7001:7000'
+      - '7001:7001'
     depends_on:
       - auth-service
       - exp-service
