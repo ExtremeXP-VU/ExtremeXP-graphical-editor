@@ -20,7 +20,6 @@ import {
   defaultParameter,
 } from '../../../../types/task';
 
-import Popover from '../../../general/Popover';
 import { TasksResponseType } from '../../../../types/requests';
 import useRequest from '../../../../hooks/useRequest';
 import { message } from '../../../../utils/message';
@@ -172,8 +171,10 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
 
   const handleOpenPopover = () => {
     setShowPopover(true);
-    for (const category of categories) {
-      getTasks(category.id_category);
+    if (taskList.length === 1) {
+      for (const category of categories) {
+        getTasks(category.id_category);
+      }
     }
   };
 
@@ -282,6 +283,35 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         Please click the current selected task node to save the changes before
         variant selection or addition.
       </div>
+      {showPopover && (
+        <div className="popover__variant">
+          <span
+            className="popover__variant__close iconfont"
+            onClick={() => setShowPopover(false)}
+          >
+            &#xe600;
+          </span>
+          <div className="popover__variant__atomic">
+            <button onClick={() => handleAddTask(false)}>
+              Add an Atomic Task
+            </button>
+          </div>
+          <div className="popover__variant__line"></div>
+          <div className="popover__variant__composite">
+            <select name="" id="" onChange={handleSelectTask}>
+              {taskList.map((task) => (
+                <option key={task.id_task} value={task.id_task}>
+                  {task.name}
+                </option>
+              ))}
+            </select>
+            <button onClick={() => handleAddTask(true)}>
+              Add a Composite Task
+            </button>
+          </div>
+        </div>
+      )}
+
       <StaticTable
         properties={{
           name: (
@@ -360,32 +390,6 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         buttonText="add parameter"
         handleClick={handleAddParameter}
       />
-
-      <Popover
-        show={showPopover}
-        blankClickCallback={() => setShowPopover(false)}
-      >
-        <div className="popover__variant">
-          <div className="popover__variant__atomic">
-            <button onClick={() => handleAddTask(false)}>
-              Add an Atomic Task
-            </button>
-          </div>
-          <div className="popover__variant__line"></div>
-          <div className="popover__variant__composite">
-            <select name="" id="" onChange={handleSelectTask}>
-              {taskList.map((task) => (
-                <option key={task.id_task} value={task.id_task}>
-                  {task.name}
-                </option>
-              ))}
-            </select>
-            <button onClick={() => handleAddTask(true)}>
-              Add a Composite Task
-            </button>
-          </div>
-        </div>
-      </Popover>
     </div>
   );
 };

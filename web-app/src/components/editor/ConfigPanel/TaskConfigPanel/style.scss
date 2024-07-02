@@ -66,6 +66,60 @@
   color: $alert-background-color;
 }
 
+// Side bar popover for adding variant
+.popover__variant {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+  margin-top: 0.2rem;
+  width: 4.5rem;
+  height: 1.5rem;
+  border-radius: 0.1rem;
+  border: 1px dashed $primary-theme-color;
+  background-color: $primary-button-text-color;
+
+  .iconfont {
+    position: absolute;
+    bottom: 0.05rem;
+    right: 0.05rem;
+    margin-left: 0.05rem;
+    margin-top: 0.05rem;
+    color: $secondary-theme-color;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+
+  button {
+    width: 1.8rem;
+    background-color: $secondary-theme-color;
+    color: $primary-button-text-color;
+  }
+
+  &__line {
+    width: 0.01rem;
+    height: 1.5rem;
+    background-color: $primary-theme-color;
+  }
+
+  &__atomic {
+    padding-bottom: 0.6rem;
+  }
+
+  &__composite {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 0.6rem;
+
+    select {
+      margin-bottom: 0.2rem;
+    }
+  }
+}
+
 @mixin select-style($color, $background, $border-color) {
   color: $color;
   background-color: $background;
