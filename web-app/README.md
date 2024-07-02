@@ -17,9 +17,9 @@ If you are developing a production application, we recommend updating the config
 export default {
   // other rules...
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
   },
 };
@@ -31,6 +31,8 @@ export default {
 
 ## Build
 
+**Develope**
+
 ```
 npm install
 ```
@@ -39,4 +41,16 @@ npm install
 npm run dev
 ```
 
-http://localhost:7000/
+**Deploy**
+
+```
+npm install
+```
+
+```
+npm run build
+```
+
+```
+npm run preview
+```

@@ -41,6 +41,17 @@
   width: 100%;
   height: 0.2rem;
 
+  &__title {
+    display: block;
+    height: 0.2rem;
+    margin-top: 0.05rem;
+    margin-right: 0.1rem;
+    line-height: 0.2rem;
+    text-align: center;
+    color: $primary-theme-color;
+    font-weight: bold;
+  }
+
   .iconfont {
     margin-left: 0.05rem;
     margin-top: 0.05rem;

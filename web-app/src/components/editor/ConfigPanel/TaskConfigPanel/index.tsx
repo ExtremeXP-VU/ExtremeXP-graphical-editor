@@ -261,6 +261,7 @@ const TaskConfigPanel: React.FC<TaskConfigPanelProps> = ({ updateSideBar }) => {
         </span>
       </div>
       <div className="sidebar__variants">
+        <span className="sidebar__variants__title">Task Variant</span>
         <DropDown
           options={
             selectedNode?.data?.variants.map((variant: TaskVariantType) => {

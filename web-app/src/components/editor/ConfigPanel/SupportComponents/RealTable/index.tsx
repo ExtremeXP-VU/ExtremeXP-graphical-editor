@@ -13,7 +13,7 @@ const RealTable: React.FC = () => {
   const createNumber = () => {
     setNumNumber(numNumber + 1);
   };
-  const [selectedType, setSelectedType] = useState<string>('range');
+  const [selectedType, setSelectedType] = useState<string>('number');
   const handleSelectedType = (selectedType: string) => {
     setSelectedType(selectedType);
   };
@@ -47,7 +47,7 @@ const RealTable: React.FC = () => {
               )}
               {selectedType === 'number' && (
                 <span
-                  className="iconfont"
+                  className="clickable iconfont"
                   style={{ cursor: 'pointer' }}
                   onClick={createNumber}
                 >

@@ -17,7 +17,6 @@ const IntegerTable: React.FC<TableProps> = ({ numbers, onValueUpdated }) => {
     numbers
   );
 
-
   const createRange = () => {
     setNumRange(numRange + 1);
   };
@@ -28,7 +27,7 @@ const IntegerTable: React.FC<TableProps> = ({ numbers, onValueUpdated }) => {
     };
     integerDispatch(action);
   };
-  const [selectedType, setSelectedType] = useState<string>('integer');
+  const [selectedType, setSelectedType] = useState<string>('number');
   const handleSelectedType = (selectedType: string) => {
     setSelectedType(selectedType);
   };

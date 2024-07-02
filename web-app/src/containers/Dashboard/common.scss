@@ -1,6 +1,8 @@
 @import '../../styles/colors.scss';
 .dashboard__page {
   display: flex;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .dashboard__common__panel {
@@ -163,7 +165,9 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  min-width: calc(100% - 6rem);
+  width: calc(100% - 4rem);
+  min-width: 6rem;
+
   height: 100%;
   background-color: rgba($color: $primary-theme-color, $alpha: 0.1);
 
