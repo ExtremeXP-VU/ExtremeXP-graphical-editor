@@ -35,7 +35,7 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
 
       return axios
         .request<T>({
-          baseURL: 'http://127.0.0.1/',
+          baseURL: import.meta.env.VITE_API_URL,
           url: requestOptions?.url || '',
           method: requestOptions?.method || options.method,
           signal: controllerRef.current.signal,
