@@ -10,12 +10,25 @@ docker-compose up -d
 ```
 
 Or, if you need everything re-built before running:
+
 ```shell
 docker-compose up --build
 ```
 
-
 To access the app: http://localhost:7001/
+
+### Deploy on SSH
+
+To deploy the framework on a server with public IP, you need to change the `VITE_API_URL` for the frontend HTTP request in `web-app/.env`.
+For example,
+
+```javascript
+// for local development
+VITE_API_URL = 'http://127.0.0.1/';
+
+// for SSH deployment
+VITE_API_URL = 'http://145.1xx.2xx.2x/';
+```
 
 ## Demo
 

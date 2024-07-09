@@ -26,6 +26,7 @@ services:
       - '5050:5050'
     depends_on:
       - auth-service
+      - emf-cloud-service
 
   emf-cloud-service:
     build: ./server-emf-cloud
