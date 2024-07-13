@@ -34,7 +34,7 @@ VITE_API_URL = 'http://145.1xx.2xx.2x/';
 
 **Network Deployment:**
 
-![newtwork_structure](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/network_and_authentication.v1.png)
+![newtwork_structure](https://github.com/Yunabell-VU/ExtremeXP-graphical-editor/blob/main/demo_images/network_and_authentication.v2.png)
 
 **Login**
 
